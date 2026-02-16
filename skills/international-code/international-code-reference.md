@@ -1,14 +1,14 @@
-# 국제 표준 코드 상세 참조 가이드
+# International Standard Code Detailed Reference Guide
 
-## 1. ISO 3166-1 국가 코드
+## 1. ISO 3166-1 Country Codes
 
-### 개요
-ISO 3166-1은 국가 및 종속 영토를 식별하기 위한 국제 표준이다.
+### Overview
+ISO 3166-1 is an international standard for identifying countries and dependent territories.
 
-### 데이터 파일
-`data/iso_3166_1_countries.json` — 249개 항목
+### Data File
+`data/iso_3166_1_countries.json` — 249 entries
 
-### 스키마
+### Schema
 ```json
 {
   "koreanName": "대한민국",
@@ -20,18 +20,18 @@ ISO 3166-1은 국가 및 종속 영토를 식별하기 위한 국제 표준이�
 }
 ```
 
-| 필드 | 설명 | 예시 |
+| Field | Description | Example |
 |---|---|---|
-| `koreanName` | 한글 국가명 | 대한민국, 미국, 일본 |
-| `englishName` | ISO 공식 영문명 | Korea (the Republic of) |
-| `alpha2` | 2자리 알파벳 코드 | KR, US, JP |
-| `alpha3` | 3자리 알파벳 코드 | KOR, USA, JPN |
-| `numeric` | 3자리 숫자 코드 (0 패딩) | 410, 840, 392 |
-| `independent` | 독립국 여부 | true/false |
+| `koreanName` | Korean country name | 대한민국, 미국, 일본 |
+| `englishName` | ISO official English name | Korea (the Republic of) |
+| `alpha2` | 2-letter alphabetic code | KR, US, JP |
+| `alpha3` | 3-letter alphabetic code | KOR, USA, JPN |
+| `numeric` | 3-digit numeric code (zero-padded) | 410, 840, 392 |
+| `independent` | Whether the country is independent | true/false |
 
-### 주요 국가 코드 (빈번 사용)
+### Frequently Used Country Codes
 
-| 한글명 | alpha-2 | alpha-3 | numeric | 국번 |
+| Korean Name | alpha-2 | alpha-3 | numeric | Calling Code |
 |---|---|---|---|---|
 | 대한민국 | KR | KOR | 410 | +82 |
 | 미국 | US | USA | 840 | +1 |
@@ -49,24 +49,24 @@ ISO 3166-1은 국가 및 종속 영토를 식별하기 위한 국제 표준이�
 | 베트남 | VN | VNM | 704 | +84 |
 | 필리핀 | PH | PHL | 608 | +63 |
 
-### 사용 규칙
+### Usage Rules
 
-1. **alpha-2를 기본 식별자로 사용**: DB 저장, API 파라미터, 내부 로직 모두 alpha-2 사용
-2. **alpha-3는 표시/교환용**: ISO 표준 문서 교환, 공식 보고서에 사용
-3. **numeric은 알파벳 독립이 필요할 때**: 다국어 환경에서 문자 체계에 무관한 식별이 필요할 때
-4. **`independent` 필터링**: 드롭다운에서 독립국만 표시할 때 `independent: true`로 필터
+1. **Use alpha-2 as the primary identifier**: Use alpha-2 for DB storage, API parameters, and internal logic
+2. **alpha-3 is for display/exchange**: Use in ISO standard document exchange and official reports
+3. **numeric is for alphabet-independent scenarios**: When identification independent of character systems is needed in multilingual environments
+4. **`independent` filtering**: Filter with `independent: true` to show only independent countries in dropdowns
 
 ---
 
-## 2. ISO 3166-2 지역/행정구역 코드
+## 2. ISO 3166-2 Region/Administrative Division Codes
 
-### 개요
-ISO 3166-2는 각 국가의 행정구역(시/도/주/현 등)을 식별하기 위한 국제 표준이다.
+### Overview
+ISO 3166-2 is an international standard for identifying administrative divisions (cities/provinces/states/prefectures, etc.) within each country.
 
-### 데이터 파일
-`data/iso_3166_2_regions.json` — 21개국, 653개 행정구역
+### Data File
+`data/iso_3166_2_regions.json` — 21 countries, 653 administrative divisions
 
-### 스키마
+### Schema
 ```json
 {
   "KR": {
@@ -86,57 +86,57 @@ ISO 3166-2는 각 국가의 행정구역(시/도/주/현 등)을 식별하기 �
 }
 ```
 
-| 필드 | 설명 | 예시 |
+| Field | Description | Example |
 |---|---|---|
-| `code` | ISO 3166-2 코드 (국가-구역) | KR-11, US-CA, JP-13 |
-| `nameEn` | 영문 지역명 | Seoul, California, Tokyo |
-| `nameLocal` | 현지어 지역명 (있는 경우) | 서울특별시, 東京都 |
-| `type` | 행정구역 유형 | Special city, State, Prefecture |
+| `code` | ISO 3166-2 code (country-subdivision) | KR-11, US-CA, JP-13 |
+| `nameEn` | English region name | Seoul, California, Tokyo |
+| `nameLocal` | Local language region name (if available) | 서울특별시, 東京都 |
+| `type` | Administrative division type | Special city, State, Prefecture |
 
-### 수록 국가
+### Included Countries
 
-| 국가 | alpha-2 | 행정구역 수 | 구역 유형 |
+| Country | alpha-2 | Number of Divisions | Division Type |
 |---|---|---|---|
-| 대한민국 | KR | 17 | 특별시, 광역시, 도, 특별자치시/도 |
-| 미국 | US | 57 | State, District, Territory |
-| 일본 | JP | 47 | Prefecture (都道府県) |
-| 중국 | CN | 34 | Province, Municipality, Autonomous Region, SAR |
-| 영국 | GB | 4 | Country (England, Scotland, Wales, NI) |
-| 독일 | DE | 16 | Land (Bundesland) |
-| 프랑스 | FR | 18 | Region (Région) |
-| 캐나다 | CA | 13 | Province, Territory |
-| 호주 | AU | 8 | State, Territory |
-| 인도 | IN | 36 | State, Union Territory |
-| 브라질 | BR | 27 | State, Federal District |
-| 이탈리아 | IT | 20 | Region (Regione) |
-| 스페인 | ES | 19 | Autonomous Community, City |
-| 러시아 | RU | 85 | Oblast, Republic, Krai, City, Autonomous |
-| 멕시코 | MX | 32 | State, Federal District |
-| 인도네시아 | ID | 38 | Province (Provinsi) |
-| 태국 | TH | 77 | Province (Changwat) |
-| 베트남 | VN | 63 | Province, Municipality |
-| 필리핀 | PH | 82 | Province, City, District |
-| 싱가포르 | SG | 5 | District |
-| 대만 | TW | 22 | City, County |
+| 대한민국 | KR | 17 | Special city, Metropolitan city, Province, Special autonomous city/province |
+| United States | US | 57 | State, District, Territory |
+| Japan | JP | 47 | Prefecture (都道府県) |
+| China | CN | 34 | Province, Municipality, Autonomous Region, SAR |
+| United Kingdom | GB | 4 | Country (England, Scotland, Wales, NI) |
+| Germany | DE | 16 | Land (Bundesland) |
+| France | FR | 18 | Region (Région) |
+| Canada | CA | 13 | Province, Territory |
+| Australia | AU | 8 | State, Territory |
+| India | IN | 36 | State, Union Territory |
+| Brazil | BR | 27 | State, Federal District |
+| Italy | IT | 20 | Region (Regione) |
+| Spain | ES | 19 | Autonomous Community, City |
+| Russia | RU | 85 | Oblast, Republic, Krai, City, Autonomous |
+| Mexico | MX | 32 | State, Federal District |
+| Indonesia | ID | 38 | Province (Provinsi) |
+| Thailand | TH | 77 | Province (Changwat) |
+| Vietnam | VN | 63 | Province, Municipality |
+| Philippines | PH | 82 | Province, City, District |
+| Singapore | SG | 5 | District |
+| Taiwan | TW | 22 | City, County |
 
-### 사용 규칙
+### Usage Rules
 
-1. **국가 선택에 연동**: 국가 선택 시 해당 국가의 행정구역 목록을 동적 로드
-2. **코드 형식 보존**: `KR-11` 전체를 저장 (국가코드 + 하이픈 + 구역코드)
-3. **표시명 로케일 대응**: 한국어 UI에서는 `nameLocal`, 영문 UI에서는 `nameEn` 사용
-4. **미지원 국가 대비**: 데이터에 없는 국가는 지역 선택을 숨기거나 자유 입력으로 전환
+1. **Link to country selection**: Dynamically load the administrative division list for the selected country
+2. **Preserve code format**: Store the full `KR-11` (country code + hyphen + subdivision code)
+3. **Locale-aware display names**: Use `nameLocal` for Korean UI, `nameEn` for English UI
+4. **Handle unsupported countries**: For countries not in the data, hide region selection or switch to free-text input
 
 ---
 
-## 3. ITU-T E.164 국제 전화 국번
+## 3. ITU-T E.164 International Telephone Calling Codes
 
-### 개요
-ITU-T E.164는 국제 공중 전화 번호 체계를 정의하는 국제 표준이다.
+### Overview
+ITU-T E.164 is an international standard that defines the international public telecommunication numbering plan.
 
-### 데이터 파일
-`data/country_calling_codes.json` — 245개 항목
+### Data File
+`data/country_calling_codes.json` — 245 entries
 
-### 스키마
+### Schema
 ```json
 {
   "countryNameEn": "South Korea",
@@ -147,7 +147,7 @@ ITU-T E.164는 국제 공중 전화 번호 체계를 정의하는 국제 표준�
 }
 ```
 
-공유 코드가 있는 경우:
+When shared codes exist:
 ```json
 {
   "countryNameEn": "United States",
@@ -159,41 +159,41 @@ ITU-T E.164는 국제 공중 전화 번호 체계를 정의하는 국제 표준�
 }
 ```
 
-| 필드 | 설명 | 예시 |
+| Field | Description | Example |
 |---|---|---|
-| `countryNameEn` | 영문 국가명 | South Korea |
-| `countryNameKo` | 한글 국가명 | 대한민국 |
+| `countryNameEn` | English country name | South Korea |
+| `countryNameKo` | Korean country name | 대한민국 |
 | `alpha2` | ISO 3166-1 alpha-2 | KR |
-| `callingCode` | 국제 전화 국번 (+ 포함) | +82 |
-| `zone` | ITU 존 번호 (1~9) | 8 |
-| `sharedWith` | 동일 국번 공유 국가 목록 (선택) | ["CA", "PR"] |
+| `callingCode` | International calling code (with + prefix) | +82 |
+| `zone` | ITU zone number (1-9) | 8 |
+| `sharedWith` | List of countries sharing the same calling code (optional) | ["CA", "PR"] |
 
-### ITU 존 구분
+### ITU Zone Classification
 
-| 존 | 지역 | 대표 국번 |
+| Zone | Region | Representative Calling Code |
 |---|---|---|
-| 1 | 북미 (NANP) | +1 |
-| 2 | 아프리카 | +2xx |
-| 3 | 유럽 남부/동부 | +3xx |
-| 4 | 유럽 북부/서부 | +4x |
-| 5 | 중남미 | +5xx |
-| 6 | 동남아/오세아니아 | +6x |
-| 7 | 러시아/CIS | +7 |
-| 8 | 동아시아 | +8x |
-| 9 | 서아시아/남아시아 | +9xx |
+| 1 | North America (NANP) | +1 |
+| 2 | Africa | +2xx |
+| 3 | Southern/Eastern Europe | +3xx |
+| 4 | Northern/Western Europe | +4x |
+| 5 | Central/South America | +5xx |
+| 6 | Southeast Asia/Oceania | +6x |
+| 7 | Russia/CIS | +7 |
+| 8 | East Asia | +8x |
+| 9 | West Asia/South Asia | +9xx |
 
-### 사용 규칙
+### Usage Rules
 
-1. **E.164 전체 형식으로 저장**: `+국번 + 로컬번호` (공백/하이픈 없이). 최대 15자리
-2. **국번과 로컬번호 분리 입력**: UI에서는 국가 선택(국번 자동 설정) + 로컬번호 입력
-3. **국번 표시 형식**: `+82` 형태로 표시 (+ 기호 포함)
-4. **공유 코드 주의**: +1은 미국/캐나다 등 NANP 국가가 공유. alpha-2로 국가를 구분
+1. **Store in full E.164 format**: `+calling code + local number` (without spaces/hyphens). Maximum 15 digits
+2. **Separate calling code and local number input**: In the UI, use country selection (auto-set calling code) + local number input
+3. **Calling code display format**: Display as `+82` format (including + symbol)
+4. **Shared code caution**: +1 is shared by NANP countries including the US/Canada. Distinguish countries by alpha-2
 
 ---
 
-## 4. 컴포넌트 구현 패턴
+## 4. Component Implementation Patterns
 
-### 4.1 국가 선택 (Country Selector)
+### 4.1 Country Selector
 
 #### TypeScript/React
 
@@ -202,12 +202,12 @@ import countriesData from '@/data/iso_3166_1_countries.json';
 
 interface CountryOption {
   value: string;   // alpha-2
-  label: string;   // 표시명
+  label: string;   // display name
   alpha3: string;
   numeric: string;
 }
 
-// 주요 국가 우선 정렬
+// Priority countries sorted first
 const PRIORITY_COUNTRIES = ['KR', 'US', 'JP', 'CN', 'GB', 'DE'];
 
 export function getCountryOptions(locale: 'ko' | 'en' = 'ko'): CountryOption[] {
@@ -283,7 +283,7 @@ def get_country_options(independent_only: bool = True, locale: str = "ko") -> li
     ]
 ```
 
-### 4.2 지역 선택 (Region Selector)
+### 4.2 Region Selector
 
 #### TypeScript/React
 
@@ -291,9 +291,9 @@ def get_country_options(independent_only: bool = True, locale: str = "ko") -> li
 import regionsData from '@/data/iso_3166_2_regions.json';
 
 interface RegionOption {
-  value: string;   // ISO 3166-2 코드 (예: "KR-11")
-  label: string;   // 표시명
-  type: string;    // 행정구역 유형
+  value: string;   // ISO 3166-2 code (e.g., "KR-11")
+  label: string;   // display name
+  type: string;    // administrative division type
 }
 
 export function getRegionOptions(
@@ -367,7 +367,7 @@ def get_region_options(country_code: str, locale: str = "ko") -> list[dict]:
     ]
 ```
 
-### 4.3 전화번호 입력 (Phone Number Input)
+### 4.3 Phone Number Input
 
 #### TypeScript/React
 
@@ -375,10 +375,10 @@ def get_region_options(country_code: str, locale: str = "ko") -> list[dict]:
 import callingCodesData from '@/data/country_calling_codes.json';
 
 interface CallingCodeOption {
-  value: string;       // callingCode (예: "+82")
-  label: string;       // 표시명
-  alpha2: string;      // 국가코드
-  countryName: string; // 국가명
+  value: string;       // callingCode (e.g., "+82")
+  label: string;       // display name
+  alpha2: string;      // country code
+  countryName: string; // country name
 }
 
 const PRIORITY_COUNTRIES = ['KR', 'US', 'JP', 'CN'];
@@ -399,21 +399,21 @@ export function getCallingCodeOptions(locale: 'ko' | 'en' = 'ko'): CallingCodeOp
   return [...priority, ...rest];
 }
 
-// E.164 전화번호 조합
+// E.164 phone number composition
 export function toE164(callingCode: string, localNumber: string): string {
   const digits = localNumber.replace(/[^0-9]/g, '');
-  // 선행 0 제거 (국내 번호 형식에서 국제 형식으로 변환)
+  // Remove leading 0 (converting from domestic to international format)
   const normalized = digits.startsWith('0') ? digits.slice(1) : digits;
   return `${callingCode}${normalized}`;
 }
 
-// E.164 전화번호 파싱
+// E.164 phone number parsing
 export function parseE164(
   e164: string,
 ): { callingCode: string; localNumber: string } | null {
   const match = callingCodesData
     .map((c) => c.callingCode)
-    .sort((a, b) => b.length - a.length) // 긴 코드부터 매칭
+    .sort((a, b) => b.length - a.length) // Match longest code first
     .find((code) => e164.startsWith(code));
 
   if (!match) {
@@ -494,48 +494,48 @@ def parse_e164(e164: str) -> dict | None:
     return None
 ```
 
-### 4.4 주소 입력 폼 (Address Form)
+### 4.4 Address Input Form
 
-국가 → 지역 → 상세주소 연동 패턴:
+Country -> Region -> Detailed address linked pattern:
 
 ```typescript
-// 주소 데이터 모델
+// Address data model
 interface InternationalAddress {
-  countryCode: string;     // ISO 3166-1 alpha-2 (예: "KR")
-  regionCode: string;      // ISO 3166-2 (예: "KR-11")
-  addressLine1: string;    // 기본 주소
-  addressLine2?: string;   // 상세 주소
-  postalCode?: string;     // 우편번호
+  countryCode: string;     // ISO 3166-1 alpha-2 (e.g., "KR")
+  regionCode: string;      // ISO 3166-2 (e.g., "KR-11")
+  addressLine1: string;    // Primary address
+  addressLine2?: string;   // Detailed address
+  postalCode?: string;     // Postal code
 }
 
-// 국가 변경 시 지역 목록 갱신
+// Update region list on country change
 function onCountryChange(countryCode: string): void {
   const regions = getRegionOptions(countryCode);
-  // 지역 선택 드롭다운 갱신
-  // 이전 지역 선택 초기화
+  // Update region selection dropdown
+  // Reset previous region selection
 }
 ```
 
 ---
 
-## 5. DB 컬럼 매핑 규칙
+## 5. DB Column Mapping Rules
 
-국제 표준 코드 관련 DB 컬럼은 공공 데이터 표준과 함께 아래 규칙을 따른다:
+International standard code-related DB columns follow the rules below alongside the public data standard:
 
-| 논리명 | 물리 컬럼명 | 타입 | 참조 표준 |
+| Logical Name | Physical Column Name | Type | Reference Standard |
 |---|---|---|---|
-| 국가코드 | NATN_CD | CHAR(2) | ISO 3166-1 alpha-2 |
-| 국가코드(3자리) | NATN_A3_CD | CHAR(3) | ISO 3166-1 alpha-3 |
-| 국가숫자코드 | NATN_NO | CHAR(3) | ISO 3166-1 numeric |
-| 지역코드 | RGN_CD | VARCHAR(6) | ISO 3166-2 |
-| 국제전화번호 | INTL_TELNO | VARCHAR(15) | E.164 |
-| 국가전화번호 | NATN_TELNO | VARCHAR(5) | ITU-T 국번 |
-| 국가명(한글) | NATN_KO_NM | VARCHAR(50) | iso_3166_1_countries.json |
-| 국가명(영문) | NATN_EN_NM | VARCHAR(100) | iso_3166_1_countries.json |
-| 지역명(현지어) | RGN_LCL_NM | VARCHAR(100) | iso_3166_2_regions.json |
-| 지역명(영문) | RGN_EN_NM | VARCHAR(100) | iso_3166_2_regions.json |
+| Country code | NATN_CD | CHAR(2) | ISO 3166-1 alpha-2 |
+| Country code (3-letter) | NATN_A3_CD | CHAR(3) | ISO 3166-1 alpha-3 |
+| Country numeric code | NATN_NO | CHAR(3) | ISO 3166-1 numeric |
+| Region code | RGN_CD | VARCHAR(6) | ISO 3166-2 |
+| International phone number | INTL_TELNO | VARCHAR(15) | E.164 |
+| Country calling code | NATN_TELNO | VARCHAR(5) | ITU-T calling code |
+| Country name (Korean) | NATN_KO_NM | VARCHAR(50) | iso_3166_1_countries.json |
+| Country name (English) | NATN_EN_NM | VARCHAR(100) | iso_3166_1_countries.json |
+| Region name (local) | RGN_LCL_NM | VARCHAR(100) | iso_3166_2_regions.json |
+| Region name (English) | RGN_EN_NM | VARCHAR(100) | iso_3166_2_regions.json |
 
-### JPA 엔티티 예시
+### JPA Entity Example
 
 ```java
 @Entity
@@ -576,24 +576,24 @@ public class InternationalAddress {
 
 ---
 
-## 6. 유효성 검증 규칙
+## 6. Validation Rules
 
-### 국가코드 검증
-- alpha-2: 정확히 2자리 대문자 알파벳, `iso_3166_1_countries.json`에 존재하는지 확인
-- alpha-3: 정확히 3자리 대문자 알파벳
+### Country Code Validation
+- alpha-2: Exactly 2 uppercase alphabetic characters, verify existence in `iso_3166_1_countries.json`
+- alpha-3: Exactly 3 uppercase alphabetic characters
 
-### 지역코드 검증
-- 형식: `{alpha-2}-{구역코드}` (예: `KR-11`, `US-CA`)
-- 국가코드 부분이 유효한 ISO 3166-1 alpha-2인지 확인
-- 해당 국가의 `iso_3166_2_regions.json`에 코드가 존재하는지 확인
+### Region Code Validation
+- Format: `{alpha-2}-{subdivision code}` (e.g., `KR-11`, `US-CA`)
+- Verify that the country code portion is a valid ISO 3166-1 alpha-2
+- Verify that the code exists in the corresponding country's `iso_3166_2_regions.json`
 
-### 전화번호 검증
-- E.164 형식: `+` 로 시작, 최대 15자리 숫자
-- 정규식: `^\+[1-9]\d{1,14}$`
-- 국번이 `country_calling_codes.json`에 존재하는지 확인
+### Phone Number Validation
+- E.164 format: starts with `+`, maximum 15 digit characters
+- Regex: `^\+[1-9]\d{1,14}$`
+- Verify that the calling code exists in `country_calling_codes.json`
 
 ```typescript
-// 유효성 검증 함수
+// Validation functions
 export function isValidCountryCode(code: string): boolean {
   return /^[A-Z]{2}$/.test(code)
     && countriesData.some((c) => c.alpha2 === code);

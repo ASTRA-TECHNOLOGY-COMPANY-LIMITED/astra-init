@@ -1,64 +1,64 @@
-# Sprint 1 프롬프트 맵
+# Sprint 1 Prompt Map
 
-## 스프린트 목표
-[이번 스프린트에서 달성할 비즈니스 가치를 서술]
+## Sprint Goal
+[Describe the business value to be achieved in this sprint]
 
-## 기능 1: {기능명}
+## Feature 1: {Feature Name}
 
-### 1.1 설계 프롬프트
+### 1.1 Design Prompt
 ```
-/feature-dev "{기능 설명}의 설계 문서를
-docs/blueprints/{feature-name}.md로 작성해줘.
-{상세 요구사항}
-DB 스키마는 docs/database/database-design.md를 참조할 것.
-아직 코드는 수정하지 마."
-```
-
-### 1.2 DB 설계 반영 프롬프트
-```
-/feature-dev "docs/database/database-design.md에 {모듈명} 테이블을
-추가/갱신해줘:
-- {테이블 목록}
-- ERD와 FK 관계 요약도 갱신할 것. 표준 용어 사전 준수.
-아직 코드는 수정하지 마."
+/feature-dev "Write a design document for {feature description}
+at docs/blueprints/{feature-name}.md.
+{Detailed requirements}
+Refer to docs/database/database-design.md for DB schema.
+Do not modify code yet."
 ```
 
-### 1.3 테스트 케이스 프롬프트
+### 1.2 DB Design Prompt
 ```
-/feature-dev "docs/blueprints/{feature-name}.md의 기능 요구사항을 기반으로
-테스트 케이스를 docs/tests/test-cases/{feature-name}-test-cases.md로 작성해줘.
-Given-When-Then 형식, 단위/통합/엣지 케이스를 포함.
-아직 코드는 수정하지 마."
-```
-
-### 1.4 구현 프롬프트
-```
-/feature-dev "docs/blueprints/{feature-name}.md와
-docs/database/database-design.md의 내용을 엄격히 준수해서
-개발을 진행해줘. 테스트는 docs/tests/test-cases/{feature-name}-test-cases.md를
-참조하여 작성하고, 구현이 끝나면 모든 테스트를 실행하고
-결과를 docs/tests/test-reports/에 보고해."
+/feature-dev "Add/update {module name} tables in
+docs/database/database-design.md:
+- {Table list}
+- Also update the ERD and FK relationship summary. Follow the standard terminology dictionary.
+Do not modify code yet."
 ```
 
-## 기능 2: {기능명}
-
-### 2.1 설계 프롬프트
+### 1.3 Test Case Prompt
 ```
+/feature-dev "Based on the functional requirements in docs/blueprints/{feature-name}.md,
+write test cases at docs/tests/test-cases/{feature-name}-test-cases.md.
+Use Given-When-Then format, include unit/integration/edge cases.
+Do not modify code yet."
 ```
 
-### 2.2 DB 설계 반영 프롬프트
+### 1.4 Implementation Prompt
+```
+/feature-dev "Strictly follow docs/blueprints/{feature-name}.md and
+docs/database/database-design.md to proceed with development.
+Write tests referencing docs/tests/test-cases/{feature-name}-test-cases.md,
+and once implementation is complete, run all tests and
+report results to docs/tests/test-reports/."
+```
+
+## Feature 2: {Feature Name}
+
+### 2.1 Design Prompt
 ```
 ```
 
-### 2.3 테스트 케이스 프롬프트
+### 2.2 DB Design Prompt
 ```
 ```
 
-### 2.4 구현 프롬프트
+### 2.3 Test Case Prompt
+```
+```
+
+### 2.4 Implementation Prompt
 ```
 ```
 
 ---
 
-> **작성 가이드**: Planning 미팅에서 VA와 PE가 함께 채워 넣습니다.
-> 좋은 프롬프트의 5요소: What(무엇을), Why(왜), Constraint(제약), Reference(참조), Acceptance(기준)
+> **Writing Guide**: VA and PE fill this in together during the Planning meeting.
+> 5 elements of a good prompt: What (what to do), Why (purpose), Constraint (restrictions), Reference (references), Acceptance (criteria)

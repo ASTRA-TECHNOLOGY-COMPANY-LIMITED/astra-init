@@ -1,115 +1,115 @@
 ---
 name: project-sprint
-description: "ASTRA 새로운 스프린트를 초기화합니다. 스프린트 프롬프트 맵과 회고 템플릿을 생성합니다."
-argument-hint: "[스프린트번호]"
+description: "Initializes a new ASTRA sprint. Creates sprint prompt maps and retrospective templates."
+argument-hint: "[sprint-number]"
 allowed-tools: Read, Write, Edit, Bash, Glob, Grep, AskUserQuestion
 ---
 
-# ASTRA 스프린트 초기화
+# ASTRA Sprint Initialization
 
-새로운 스프린트의 프롬프트 맵과 회고 템플릿을 생성합니다.
+Creates prompt maps and retrospective templates for a new sprint.
 
-## 실행 절차
+## Execution Procedure
 
-### 1단계: 스프린트 번호 확인
+### Step 1: Confirm Sprint Number
 
-`$ARGUMENTS`에서 스프린트 번호를 파싱합니다. 없으면 `docs/prompts/` 디렉토리의 기존 파일을 확인하여 다음 번호를 자동 결정합니다.
+Parse the sprint number from `$ARGUMENTS`. If not provided, check existing files in the `docs/prompts/` directory to automatically determine the next number.
 
-### 2단계: 스프린트 프롬프트 맵 생성
+### Step 2: Create Sprint Prompt Map
 
-`docs/prompts/sprint-{N}.md` 파일을 생성합니다:
+Create the `docs/prompts/sprint-{N}.md` file:
 
 ```markdown
-# Sprint {N} 프롬프트 맵
+# Sprint {N} Prompt Map
 
-## 스프린트 목표
-[이번 스프린트에서 달성할 비즈니스 가치를 서술]
+## Sprint Goal
+[Describe the business value to achieve in this sprint]
 
-## 기능 1: {기능명}
+## Feature 1: {feature-name}
 
-### 1.1 설계 프롬프트
-/feature-dev "{기능 설명}의 설계 문서를
-docs/blueprints/{feature-name}.md로 작성해줘.
-{상세 요구사항}
-DB 스키마는 docs/database/database-design.md를 참조할 것.
-아직 코드는 수정하지 마."
+### 1.1 Design Prompt
+/feature-dev "Write the design document for {feature description}
+to docs/blueprints/{feature-name}.md.
+{detailed requirements}
+Refer to docs/database/database-design.md for DB schema.
+Do not modify any code yet."
 
-### 1.2 DB 설계 반영 프롬프트
-/feature-dev "docs/database/database-design.md에 {모듈명} 테이블을
-추가/갱신해줘:
-- {테이블 목록}
-- ERD와 FK 관계 요약도 갱신할 것. 표준 용어 사전 준수.
-아직 코드는 수정하지 마."
+### 1.2 DB Design Reflection Prompt
+/feature-dev "Add/update the {module-name} tables in
+docs/database/database-design.md:
+- {table list}
+- Also update the ERD and FK relationship summary. Follow standard terminology dictionary.
+Do not modify any code yet."
 
-### 1.3 테스트 케이스 프롬프트
-/feature-dev "docs/blueprints/{feature-name}.md의 기능 요구사항을 기반으로
-테스트 케이스를 docs/tests/test-cases/{feature-name}-test-cases.md로 작성해줘.
-Given-When-Then 형식, 단위/통합/엣지 케이스를 포함.
-아직 코드는 수정하지 마."
+### 1.3 Test Case Prompt
+/feature-dev "Based on the feature requirements in docs/blueprints/{feature-name}.md,
+write test cases to docs/tests/test-cases/{feature-name}-test-cases.md.
+Use Given-When-Then format, include unit/integration/edge cases.
+Do not modify any code yet."
 
-### 1.4 구현 프롬프트
-/feature-dev "docs/blueprints/{feature-name}.md와
-docs/database/database-design.md의 내용을 엄격히 준수해서
-개발을 진행해줘. 테스트는 docs/tests/test-cases/{feature-name}-test-cases.md를
-참조하여 작성하고, 구현이 끝나면 모든 테스트를 실행하고
-결과를 docs/tests/test-reports/에 보고해."
+### 1.4 Implementation Prompt
+/feature-dev "Strictly follow the contents of docs/blueprints/{feature-name}.md and
+docs/database/database-design.md to proceed with development.
+Write tests referencing docs/tests/test-cases/{feature-name}-test-cases.md,
+and once implementation is complete, run all tests and
+report results to docs/tests/test-reports/."
 
-## 기능 2: {기능명}
-{위와 동일한 구조로 반복}
+## Feature 2: {feature-name}
+{Repeat with the same structure as above}
 ```
 
-### 3단계: 회고 템플릿 생성
+### Step 3: Create Retrospective Template
 
-`docs/retrospectives/sprint-{N}-retro.md` 파일을 생성합니다:
+Create the `docs/retrospectives/sprint-{N}-retro.md` file:
 
 ```markdown
 # Sprint {N} Retrospective
 
-## 날짜: {YYYY-MM-DD}
+## Date: {YYYY-MM-DD}
 
-## AI 분석 데이터
-- code-review 반복 이슈: [자동 수집]
-- security-guidance 차단 건수: [자동 수집]
-- standard-enforcer 위반 빈도: [자동 수집]
+## AI Analysis Data
+- code-review recurring issues: [auto-collected]
+- security-guidance blocked count: [auto-collected]
+- standard-enforcer violation frequency: [auto-collected]
 
-## 팀 논의 (AI가 잡지 못하는 영역)
+## Team Discussion (areas AI cannot catch)
 
-### 잘한 것 (Keep)
+### What went well (Keep)
 -
 
-### 개선할 것 (Problem)
+### What to improve (Problem)
 -
 
-### 시도할 것 (Try)
+### What to try (Try)
 -
 
-## 자동화된 개선 조치
-- /hookify [이번 스프린트에서 발견된 반복 실수 규칙화]
-- CLAUDE.md 업데이트 내용: [추가된 규칙 기술]
+## Automated Improvement Actions
+- /hookify [codify recurring mistakes found in this sprint]
+- CLAUDE.md update content: [describe added rules]
 ```
 
-### 4단계: 스프린트 Planning 가이드 출력
+### Step 4: Output Sprint Planning Guide
 
 ```
-## Sprint {N} 초기화 완료
+## Sprint {N} Initialization Complete
 
-### 생성된 파일
-- docs/prompts/sprint-{N}.md (프롬프트 맵)
-- docs/retrospectives/sprint-{N}-retro.md (회고 템플릿)
+### Generated Files
+- docs/prompts/sprint-{N}.md (prompt map)
+- docs/retrospectives/sprint-{N}-retro.md (retrospective template)
 
-### Sprint Planning 진행 순서 (1시간)
-1. (10분) AI 분석 보고서 리뷰
-2. (20분) DE와 비즈니스 우선순위 확인 및 스프린트 목표 합의
-3. (20분) 아이템별 프롬프트 설계 방향 논의 + DSA 디자인 방향 공유
-4. (10분) 스프린트 백로그 확정
+### Sprint Planning Procedure (1 hour)
+1. (10 min) Review AI analysis report
+2. (20 min) Confirm business priorities with DE and agree on sprint goal
+3. (20 min) Discuss prompt design direction per item + DSA shares design direction
+4. (10 min) Finalize sprint backlog
 
-### 사전 준비 (Planning 전날, VA 실행)
-/feature-dev "이번 스프린트 후보 백로그 아이템들의 기술적 복잡도를 분석해줘.
-기존 코드베이스와의 의존성, 예상 작업 규모, 위험 요소를 정리해줘.
-아직 코드는 수정하지 마."
+### Pre-Planning Preparation (day before Planning, executed by VA)
+/feature-dev "Analyze the technical complexity of candidate backlog items for this sprint.
+Summarize dependencies with the existing codebase, estimated work scope, and risk factors.
+Do not modify any code yet."
 ```
 
-## 주의사항
+## Notes
 
-- 이미 존재하는 스프린트 파일은 덮어쓰지 않습니다.
-- 프롬프트 맵은 Planning 미팅에서 VA와 PE가 함께 채워 넣습니다.
+- Existing sprint files are not overwritten.
+- The prompt map is filled in collaboratively by VA and PE during the Planning meeting.

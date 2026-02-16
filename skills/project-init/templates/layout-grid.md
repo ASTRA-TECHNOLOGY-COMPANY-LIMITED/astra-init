@@ -1,27 +1,27 @@
-# 레이아웃 그리드 시스템
+# Layout Grid System
 
-> DSA가 프로젝트에 맞게 커스터마이즈합니다.
-> AI가 레이아웃을 생성할 때 이 가이드를 참조합니다.
+> DSA customizes this for the project.
+> AI references this guide when generating layouts.
 
-## 1. 브레이크포인트
+## 1. Breakpoints
 
-| 이름 | 범위 | 사용 환경 |
-|------|------|----------|
-| Mobile | ~767px | 스마트폰 |
-| Tablet | 768px ~ 1023px | 태블릿, 작은 노트북 |
-| Desktop | 1024px ~ | 데스크톱, 큰 노트북 |
+| Name | Range | Environment |
+|------|-------|-------------|
+| Mobile | ~767px | Smartphones |
+| Tablet | 768px ~ 1023px | Tablets, small laptops |
+| Desktop | 1024px ~ | Desktops, large laptops |
 
 ```css
-/* 미디어 쿼리 사용법 (Mobile First) */
-/* 기본: Mobile */
+/* Media query usage (Mobile First) */
+/* Default: Mobile */
 @media (min-width: 768px) { /* Tablet+ */ }
 @media (min-width: 1024px) { /* Desktop+ */ }
 ```
 
-## 2. 컨테이너
+## 2. Container
 
-| 브레이크포인트 | 최대 너비 | 좌우 패딩 |
-|--------------|----------|----------|
+| Breakpoint | Max Width | Horizontal Padding |
+|------------|-----------|-------------------|
 | Mobile | 100% | `--spacing-4` (16px) |
 | Tablet | 100% | `--spacing-6` (24px) |
 | Desktop | 1200px | `--spacing-8` (32px) |
@@ -50,55 +50,55 @@
 }
 ```
 
-## 3. 그리드 시스템
+## 3. Grid System
 
-### 12컬럼 그리드
+### 12-Column Grid
 
-| 브레이크포인트 | 컬럼 수 | 거터 |
-|--------------|---------|------|
+| Breakpoint | Columns | Gutter |
+|------------|---------|--------|
 | Mobile | 4 | `--spacing-4` (16px) |
 | Tablet | 8 | `--spacing-6` (24px) |
 | Desktop | 12 | `--spacing-6` (24px) |
 
-### 일반적인 레이아웃 패턴
+### Common Layout Patterns
 
 ```
-[Desktop 12컬럼]
+[Desktop 12-column]
 
-1. 전체 너비
+1. Full width
 ┌──────────────────────────────────────────────────┐
-│                    12컬럼                         │
+│                    12 columns                     │
 └──────────────────────────────────────────────────┘
 
-2. 2분할 (사이드바 + 콘텐츠)
+2. Two-panel (Sidebar + Content)
 ┌────────────┬─────────────────────────────────────┐
-│  3컬럼     │              9컬럼                   │
-│  사이드바   │              메인 콘텐츠              │
+│  3 columns │              9 columns               │
+│  Sidebar   │              Main Content             │
 └────────────┴─────────────────────────────────────┘
 
-3. 3분할
+3. Three-panel
 ┌──────────────┬──────────────┬──────────────┐
-│    4컬럼     │    4컬럼     │    4컬럼     │
+│   4 columns  │   4 columns  │   4 columns  │
 └──────────────┴──────────────┴──────────────┘
 
-4. 대시보드 (3+3+6)
+4. Dashboard (3+3+6)
 ┌───────┬───────┬──────────────────────────────┐
-│ 3컬럼 │ 3컬럼 │          6컬럼               │
+│ 3 col │ 3 col │          6 columns            │
 └───────┴───────┴──────────────────────────────┘
 
-[Tablet 8컬럼]
-- 사이드바: 접힘(64px) 또는 오버레이
-- 카드: 2열 (각 4컬럼)
+[Tablet 8-column]
+- Sidebar: Collapsed (64px) or overlay
+- Cards: 2 columns (4 columns each)
 
-[Mobile 4컬럼]
-- 모든 요소: 전체 너비 (4컬럼)
-- 사이드바: 햄버거 메뉴 → 오버레이
-- 카드: 1열 (4컬럼)
+[Mobile 4-column]
+- All elements: Full width (4 columns)
+- Sidebar: Hamburger menu → overlay
+- Cards: 1 column (4 columns)
 ```
 
-## 4. 페이지 레이아웃
+## 4. Page Layout
 
-### 기본 페이지 구조
+### Base Page Structure
 
 ```
 ┌─────────────────────────────────────────────┐
@@ -111,33 +111,33 @@
 │          │                                  │
 │          │                                  │
 │          │──────────────────────────────────│
-│          │         Footer (선택사항)          │
+│          │         Footer (Optional)         │
 ├──────────┴──────────────────────────────────┤
 ```
 
-### 간격 규칙
+### Spacing Rules
 
-| 요소 | 간격 |
-|------|------|
-| GNB ↔ 콘텐츠 | 0 (GNB가 fixed일 때 padding-top: 64px) |
+| Element | Spacing |
+|---------|---------|
+| GNB ↔ Content | 0 (padding-top: 64px when GNB is fixed) |
 | Page Header ↔ Main Content | `--spacing-6` |
-| 섹션 ↔ 섹션 | `--spacing-8` ~ `--spacing-12` |
-| 카드 ↔ 카드 | `--spacing-4` ~ `--spacing-6` |
-| 라벨 ↔ 입력 필드 | `--spacing-1` |
-| 폼 필드 ↔ 폼 필드 | `--spacing-4` |
+| Section ↔ Section | `--spacing-8` ~ `--spacing-12` |
+| Card ↔ Card | `--spacing-4` ~ `--spacing-6` |
+| Label ↔ Input field | `--spacing-1` |
+| Form field ↔ Form field | `--spacing-4` |
 
-## 5. 반응형 동작 요약
+## 5. Responsive Behavior Summary
 
-| 요소 | Mobile | Tablet | Desktop |
-|------|--------|--------|---------|
-| GNB | 햄버거 메뉴 | 아이콘 + 텍스트 | 전체 |
-| 사이드바 | 오버레이 | 접힘(64px) | 펼침(240px) |
-| 카드 그리드 | 1열 | 2열 | 3~4열 |
-| 테이블 | 카드 전환 | 가로 스크롤 | 전체 |
-| 모달 | 전체 화면 | 640px 중앙 | 640px 중앙 |
-| 폼 | 1열 | 2열 | 2열 |
+| Element | Mobile | Tablet | Desktop |
+|---------|--------|--------|---------|
+| GNB | Hamburger menu | Icon + text | Full |
+| Sidebar | Overlay | Collapsed (64px) | Expanded (240px) |
+| Card grid | 1 column | 2 columns | 3~4 columns |
+| Table | Card conversion | Horizontal scroll | Full |
+| Modal | Full screen | 640px centered | 640px centered |
+| Form | 1 column | 2 columns | 2 columns |
 
 ---
 
-> **DSA 체크포인트**: 이 그리드 시스템이 프로젝트의 페이지 구성에 적합한지 확인합니다.
-> 대시보드 중심 프로젝트는 더 유연한 그리드가 필요할 수 있습니다.
+> **DSA Checkpoint**: Verify that this grid system is suitable for the project's page composition.
+> Dashboard-centric projects may require a more flexible grid.

@@ -6,82 +6,83 @@
 
 ## Overview
 
-ASTRA는 Claude Code 기반의 AI 강화 스프린트 방법론 플러그인입니다. 한국 공공데이터 표준(행정안전부 공통표준용어 제8차)을 기반으로 DB 네이밍 검증, 엔티티 코드 생성, 품질 게이트를 자동화합니다.
+ASTRA is an AI-augmented sprint methodology plugin based on Claude Code. It automates DB naming validation, entity code generation, and quality gates based on the Korean Public Data Standard (Ministry of the Interior and Safety Common Standard Terms, 8th edition).
 
-### VIP 원칙
+### VIP Principles
 
-| 원칙 | 설명 |
+| Principle | Description |
 |------|------|
-| **V**ibe-driven Development | 자연어 기반 개발 — 프롬프트로 설계하고, AI가 구현 |
-| **I**nstant Feedback Loop | 작성 즉시 검증 — Hook과 Agent가 실시간 품질 확인 |
-| **P**lugin-powered Quality | 플러그인 기반 품질 관리 — 자동화된 게이트로 일관성 보장 |
+| **V**ibe-driven Development | Natural language-based development — design with prompts, AI implements |
+| **I**nstant Feedback Loop | Validate as you write — hooks and agents verify quality in real-time |
+| **P**lugin-powered Quality | Plugin-based quality management — automated gates ensure consistency |
 
 ## Installation
 
-### 1. 글로벌 환경 설정
+### 1. Global Environment Setup
 
 ```bash
-# Claude Code에서 실행
+# Run in Claude Code
 /astra-global-setup
 ```
 
-이 명령은 다음을 설정합니다:
-- `~/.claude/settings.json` — 전역 설정 (에이전트 팀, bypass 모드 등)
-- `~/.claude/.mcp.json` — MCP 서버 등록 (Chrome DevTools, PostgreSQL, Context7)
-- 필수 도구 확인 (Node.js, Git, GitHub CLI)
+This command configures the following:
+- `~/.claude/settings.json` — Global settings (agent team, bypass mode, etc.)
+- `~/.claude/.mcp.json` — MCP server registration (Chrome DevTools, PostgreSQL, Context7)
+- Required tools check (Node.js, Git, GitHub CLI)
 
-### 2. 플러그인 설치
-
-```bash
-claude plugin add github:ASTRA-TECHNOLOGY-COMPANY-LIMITED/astra-methodology
-```
-
-### 3. 프로젝트 초기화 (Sprint 0)
+### 2. Plugin Installation
 
 ```bash
-# Claude Code에서 실행
-/astra-init [프로젝트명] [백엔드기술] [프론트엔드기술] [DB종류]
+claude plugin marketplace add https://github.com/ASTRA-TECHNOLOGY-COMPANY-LIMITED/astra-methodology.git
+claude plugin install astra-methodology@astra
 ```
 
-## Skills (슬래시 커맨드)
+### 3. Project Initialization (Sprint 0)
 
-| 커맨드 | 설명 |
+```bash
+# Run in Claude Code
+/astra-init [project-name] [backend-tech] [frontend-tech] [DB-type]
+```
+
+## Skills (Slash Commands)
+
+| Command | Description |
 |--------|------|
-| `/astra-init` | Sprint 0 프로젝트 구조 생성 — CLAUDE.md, 디자인 시스템, DB 설계 문서, 테스트 전략 템플릿 |
-| `/astra-sprint` | 새 스프린트 초기화 — 프롬프트 맵, 회고 템플릿 자동 생성 |
-| `/astra-guide` | ASTRA 방법론 퀵 레퍼런스 (sprint, review, release, gates, roles) |
-| `/astra-checklist` | Sprint 0 완료 검증 — 프로젝트 구조, CLAUDE.md, 디자인 토큰, DB 설계, 테스트 전략 점검 |
-| `/astra-global-setup` | 글로벌 개발 환경 설정 (Step 0.0) |
-| `/astra-integration-test` | Chrome MCP 기반 E2E 통합 테스트 — 서버 기동, 시나리오 실행, 리포트 생성 |
-| `/data-standard` | 한국 공공데이터 표준 용어 적용 가이드 |
+| `/astra-init` | Sprint 0 project structure generation — CLAUDE.md, design system, DB design docs, test strategy templates |
+| `/astra-sprint` | New sprint initialization — auto-generates prompt map, retrospective templates |
+| `/astra-guide` | ASTRA methodology quick reference (sprint, review, release, gates, roles) |
+| `/astra-checklist` | Sprint 0 completion verification — checks project structure, CLAUDE.md, design tokens, DB design, test strategy |
+| `/astra-global-setup` | Global development environment setup (Step 0.0) |
+| `/astra-integration-test` | Chrome MCP-based E2E integration test — server startup, scenario execution, report generation |
+| `/data-standard` | Korean public data standard term application guide |
 
-## Commands (데이터 표준 도구)
+## Commands (Data Standard Tools)
 
-| 커맨드 | 설명 | 사용 예시 |
+| Command | Description | Usage Example |
 |--------|------|-----------|
-| `/lookup-term` | 표준 용어 조회 | `/lookup-term 고객명` |
-| `/generate-entity` | 한글 정의 → 엔티티 코드 생성 | `/generate-entity 고객 테이블: 고객명, 고객번호, 생년월일` |
-| `/check-naming` | DB 네이밍 표준 준수 검사 | `/check-naming src/entity/Customer.java` |
+| `/lookup-term` | Standard term lookup | `/lookup-term 고객명` |
+| `/generate-entity` | Korean definition -> Entity code generation | `/generate-entity 고객 테이블: 고객명, 고객번호, 생년월일` |
+| `/check-naming` | DB naming standard compliance check | `/check-naming src/entity/Customer.java` |
 
-### `/lookup-term` 예시
+### `/lookup-term` Example
 
 ```
-입력: /lookup-term 가입일자
+Input: /lookup-term 가입일자
 
-결과:
+Result:
 ┌──────────────┬─────────────┬───────────┬──────────┐
-│ 표준용어명    │ 영문약어명   │ 도메인    │ 데이터타입 │
+│ Standard Term│ Eng. Abbr.  │ Domain    │ Data Type│
 ├──────────────┼─────────────┼───────────┼──────────┤
 │ 가입일자      │ JOIN_YMD    │ 연월일C8  │ CHAR(8)  │
 └──────────────┴─────────────┴───────────┴──────────┘
 ```
 
-### `/generate-entity` 예시
+### `/generate-entity` Example
 
 ```
-입력: /generate-entity 고객 테이블: 고객명, 고객번호, 생년월일, 사용여부
+Input: /generate-entity 고객 테이블: 고객명, 고객번호, 생년월일, 사용여부
 
-생성 코드 (Java JPA):
+Generated Code (Java JPA):
 @Entity
 @Table(name = "TB_CSTMR")
 public class TbCstmr {
@@ -104,137 +105,139 @@ public class TbCstmr {
 
 ## Agents
 
-| 에이전트 | 모델 | 설명 |
+| Agent | Model | Description |
 |----------|------|------|
-| `naming-validator` | default | DB 엔티티 네이밍 표준 검증 — 컬럼명, 접미사 패턴, 도메인 규칙, 금칙어 검출 |
-| `astra-verifier` | haiku | ASTRA 방법론 준수 여부 검증 (읽기 전용) — 프로젝트 구조, CLAUDE.md, 설계 문서 점검 |
+| `naming-validator` | default | DB entity naming standard validation — column names, suffix patterns, domain rules, forbidden word detection |
+| `astra-verifier` | haiku | ASTRA methodology compliance verification (read-only) — project structure, CLAUDE.md, design document checks |
 
-## Hooks (자동 품질 검증)
+## Hooks (Automatic Quality Verification)
 
-파일 작성/수정 시 자동으로 실행되는 PostToolUse 훅:
+PostToolUse hooks that run automatically when files are created/modified:
 
-| 훅 | 트리거 | 동작 |
+| Hook | Trigger | Action |
 |----|--------|------|
-| `validate-naming.sh` | Write/Edit (DB 관련 파일) | 테이블명 접두사 검증 (TB_, TC_, TH_, TL_, TR_) |
-| `check-forbidden-words.sh` | Write/Edit (DB 관련 파일) | 금칙어 감지 및 표준어 대체 권장 |
-| 설계 문서 알림 | Write/Edit (설계 문서) | database-design.md, blueprints 수정 시 알림 |
+| `validate-naming.sh` | Write/Edit (DB-related files) | Table name prefix validation (TB_, TC_, TH_, TL_, TR_) |
+| `check-forbidden-words.sh` | Write/Edit (DB-related files) | Forbidden word detection and standard term replacement recommendation |
+| Design document notification | Write/Edit (design documents) | Notification when database-design.md, blueprints are modified |
 
-모든 훅은 non-blocking (exit 0) — 경고만 표시하고 작업을 중단하지 않습니다.
+All hooks are non-blocking (exit 0) — they display warnings only and do not interrupt the workflow.
 
 ## Quality Gates
 
 ```
-Gate 1 (작성 시)          Gate 2 (리뷰 시)         Gate 2.5 (디자인)        Gate 3 (릴리스)
+Gate 1 (Write-time)          Gate 2 (Review-time)         Gate 2.5 (Design)            Gate 3 (Release)
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│ - 금칙어 검사    │    │ - 코드 리뷰      │    │ - 디자인 리뷰    │    │ - /check-naming  │
-│ - 네이밍 검증    │    │ - PR 검토        │    │ - Chrome MCP     │    │ - 통합 테스트    │
-│ - 자동 (Hook)    │    │ - 수동 + AI      │    │ - 반응형 검증    │    │ - 배포 전 검증   │
+│ - Forbidden word │    │ - Code review    │    │ - Design review  │    │ - /check-naming  │
+│   check          │    │ - PR review      │    │ - Chrome MCP     │    │ - Integration    │
+│ - Naming valid.  │    │ - Manual + AI    │    │ - Responsive     │    │   test           │
+│ - Auto (Hook)    │    │                  │    │   validation     │    │ - Pre-deploy     │
+│                  │    │                  │    │                  │    │   verification   │
 └─────────────────┘    └─────────────────┘    └─────────────────┘    └─────────────────┘
 ```
 
 ## Korean Public Data Standard
 
-행정안전부 공공데이터 공통표준 제8차(2025-11) 기반:
+Based on Ministry of the Interior and Safety Common Public Data Standard, 8th edition (2025-11):
 
-| 데이터 | 건수 | 설명 |
+| Data | Count | Description |
 |--------|------|------|
-| `standard_terms.json` | 13,176건 | 표준용어 (한글명 → 영문약어 → 도메인) |
-| `standard_words.json` | 3,284건 | 표준단어 (약어, 금칙어, 이음동의어) |
-| `standard_domains.json` | 123건 | 표준도메인 (데이터타입, 길이, 소수점) |
+| `standard_terms.json` | 13,176 | Standard terms (Korean name -> English abbreviation -> domain) |
+| `standard_words.json` | 3,284 | Standard words (abbreviations, forbidden words, synonyms) |
+| `standard_domains.json` | 123 | Standard domains (data type, length, decimal places) |
 
-### 네이밍 규칙
+### Naming Rules
 
-**테이블 접두사:**
-- `TB_` — 일반 테이블
-- `TC_` — 코드 테이블
-- `TH_` — 이력 테이블
-- `TL_` — 로그 테이블
-- `TR_` — 관계 테이블
+**Table Prefixes:**
+- `TB_` — General table
+- `TC_` — Code table
+- `TH_` — History table
+- `TL_` — Log table
+- `TR_` — Relation table
 
-**컬럼 접미사:**
+**Column Suffixes:**
 
-| 접미사 | 의미 | 예시 |
+| Suffix | Meaning | Example |
 |--------|------|------|
-| `_NM` | 명칭 | `CSTMR_NM` (고객명) |
-| `_CD` | 코드 | `STTS_CD` (상태코드) |
-| `_NO` | 번호 | `CSTMR_NO` (고객번호) |
-| `_YMD` | 연월일 | `JOIN_YMD` (가입일자) |
-| `_DT` | 일시 | `REG_DT` (등록일시) |
-| `_AMT` | 금액 | `SLE_AMT` (매출금액) |
-| `_CN` | 내용 | `NTIC_CN` (공지내용) |
-| `_YN` | 여부 | `USE_YN` (사용여부) |
-| `_SN` | 순번 | `CSTMR_SN` (고객순번) |
-| `_CNT` | 건수 | `INQR_CNT` (조회건수) |
-| `_ADDR` | 주소 | `BASS_ADDR` (기본주소) |
+| `_NM` | Name | `CSTMR_NM` (customer name) |
+| `_CD` | Code | `STTS_CD` (status code) |
+| `_NO` | Number | `CSTMR_NO` (customer number) |
+| `_YMD` | Date (YYYYMMDD) | `JOIN_YMD` (join date) |
+| `_DT` | Datetime | `REG_DT` (registration datetime) |
+| `_AMT` | Amount | `SLE_AMT` (sales amount) |
+| `_CN` | Content | `NTIC_CN` (notice content) |
+| `_YN` | Yes/No flag | `USE_YN` (use status) |
+| `_SN` | Sequence number | `CSTMR_SN` (customer sequence) |
+| `_CNT` | Count | `INQR_CNT` (inquiry count) |
+| `_ADDR` | Address | `BASS_ADDR` (base address) |
 
-## Project Structure (생성되는 프로젝트)
+## Project Structure (Generated Project)
 
-`/astra-init` 실행 시 대상 프로젝트에 생성되는 구조:
+Structure generated in the target project when `/astra-init` is executed:
 
 ```
 {project}/
-├── CLAUDE.md                              # 프로젝트 AI 규칙
-├── .claude/settings.json                  # Claude Code 프로젝트 설정
+├── CLAUDE.md                              # Project AI rules
+├── .claude/settings.json                  # Claude Code project settings
 ├── docs/
-│   ├── design-system/                     # 디자인 토큰, 컴포넌트, 레이아웃
-│   │   └── references/                    # 디자인 참조 이미지
-│   ├── blueprints/                        # 기능 설계 문서
-│   ├── database/                          # DB 설계 (SSoT), 네이밍 규칙
-│   │   └── migration/                     # 마이그레이션 이력
-│   ├── tests/                             # 테스트 전략, 케이스, 리포트
+│   ├── design-system/                     # Design tokens, components, layout
+│   │   └── references/                    # Design reference images
+│   ├── blueprints/                        # Feature design documents
+│   ├── database/                          # DB design (SSoT), naming rules
+│   │   └── migration/                     # Migration history
+│   ├── tests/                             # Test strategy, cases, reports
 │   │   ├── test-cases/
 │   │   └── test-reports/
-│   ├── prompts/                           # 스프린트 프롬프트 맵
-│   ├── retrospectives/                    # 스프린트 회고
-│   └── delivery/                          # 릴리스 산출물
-└── src/                                   # 소스 코드
+│   ├── prompts/                           # Sprint prompt maps
+│   ├── retrospectives/                    # Sprint retrospectives
+│   └── delivery/                          # Release artifacts
+└── src/                                   # Source code
 ```
 
 ## Sprint Workflow
 
-### Sprint 0 (프로젝트 셋업)
+### Sprint 0 (Project Setup)
 
 ```
-Step 0.0  /astra-global-setup     → 글로벌 환경 설정
-Step 0.1  /astra-init             → 프로젝트 구조 생성
-Step 0.2  설계 문서 작성            → 디자인 토큰, DB 설계, 테스트 전략
-Step 0.3  /astra-checklist        → Sprint 0 완료 검증
+Step 0.0  /astra-global-setup     → Global environment setup
+Step 0.1  /astra-init             → Project structure generation
+Step 0.2  Design document writing  → Design tokens, DB design, test strategy
+Step 0.3  /astra-checklist        → Sprint 0 completion verification
 ```
 
-### Sprint N (기능 개발)
+### Sprint N (Feature Development)
 
 ```
-월  Sprint Planning    → /astra-sprint N → 프롬프트 맵 작성
-화  Feature Dev        → /feature-dev → 설계 → 구현 → 테스트
-수  Feature Dev        → Hook 자동 검증 (금칙어, 네이밍)
-목  Review             → /check-naming → 코드 리뷰 → 디자인 리뷰
-금  Release            → /astra-integration-test → 배포
+Mon  Sprint Planning    → /astra-sprint N → Write prompt map
+Tue  Feature Dev        → /feature-dev → Design → Implement → Test
+Wed  Feature Dev        → Hook auto-verification (forbidden words, naming)
+Thu  Review             → /check-naming → Code review → Design review
+Fri  Release            → /astra-integration-test → Deploy
 ```
 
 ### Team Roles
 
-| 역할 | 설명 |
+| Role | Description |
 |------|------|
-| **VA** (Vibe Architect) | 프로젝트 비전 설계, Sprint 0 리드, 품질 게이트 관리 |
-| **PE** (Prompt Engineer) | 프롬프트 맵 작성, AI 페어 프로그래밍, 코드 리뷰 |
-| **DE** (Domain Expert) | 도메인 요구사항 정의, 데이터 표준 검증, 수용 테스트 |
-| **DSA** (Design System Architect) | 디자인 토큰 관리, UI 일관성 검증, 반응형 테스트 |
+| **VA** (Vibe Architect) | Project vision design, Sprint 0 lead, quality gate management |
+| **PE** (Prompt Engineer) | Prompt map writing, AI pair programming, code review |
+| **DE** (Domain Expert) | Domain requirements definition, data standard verification, acceptance testing |
+| **DSA** (Design System Architect) | Design token management, UI consistency verification, responsive testing |
 
 ## Repository Structure
 
 ```
 astra-methodology/
 ├── skills/                        # 7 Claude Code skills
-│   ├── astra-init/                #   Sprint 0 프로젝트 초기화
-│   ├── astra-sprint/              #   새 스프린트 초기화
-│   ├── astra-guide/               #   방법론 퀵 레퍼런스
-│   ├── astra-checklist/           #   Sprint 0 완료 검증
-│   ├── astra-global-setup/        #   글로벌 개발 환경 설정
-│   ├── astra-integration-test/    #   Chrome MCP 통합 테스트
-│   └── data-standard/             #   데이터 표준 적용 가이드
+│   ├── astra-init/                #   Sprint 0 project initialization
+│   ├── astra-sprint/              #   New sprint initialization
+│   ├── astra-guide/               #   Methodology quick reference
+│   ├── astra-checklist/           #   Sprint 0 completion verification
+│   ├── astra-global-setup/        #   Global dev environment setup
+│   ├── astra-integration-test/    #   Chrome MCP integration test
+│   └── data-standard/             #   Data standard application guide
 ├── agents/                        # 2 specialized agents
-│   ├── naming-validator.md        #   DB 네이밍 표준 검증
-│   └── astra-verifier.md          #   ASTRA 준수 검증 (읽기 전용)
+│   ├── naming-validator.md        #   DB naming standard validation
+│   └── astra-verifier.md          #   ASTRA compliance verification (read-only)
 ├── commands/                      # 3 slash commands
 │   ├── generate-entity.md         #   /generate-entity
 │   ├── check-naming.md            #   /check-naming
@@ -242,17 +245,17 @@ astra-methodology/
 ├── hooks/                         # PostToolUse hooks
 │   └── hooks.json
 ├── scripts/                       # Shell scripts
-│   ├── verify-setup.sh            #   Sprint 0 검증
-│   ├── init-project.sh            #   디렉토리 구조 생성
-│   ├── validate-naming.sh         #   테이블명 접두사 검증
-│   └── check-forbidden-words.sh   #   금칙어 감지
-├── data/                          # 공공데이터 표준 사전
-│   ├── standard_terms.json        #   13,176 표준용어
-│   ├── standard_words.json        #   3,284 표준단어
-│   └── standard_domains.json      #   123 표준도메인
+│   ├── verify-setup.sh            #   Sprint 0 verification
+│   ├── init-project.sh            #   Directory structure generation
+│   ├── validate-naming.sh         #   Table name prefix validation
+│   └── check-forbidden-words.sh   #   Forbidden word detection
+├── data/                          # Public data standard dictionary
+│   ├── standard_terms.json        #   13,176 standard terms
+│   ├── standard_words.json        #   3,284 standard words
+│   └── standard_domains.json      #   123 standard domains
 ├── .claude-plugin/
-│   └── plugin.json                # 플러그인 매니페스트
-└── CLAUDE.md                      # 프로젝트 AI 규칙
+│   └── plugin.json                # Plugin manifest
+└── CLAUDE.md                      # Project AI rules
 ```
 
 ## Prerequisites

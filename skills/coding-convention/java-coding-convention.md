@@ -1,247 +1,247 @@
 # Java Coding Convention
 
-> **Google Java Style Guide** 기반
+> **Based on Google Java Style Guide**
 >
-> - 공식 문서: https://google.github.io/styleguide/javaguide.html
-> - 도구: https://github.com/google/google-java-format
-> - 관리: Google Engineering
-> - GitHub Stars: ~38,900+ (google/styleguide 리포지토리)
+> - Official documentation: https://google.github.io/styleguide/javaguide.html
+> - Tool: https://github.com/google/google-java-format
+> - Maintained by: Google Engineering
+> - GitHub Stars: ~38,900+ (google/styleguide repository)
 
 ---
 
-## 1. 선정 사유
+## 1. Selection Rationale
 
-| 기준 | Google Java | Oracle/Sun | Alibaba | Spring |
+| Criteria | Google Java | Oracle/Sun | Alibaba | Spring |
 |---|---|---|---|---|
-| 커뮤니티 채택 | 전 세계 가장 널리 채택 | 역사적 기반 (레거시) | 중국 생태계 중심 | Spring 기여 전용 |
-| 최신성 | 활발 유지보수 (records, sealed classes 등) | 1999년 이후 미갱신 | 활발 | Spring 전용 |
-| 포괄성 | 파일 구조, 포매팅, 네이밍, 프로그래밍 관행, Javadoc | 기본적 | 매우 넓음 (DB/보안 포함) | 좁음 |
-| 도구 지원 | google-java-format, Checkstyle, IDE 설정 | 없음 | PMD 플러그인, IDE 플러그인 | 없음 |
-| 명확성 | 처방적, 모호성 최소 | 일부 모호 | 높음 | 기본적 |
+| Community adoption | Most widely adopted worldwide | Historical foundation (legacy) | China ecosystem focused | Spring contributions only |
+| Up-to-date | Actively maintained (records, sealed classes, etc.) | Not updated since 1999 | Active | Spring-specific |
+| Comprehensiveness | File structure, formatting, naming, programming practices, Javadoc | Basic | Very broad (includes DB/security) | Narrow |
+| Tooling support | google-java-format, Checkstyle, IDE settings | None | PMD plugin, IDE plugin | None |
+| Clarity | Prescriptive, minimal ambiguity | Some ambiguity | High | Basic |
 
-Google Java Style Guide는 현대 Java 기능을 포괄하며, 전 세계적으로 가장 널리 채택된 Java 스타일 가이드이다. Spring Framework의 코드 스타일도 Google Java Style을 기반으로 한다.
+Google Java Style Guide covers modern Java features and is the most widely adopted Java style guide worldwide. Spring Framework's code style is also based on Google Java Style.
 
 ---
 
-## 2. 소스 파일 기본 규칙
+## 2. Source File Basic Rules
 
-### 2.1 파일명
+### 2.1 File Name
 
-- 최상위 클래스의 대소문자 구분 이름 + `.java`
-- 파일당 정확히 하나의 최상위 클래스
+- Case-sensitive name of the top-level class + `.java`
+- Exactly one top-level class per file
 
-### 2.2 파일 인코딩
+### 2.2 File Encoding
 
-- UTF-8 필수
+- UTF-8 required
 
-### 2.3 특수 문자
+### 2.3 Special Characters
 
-| 규칙 | 상세 |
+| Rule | Details |
 |---|---|
-| 공백 문자 | ASCII 수평 공백(0x20)만 허용. **탭 문자 금지** |
-| 이스케이프 시퀀스 | `\b`, `\t`, `\n`, `\f`, `\r`, `\s`, `\"`, `\'`, `\\` 사용. 8진수/유니코드 이스케이프 대신 사용 |
-| Non-ASCII 문자 | 실제 유니코드 문자 또는 유니코드 이스케이프 중 **가독성 높은 쪽** 사용. 유니코드 이스케이프 시 설명 주석 첨부 |
+| Whitespace character | Only ASCII horizontal space (0x20) is allowed. **Tab characters are prohibited** |
+| Escape sequences | Use `\b`, `\t`, `\n`, `\f`, `\r`, `\s`, `\"`, `\'`, `\\`. Preferred over octal/Unicode escapes |
+| Non-ASCII characters | Use whichever of the actual Unicode character or Unicode escape is **more readable**. Add explanatory comment when using Unicode escapes |
 
 ---
 
-## 3. 소스 파일 구조
+## 3. Source File Structure
 
-파일은 다음 순서로 구성하며, 각 섹션 사이에 **정확히 한 줄**의 빈 줄을 삽입:
+Files are organized in the following order, with **exactly one blank line** between each section:
 
-1. 라이선스/저작권 정보 (있는 경우)
-2. Package 문 (줄 바꿈 금지, 칼럼 제한 미적용)
-3. Import 문
-4. 정확히 하나의 최상위 클래스
+1. License/copyright information (if applicable)
+2. Package statement (no line wrapping, column limit does not apply)
+3. Import statements
+4. Exactly one top-level class
 
 ---
 
-## 4. Import 규칙
+## 4. Import Rules
 
-| 규칙 | 상세 |
+| Rule | Details |
 |---|---|
-| 와일드카드 import 금지 | `import java.util.*` 금지 (정적/비정적 모두) |
-| 줄 바꿈 금지 | import 문은 줄 바꿈하지 않음, 칼럼 제한 미적용 |
-| 순서 | 모든 정적 import를 하나의 블록, 모든 비정적 import를 하나의 블록 |
-| 블록 간 구분 | 정적/비정적 블록 사이에 빈 줄 하나 |
-| 블록 내 정렬 | ASCII 정렬 순서 |
-| 정적 중첩 클래스 | 일반(비정적) import 사용 |
+| No wildcard imports | `import java.util.*` prohibited (both static and non-static) |
+| No line wrapping | Import statements are not line-wrapped; column limit does not apply |
+| Ordering | All static imports in one block, all non-static imports in one block |
+| Block separation | One blank line between static/non-static blocks |
+| Ordering within blocks | ASCII sort order |
+| Static nested classes | Use regular (non-static) imports |
 
 ---
 
-## 5. 클래스 선언
+## 5. Class Declaration
 
-| 규칙 | 상세 |
+| Rule | Details |
 |---|---|
-| 파일당 하나 | 정확히 하나의 최상위 클래스 |
-| 멤버 순서 | **논리적 순서** (유지관리자가 설명 가능한). 추가 시간순 아님 |
-| 오버로드 분리 금지 | 같은 이름의 여러 생성자/메서드는 순차 배치, 사이에 다른 코드 없음 |
+| One per file | Exactly one top-level class |
+| Member ordering | **Logical ordering** (explainable by the maintainer). Not chronological by addition time |
+| No overload separation | Multiple constructors/methods with the same name are placed sequentially, with no other code between them |
 
 ---
 
-## 6. 포매팅
+## 6. Formatting
 
-### 6.1 중괄호
+### 6.1 Braces
 
-**필수 중괄호**: `if`, `else`, `for`, `do`, `while` 문에서 본문이 비어있거나 단일 문장이어도 중괄호 사용. 예외: 람다 표현식.
+**Required braces**: Use braces with `if`, `else`, `for`, `do`, `while` statements even when the body is empty or contains a single statement. Exception: lambda expressions.
 
-**비어있지 않은 블록 (K&R 스타일)**:
-- 여는 중괄호 앞에 줄 바꿈 없음
-- 여는 중괄호 뒤에 줄 바꿈
-- 닫는 중괄호 앞에 줄 바꿈
-- 닫는 중괄호 뒤에 줄 바꿈 (문장/메서드/생성자/클래스 본문 종료 시만). `else`, `catch`, 쉼표 앞에서는 줄 바꿈 없음
+**Non-empty blocks (K&R style)**:
+- No line break before the opening brace
+- Line break after the opening brace
+- Line break before the closing brace
+- Line break after the closing brace (only when it terminates a statement/method/constructor/class body). No line break before `else`, `catch`, or comma
 
-**빈 블록**: 간결한 `{}` 허용 (내부 문자/줄 바꿈 없음). 예외: 다중 블록 문(`if/else`, `try/catch/finally`)에서는 불허.
+**Empty blocks**: Concise `{}` is allowed (no characters or line breaks inside). Exception: not allowed in multi-block statements (`if/else`, `try/catch/finally`).
 
-### 6.2 블록 들여쓰기
+### 6.2 Block Indentation
 
-- 새 블록마다 **+2칸 공백**
-- 블록 내 코드와 주석 모두 적용
+- **+2 spaces** for each new block
+- Applies to both code and comments within the block
 
-### 6.3 한 줄에 하나의 문장
+### 6.3 One Statement Per Line
 
-각 문장 뒤에 줄 바꿈.
+Line break after each statement.
 
-### 6.4 칼럼 제한
+### 6.4 Column Limit
 
-- **100자** per line
-- 각 유니코드 코드 포인트가 하나의 문자로 카운트
+- **100 characters** per line
+- Each Unicode code point counts as one character
 
-**예외** (100자 초과 허용):
-- 칼럼 제한 준수 불가능한 줄 (예: Javadoc의 긴 URL)
-- Package 및 import 문
-- 텍스트 블록 내용
-- 셸에 복사할 수 있는 주석 내 명령줄
-- 매우 긴 식별자 (드묾)
+**Exceptions** (may exceed 100 characters):
+- Lines where compliance is impossible (e.g., long URLs in Javadoc)
+- Package and import statements
+- Text block content
+- Command lines in comments that can be copied to a shell
+- Very long identifiers (rare)
 
-### 6.5 줄 바꿈
+### 6.5 Line Wrapping
 
-**핵심 원칙**: **더 높은 구문 수준**에서 줄 바꿈 선호.
+**Core principle**: Prefer line breaks at a **higher syntactic level**.
 
-| 컨텍스트 | 줄 바꿈 위치 |
+| Context | Break position |
 |---|---|
-| 비할당 연산자 (`.`, `::`, `&`, `\|`) | 연산자 **앞** |
-| 할당 연산자 (향상된 `for`의 콜론 포함) | 연산자 **뒤** (양방향 허용) |
-| 메서드/생성자/레코드 이름 | 여는 `(`에 붙임 |
-| 쉼표 | 앞 토큰에 붙임 |
-| 람다 화살표 (`->`) | 인접 줄 바꿈 금지 |
-| Switch 규칙 화살표 (`->`) | 인접 줄 바꿈 금지 |
+| Non-assignment operators (`.`, `::`, `&`, `\|`) | **Before** the operator |
+| Assignment operators (including colon in enhanced `for`) | **After** the operator (either direction allowed) |
+| Method/constructor/record name | Attached to the opening `(` |
+| Comma | Attached to the preceding token |
+| Lambda arrow (`->`) | No adjacent line breaks |
+| Switch rule arrow (`->`) | No adjacent line breaks |
 
-**연속 들여쓰기**: 원래 줄에서 최소 **+4칸 공백**.
+**Continuation indent**: At least **+4 spaces** from the original line.
 
-### 6.6 공백
+### 6.6 Whitespace
 
-#### 수직 공백 (빈 줄)
+#### Vertical Whitespace (Blank Lines)
 
-- 클래스의 연속 멤버/이니셜라이저 사이에 단일 빈 줄
-- 연속 필드 사이 빈 줄은 선택 (논리적 그룹화용)
-- 가독성 향상을 위해 어디서든 추가 빈 줄 허용
-- 연속 빈 줄 여러 개 허용이나 권장하지 않음
+- Single blank line between consecutive members/initializers of a class
+- Blank lines between consecutive fields are optional (for logical grouping)
+- Additional blank lines are allowed anywhere for improved readability
+- Multiple consecutive blank lines are allowed but not recommended
 
-#### 수평 공백 (단일 공백)
+#### Horizontal Whitespace (Single Space)
 
-단일 ASCII 공백이 나타나는 **유일한** 위치:
+The **only** places where a single ASCII space appears:
 
-1. 예약어(`if`, `for`, `catch` 등)와 뒤따르는 `(` 사이
-2. 예약어(`else`, `catch`)와 앞의 `}` 사이
-3. 모든 여는 중괄호 `{` 앞 (예외: `@SomeAnnotation({a, b})`, `String[][] x = {{"foo"}}`)
-4. 모든 이항/삼항 연산자 양쪽:
-   - 결합 타입 바운드의 `&`: `<T extends Foo & Bar>`
-   - 다중 catch의 `|`: `catch (FooException | BarException e)`
-   - 향상된 for의 `:`: `for (String s : list)`
-   - 람다 `->`: `(String str) -> str.length()`
-   - **예외**: `::` (메서드 참조), `.` (멤버 접근)은 공백 없음
-5. `,` `:` `;` 또는 캐스트의 닫는 `)` 뒤
-6. 내용과 `//` 사이 (다중 공백 허용)
-7. `//`와 주석 텍스트 사이 (다중 공백 허용)
-8. 타입과 변수 선언 사이: `List<String> list`
-9. 배열 이니셜라이저 중괄호 안쪽 (선택): `{5, 6}`과 `{ 5, 6 }` 모두 유효
+1. Between reserved words (`if`, `for`, `catch`, etc.) and the following `(`
+2. Between reserved words (`else`, `catch`) and the preceding `}`
+3. Before all opening braces `{` (exceptions: `@SomeAnnotation({a, b})`, `String[][] x = {{"foo"}}`)
+4. On both sides of all binary/ternary operators:
+   - `&` in conjunctive type bounds: `<T extends Foo & Bar>`
+   - `|` in multi-catch: `catch (FooException | BarException e)`
+   - `:` in enhanced for: `for (String s : list)`
+   - Lambda `->`: `(String str) -> str.length()`
+   - **Exceptions**: `::` (method reference), `.` (member access) have no spaces
+5. After `,` `:` `;` or the closing `)` of a cast
+6. Between content and `//` (multiple spaces allowed)
+7. Between `//` and comment text (multiple spaces allowed)
+8. Between type and variable declaration: `List<String> list`
+9. Inside array initializer braces (optional): both `{5, 6}` and `{ 5, 6 }` are valid
 
-**수평 정렬**: 필수 아님. 정렬 유지 권장하지 않음.
+**Horizontal alignment**: Not required. Maintaining alignment is not recommended.
 
-### 6.7 그룹화 괄호
+### 6.7 Grouping Parentheses
 
-- 저자와 리뷰어가 코드 오해 가능성이 없다고 동의할 때만 선택적 괄호 생략
-- 모든 독자가 Java 연산자 우선순위 표를 암기하고 있다고 가정 금지
+- Optional parentheses may be omitted only when the author and reviewer agree there is no chance of misunderstanding the code
+- Do not assume every reader has memorized the Java operator precedence table
 
-### 6.8 특정 구문
+### 6.8 Specific Constructs
 
-#### Enum 클래스
+#### Enum Classes
 
-- enum 상수 뒤 줄 바꿈은 선택적
-- 메서드와 문서가 없는 enum은 배열 이니셜라이저로 포매팅 가능: `enum Suit { CLUBS, HEARTS, SPADES, DIAMONDS }`
+- Line breaks after enum constants are optional
+- Enums without methods or documentation may be formatted as array initializers: `enum Suit { CLUBS, HEARTS, SPADES, DIAMONDS }`
 
-#### 변수 선언
+#### Variable Declarations
 
-- **선언당 하나의 변수**: `int a, b;` 금지. 예외: `for` 루프 헤더
-- 지역 변수는 **첫 사용 지점 가까이** 선언 (블록 시작이 아님)
+- **One variable per declaration**: `int a, b;` prohibited. Exception: `for` loop headers
+- Local variables are declared **close to the point of first use** (not at the beginning of a block)
 
-#### 배열
+#### Arrays
 
-- 배열 선언 C 스타일 금지: `String[] args` (O), `String args[]` (X)
+- C-style array declaration prohibited: `String[] args` (correct), `String args[]` (incorrect)
 
-#### Switch 문
+#### Switch Statements
 
-- 블록 내용 switch 키워드에서 +2 들여쓰기
-- 이전 스타일 switch: 각 문장 그룹은 `break`, `continue`, `return`, `throw`로 종료하거나 fall-through 주석 (예: `// fall through`) 필수
-- 새 스타일(화살표) switch: fall-through 없음
-- 모든 switch는 **완전해야** (모든 가능한 값 커버)
-- Switch 표현식은 새 스타일(화살표) 구문 필수
+- Block content indented +2 from the switch keyword
+- Legacy-style switch: each statement group ends with `break`, `continue`, `return`, `throw`, or a fall-through comment (e.g., `// fall through`)
+- Arrow-style switch: no fall-through
+- All switches must be **exhaustive** (cover all possible values)
+- Switch expressions must use arrow-style syntax
 
-#### 어노테이션
+#### Annotations
 
-- 타입 사용 어노테이션: 주석 달린 타입 바로 앞: `final @Nullable String name;`
-- 클래스/패키지/모듈 어노테이션: 각각 자체 줄
-- 메서드/생성자 어노테이션: 클래스와 동일. 단, 파라미터 없는 단일 어노테이션은 시그니처 첫 줄과 공유 가능: `@Override public int hashCode() { ... }`
-- 필드 어노테이션: 여러 어노테이션이 한 줄 공유 가능: `@Partial @Mock DataLoader loader;`
+- Type-use annotations: immediately before the annotated type: `final @Nullable String name;`
+- Class/package/module annotations: each on its own line
+- Method/constructor annotations: same as class. However, a single annotation without parameters may share the first line with the signature: `@Override public int hashCode() { ... }`
+- Field annotations: multiple annotations may share one line: `@Partial @Mock DataLoader loader;`
 
-#### 주석
+#### Comments
 
-- 블록 주석: 주변 코드와 같은 수준 들여쓰기
-- 장식 상자 금지 (별표/문자로 감싸지 않음)
-- TODO 주석: `TODO:` + 리소스 링크/컨텍스트 + 하이픈 + 설명 텍스트
+- Block comments: same indentation level as the surrounding code
+- No decorative boxes (do not wrap with asterisks/characters)
+- TODO comments: `TODO:` + resource link/context + hyphen + description text
 
-#### 수정자 순서 (JLS 권장)
+#### Modifier Order (JLS Recommended)
 
 ```
 public protected private abstract default static final sealed non-sealed
 transient volatile synchronized native strictfp
 ```
 
-#### 숫자 리터럴
+#### Numeric Literals
 
-- `long` 정수 리터럴: 대문자 `L` 접미사 (소문자 `l` 금지 - 숫자 `1`과 혼동)
+- `long` integer literals: uppercase `L` suffix (lowercase `l` prohibited — confusion with digit `1`)
 
-#### 텍스트 블록
+#### Text Blocks
 
-- 여는 `"""`는 항상 새 줄에
-- 닫는 `"""`는 여는/닫는 구분자와 같은 들여쓰기로 새 줄에
-- 텍스트 블록 내용은 100자 칼럼 제한 초과 가능
+- Opening `"""` is always on a new line
+- Closing `"""` is on a new line at the same indentation as the opening/closing delimiter
+- Text block content may exceed the 100-character column limit
 
 ---
 
-## 7. 네이밍
+## 7. Naming
 
-### 7.1 보편 규칙
+### 7.1 General Rules
 
-- 식별자에 ASCII 문자, 숫자, 특정 경우 언더스코어만 사용
-- 특수 접두/접미사 금지: `name_`, `mName`, `s_name`, `kName` 금지
+- Identifiers use only ASCII letters, digits, and in certain cases underscores
+- No special prefixes/suffixes: `name_`, `mName`, `s_name`, `kName` prohibited
 
-### 7.2 식별자 유형별 규칙
+### 7.2 Rules by Identifier Type
 
-| 식별자 | 케이스 스타일 | 추가 규칙 |
+| Identifier | Case style | Additional rules |
 |---|---|---|
-| 패키지 | `com.example.deepspace` | 전소문자, 언더스코어 없음, 연속 단어 연결 |
-| 클래스 | `UpperCamelCase` | 보통 명사/명사구. 테스트 클래스는 `Test`로 끝남 |
-| 메서드 | `lowerCamelCase` | 보통 동사/동사구. 테스트 메서드는 `_` 구분 허용 |
-| 상수 | `UPPER_SNAKE_CASE` | `static final` + 깊이 불변 값 + 부작용 없음 필수 |
-| 비상수 필드 | `lowerCamelCase` | 보통 명사/명사구 |
-| 파라미터 | `lowerCamelCase` | 공개 메서드에서 단일 문자 이름 회피 |
-| 지역 변수 | `lowerCamelCase` | `final`이고 불변이어도 상수 스타일 금지 |
-| 타입 변수 | 단일 대문자(+숫자) 또는 클래스명+`T` | `E`, `T`, `T2`, `RequestT`, `FooBarT` |
+| Package | `com.example.deepspace` | All lowercase, no underscores, concatenated words |
+| Class | `UpperCamelCase` | Usually noun/noun phrase. Test classes end with `Test` |
+| Method | `lowerCamelCase` | Usually verb/verb phrase. Test methods may use `_` separators |
+| Constant | `UPPER_SNAKE_CASE` | Must be `static final` + deeply immutable value + no side effects |
+| Non-constant field | `lowerCamelCase` | Usually noun/noun phrase |
+| Parameter | `lowerCamelCase` | Avoid single-character names in public methods |
+| Local variable | `lowerCamelCase` | Never use constant style even if `final` and immutable |
+| Type variable | Single uppercase letter (+digit) or class name + `T` | `E`, `T`, `T2`, `RequestT`, `FooBarT` |
 
-### 7.3 상수 vs 비상수 (중요 구분)
+### 7.3 Constants vs Non-constants (Important Distinction)
 
-**상수** (`UPPER_SNAKE_CASE`):
+**Constants** (`UPPER_SNAKE_CASE`):
 ```java
 static final int NUMBER = 5;
 static final ImmutableList<String> NAMES = ImmutableList.of("Ed", "Ann");
@@ -249,42 +249,42 @@ static final Joiner COMMA_JOINER = Joiner.on(',');
 static final SomeMutableType[] EMPTY_ARRAY = {};
 ```
 
-**비상수** (`lowerCamelCase`):
+**Non-constants** (`lowerCamelCase`):
 ```java
-static String nonFinal = "non-final";              // final 아님
-final String nonStatic = "non-static";              // static 아님
-static final Set<String> mutableCollection = new HashSet<>();  // 가변
-static final Logger logger = Logger.getLogger(...); // 부작용
-static final String[] nonEmptyArray = {"these", "can", "change"};  // 가변 내용
+static String nonFinal = "non-final";              // not final
+final String nonStatic = "non-static";              // not static
+static final Set<String> mutableCollection = new HashSet<>();  // mutable
+static final Logger logger = Logger.getLogger(...); // side effects
+static final String[] nonEmptyArray = {"these", "can", "change"};  // mutable contents
 ```
 
-### 7.4 CamelCase 변환 알고리즘
+### 7.4 CamelCase Conversion Algorithm
 
-1. 순수 ASCII로 변환, 아포스트로피 제거
-2. 공백과 나머지 구두점으로 단어 분리. 기존 camelCase도 분리 권장
-3. 모두 소문자화, 각 단어 첫 글자 대문자화 (UpperCamelCase) 또는 첫 단어 제외 (lowerCamelCase)
-4. 모든 단어 결합
+1. Convert to pure ASCII, remove apostrophes
+2. Split into words by spaces and remaining punctuation. Also recommended to split existing camelCase
+3. Lowercase everything, then capitalize the first letter of each word (UpperCamelCase) or all except the first (lowerCamelCase)
+4. Join all words
 
-| 산문 형태 | 올바름 | 잘못됨 |
+| Prose form | Correct | Incorrect |
 |---|---|---|
 | "XML HTTP request" | `XmlHttpRequest` | `XMLHTTPRequest` |
 | "new customer ID" | `newCustomerId` | `newCustomerID` |
 | "supports IPv6 on iOS?" | `supportsIpv6OnIos` | `supportsIPv6OnIOS` |
-| "YouTube importer" | `YouTubeImporter` 또는 `YoutubeImporter` | -- |
+| "YouTube importer" | `YouTubeImporter` or `YoutubeImporter` | -- |
 
 ---
 
-## 8. 프로그래밍 관행
+## 8. Programming Practices
 
 ### 8.1 @Override
 
-- 합법적으로 허용되는 모든 곳에서 항상 `@Override` 사용: 슈퍼클래스 메서드 오버라이딩, 인터페이스 메서드 구현, 슈퍼인터페이스 메서드 재지정, 레코드 컴포넌트 명시적 접근자
-- 예외: 부모 메서드가 `@Deprecated`일 때 생략 가능
+- Always use `@Override` wherever legally permitted: overriding superclass methods, implementing interface methods, re-specifying superinterface methods, explicit record component accessors
+- Exception: may be omitted when the parent method is `@Deprecated`
 
-### 8.2 캐치된 예외
+### 8.2 Caught Exceptions
 
-- 절대 조용히 무시하지 않음. 반응: 로깅, 재throw, 래핑(`AssertionError`), 또는 적절한 처리
-- 정당하게 아무 조치도 안 할 때: 주석으로 정당화
+- Never silently ignore. Response: logging, rethrowing, wrapping (`AssertionError`), or appropriate handling
+- When legitimately taking no action: justify with a comment
 
 ```java
 try {
@@ -296,23 +296,23 @@ try {
 return handleTextResponse(response);
 ```
 
-### 8.3 정적 멤버
+### 8.3 Static Members
 
-- 항상 **클래스 이름**으로 한정. 인스턴스 참조 통한 접근 금지
-- 올바름: `Foo.aStaticMethod()`
-- 잘못됨: `someFooInstance.aStaticMethod()`
+- Always qualify with **class name**. No access through instance references
+- Correct: `Foo.aStaticMethod()`
+- Incorrect: `someFooInstance.aStaticMethod()`
 
 ### 8.4 Finalizer
 
-- **절대** `Object.finalize()` 오버라이드 금지. JDK에서 제거 예정.
+- **Never** override `Object.finalize()`. Scheduled for removal from the JDK.
 
 ---
 
 ## 9. Javadoc
 
-### 9.1 일반 포맷
+### 9.1 General Format
 
-**여러 줄 형태**:
+**Multi-line form**:
 ```java
 /**
  * Multiple lines of Javadoc text,
@@ -320,80 +320,80 @@ return handleTextResponse(response);
  */
 ```
 
-**한 줄 형태** (전체 Javadoc이 한 줄에 맞고 블록 태그 없을 때):
+**Single-line form** (when the entire Javadoc fits on one line and has no block tags):
 ```java
 /** An especially short bit of Javadoc. */
 ```
 
-### 9.2 문단
+### 9.2 Paragraphs
 
-- 정렬된 선행 `*`만 포함하는 빈 줄로 문단 구분
-- 첫 번째 이후 각 문단은 첫 단어 바로 앞에 `<p>` (`<p>` 뒤 공백 없음)
-- 블록 수준 HTML 요소(`<ul>`, `<table>`)는 `<p>` 앞에 두지 않음
+- Separate paragraphs with a blank line containing only the aligned leading `*`
+- Each paragraph after the first has `<p>` immediately before the first word (no space after `<p>`)
+- Block-level HTML elements (`<ul>`, `<table>`) are not preceded by `<p>`
 
-### 9.3 블록 태그
+### 9.3 Block Tags
 
-- 표준 순서: `@param`, `@return`, `@throws`, `@deprecated`
-- 블록 태그에 빈 설명 금지
-- 블록 태그 연속 줄: `@` 위치에서 4칸 이상 들여쓰기
+- Standard order: `@param`, `@return`, `@throws`, `@deprecated`
+- Block tags must not have empty descriptions
+- Continuation lines of block tags: indent at least 4 spaces from the `@` position
 
-### 9.4 요약 조각
+### 9.4 Summary Fragment
 
-- 모든 Javadoc 블록의 첫 번째 문장/조각
-- 명사구 또는 동사구, **완전한 문장 아님**
-- 완전한 문장처럼 대문자화하고 구두점 처리
-- `"A {@code Foo} is a..."`로 시작 금지
-- `"This method returns..."`로 시작 금지
-- `@return` 전용 메서드: `/** Returns the customer ID. */` 선호
+- The first sentence/fragment of every Javadoc block
+- Noun phrase or verb phrase, **not a complete sentence**
+- Capitalize and punctuate as if it were a complete sentence
+- Do not start with `"A {@code Foo} is a..."`
+- Do not start with `"This method returns..."`
+- For `@return`-only methods: prefer `/** Returns the customer ID. */`
 
-### 9.5 Javadoc 필수 대상
+### 9.5 Where Javadoc Is Required
 
-**필수**: 모든 가시적 클래스, 멤버, 레코드 컴포넌트 (`public` 또는 `protected`).
+**Required**: All visible classes, members, and record components (`public` or `protected`).
 
-**예외**:
-- 자명한 멤버 (예: `getFoo()` -- 추가 설명 없음). 남용 금지
-- 슈퍼타입 메서드를 오버라이드하는 메서드
+**Exceptions**:
+- Self-explanatory members (e.g., `getFoo()` — no additional explanation needed). Do not abuse
+- Methods that override a supertype method
 
-**비필수이나 권장**: 기타 클래스/멤버. 구현 주석 대신 Javadoc(`/** */`) 사용 권장.
+**Not required but recommended**: Other classes/members. Prefer Javadoc (`/** */`) over implementation comments.
 
 ---
 
-## 10. 핵심 수치 요약
+## 10. Key Metrics Summary
 
-| 카테고리 | 규칙 | 값 |
+| Category | Rule | Value |
 |---|---|---|
-| 인코딩 | 소스 파일 인코딩 | UTF-8 |
-| 들여쓰기 | 블록 들여쓰기 | 2칸 공백 |
-| 들여쓰기 | 연속 들여쓰기 | +4칸 이상 |
-| 칼럼 제한 | 최대 줄 길이 | 100자 |
-| 중괄호 | 스타일 | K&R (Egyptian) |
-| 중괄호 | 단일 문장 본문 | 항상 필수 |
-| Import | 와일드카드 import | 금지 |
-| Import | 순서 | 정적 블록, 빈 줄, 비정적 블록; 내부 ASCII 정렬 |
-| 클래스 | 파일당 | 정확히 하나 |
-| 변수 | 선언당 | 정확히 하나 |
-| 변수 | 선언 위치 | 첫 사용 지점 가까이 |
-| 배열 | 선언 스타일 | `String[] args` (`String args[]` 아님) |
-| Switch | 완전성 | 모든 switch에 필수 |
-| Switch 표현식 | 스타일 | 화살표 구문 필수 |
-| `@Override` | 사용 | 합법적 시 항상 |
-| 예외 | 캐치된 예외 | 절대 조용히 무시 금지 |
-| 정적 멤버 | 접근 | 클래스 이름으로만 |
-| `finalize()` | 오버라이드 | 금지 |
-| `long` 리터럴 | 접미사 | 대문자 `L` |
-| 네이밍: 패키지 | 스타일 | `alllowercase` |
-| 네이밍: 클래스 | 스타일 | `UpperCamelCase` |
-| 네이밍: 메서드 | 스타일 | `lowerCamelCase` |
-| 네이밍: 상수 | 스타일 | `UPPER_SNAKE_CASE` |
-| 네이밍: 필드/파라미터/지역변수 | 스타일 | `lowerCamelCase` |
-| 네이밍: 타입 변수 | 스타일 | `T`, `E`, `T2`, 또는 `RequestT` |
-| Javadoc | 필수 대상 | 모든 가시적 멤버 |
-| Javadoc | 요약 조각 | 명사/동사구, 문장 아님 |
-| Javadoc | 블록 태그 순서 | `@param`, `@return`, `@throws`, `@deprecated` |
+| Encoding | Source file encoding | UTF-8 |
+| Indentation | Block indentation | 2 spaces |
+| Indentation | Continuation indentation | +4 spaces minimum |
+| Column limit | Maximum line length | 100 characters |
+| Braces | Style | K&R (Egyptian) |
+| Braces | Single-statement body | Always required |
+| Import | Wildcard imports | Prohibited |
+| Import | Ordering | Static block, blank line, non-static block; ASCII sort within |
+| Class | Per file | Exactly one |
+| Variable | Per declaration | Exactly one |
+| Variable | Declaration position | Close to point of first use |
+| Array | Declaration style | `String[] args` (not `String args[]`) |
+| Switch | Exhaustiveness | Required for all switches |
+| Switch expression | Style | Arrow syntax required |
+| `@Override` | Usage | Always when legal |
+| Exception | Caught exceptions | Never silently ignore |
+| Static members | Access | By class name only |
+| `finalize()` | Override | Prohibited |
+| `long` literal | Suffix | Uppercase `L` |
+| Naming: package | Style | `alllowercase` |
+| Naming: class | Style | `UpperCamelCase` |
+| Naming: method | Style | `lowerCamelCase` |
+| Naming: constant | Style | `UPPER_SNAKE_CASE` |
+| Naming: field/parameter/local variable | Style | `lowerCamelCase` |
+| Naming: type variable | Style | `T`, `E`, `T2`, or `RequestT` |
+| Javadoc | Required for | All visible members |
+| Javadoc | Summary fragment | Noun/verb phrase, not a sentence |
+| Javadoc | Block tag order | `@param`, `@return`, `@throws`, `@deprecated` |
 
 ---
 
-## 참고 자료
+## References
 
 - [Google Java Style Guide](https://google.github.io/styleguide/javaguide.html)
 - [Google Styleguide GitHub Repository](https://github.com/google/styleguide)

@@ -1,68 +1,68 @@
 ---
-description: 표준 용어 사전에서 한글 용어의 영문 약어, 도메인, 데이터 타입을 조회합니다
-argument-hint: "<한글 용어> (예: 고객명, 등록일시, 사업자등록번호)"
+description: Looks up English abbreviation, domain, and data type for a Korean term from the standard term dictionary
+argument-hint: "<Korean term> (e.g., 고객명, 등록일시, 사업자등록번호)"
 allowed-tools: Read
 ---
 
-# 표준 용어 조회
+# Standard Term Lookup
 
-"$ARGUMENTS" 에 해당하는 표준 용어를 조회하라.
+Look up the standard term corresponding to "$ARGUMENTS".
 
-## 참조 데이터
+## Reference Data
 
-| 파일 | 내용 | 용도 |
+| File | Content | Purpose |
 |---|---|---|
-| `data/standard_terms.json` | 13,176건 표준 용어 | 한글 용어명 → 영문 약어, 도메인, 타입 |
-| `data/standard_words.json` | 3,284건 표준 단어 | 개별 단어 약어, 조합 제안 |
-| `data/standard_domains.json` | 123건 표준 도메인 | 도메인별 타입/길이 상세 |
+| `data/standard_terms.json` | 13,176 standard terms | Korean term name -> English abbreviation, domain, type |
+| `data/standard_words.json` | 3,284 standard words | Individual word abbreviation, combination suggestions |
+| `data/standard_domains.json` | 123 standard domains | Type/length details per domain |
 
-## 조회 절차
+## Lookup Procedure
 
-1. `data/standard_terms.json`에서 `공통표준용어명` 필드를 검색한다
-2. 정확히 일치하는 용어가 있으면 상세 정보를 출력한다
-3. 정확히 일치하지 않으면 부분 일치 결과를 최대 10건 보여준다
-4. 용어가 없으면 `data/standard_words.json`에서 개별 단어를 검색하여 조합을 제안한다
+1. Search the `공통표준용어명` field in `data/standard_terms.json`
+2. If an exact match is found, output the detailed information
+3. If no exact match, show up to 10 partial match results
+4. If no term is found, search individual words in `data/standard_words.json` and suggest combinations
 
-## 출력 형식
+## Output Format
 
-### 정확히 일치하는 경우
+### Exact Match Found
 
-| 항목 | 값 |
+| Item | Value |
 |---|---|
-| **표준 용어명** | (한글 용어명) |
-| **영문 약어명** | (물리 컬럼명) |
-| **용어 설명** | (설명) |
-| **도메인** | (도메인명) |
-| **데이터 타입** | (타입 + 길이) |
-| **저장 형식** | (포맷) |
-| **표현 형식** | (화면 포맷) |
-| **허용값** | (있는 경우) |
-| **이음동의어** | (있는 경우) |
+| **Standard Term Name** | (Korean term name) |
+| **English Abbreviation** | (physical column name) |
+| **Term Description** | (description) |
+| **Domain** | (domain name) |
+| **Data Type** | (type + length) |
+| **Storage Format** | (format) |
+| **Display Format** | (screen format) |
+| **Allowed Values** | (if applicable) |
+| **Synonyms** | (if applicable) |
 
-### 언어별 타입 매핑
+### Type Mapping by Language
 
-| 언어 | 타입 | 비고 |
+| Language | Type | Notes |
 |---|---|---|
-| Java | (Java 타입 + JPA 어노테이션) | |
-| TypeScript | (TS 타입) | |
-| Python | (Python 타입) | |
+| Java | (Java type + JPA annotation) | |
+| TypeScript | (TS type) | |
+| Python | (Python type) | |
 
-### 부분 일치하는 경우
+### Partial Match Found
 
-부분 일치 결과를 테이블로 표시:
+Display partial match results in a table:
 
-| # | 용어명 | 영문약어 | 도메인 |
+| # | Term Name | English Abbreviation | Domain |
 |---|---|---|---|
 | 1 | ... | ... | ... |
 
-### 용어가 없는 경우
+### No Term Found
 
-개별 단어를 조합하여 제안:
+Suggest by combining individual words:
 
-"입력한 용어는 표준 용어 사전에 없습니다. 개별 단어 조합으로 다음을 제안합니다:"
+"The entered term is not found in the standard term dictionary. The following is suggested based on individual word combinations:"
 
-| 한글 단어 | 영문약어 | 비고 |
+| Korean Word | English Abbreviation | Notes |
 |---|---|---|
 | ... | ... | ... |
 
-**제안 컬럼명**: (조합된 영문 약어)
+**Suggested Column Name**: (combined English abbreviation)

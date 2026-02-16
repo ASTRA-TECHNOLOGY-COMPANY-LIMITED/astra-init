@@ -1,81 +1,81 @@
 ---
-description: 국가코드, 지역코드, 국제전화 국번을 조회합니다
-argument-hint: "<국가명|코드|국번> (예: 대한민국, KR, +82, KR-11)"
+description: Looks up country codes, region codes, and international calling codes
+argument-hint: "<country name|code|calling code> (e.g., 대한민국, KR, +82, KR-11)"
 allowed-tools: Read
 ---
 
-# 국제 표준 코드 조회
+# International Standard Code Lookup
 
-"$ARGUMENTS" 에 해당하는 국제 표준 코드를 조회하라.
+Look up the international standard code corresponding to "$ARGUMENTS".
 
-## 참조 데이터
+## Reference Data
 
-| 조회 대상 | 데이터 파일 | 검색 필드 |
+| Lookup Target | Data File | Search Fields |
 |---|---|---|
-| 국가 | `data/iso_3166_1_countries.json` | `koreanName`, `englishName`, `alpha2`, `alpha3` |
-| 지역 | `data/iso_3166_2_regions.json` | `code`, `nameEn`, `nameLocal` |
-| 국번 | `data/country_calling_codes.json` | `countryNameKo`, `countryNameEn`, `alpha2`, `callingCode` |
+| Country | `data/iso_3166_1_countries.json` | `koreanName`, `englishName`, `alpha2`, `alpha3` |
+| Region | `data/iso_3166_2_regions.json` | `code`, `nameEn`, `nameLocal` |
+| Calling code | `data/country_calling_codes.json` | `countryNameKo`, `countryNameEn`, `alpha2`, `callingCode` |
 
-## 조회 절차
+## Lookup Procedure
 
-### 1단계: 입력 분석
+### Step 1: Input Analysis
 
-입력을 분석하여 조회 유형을 판별한다:
+Analyze the input to determine the lookup type:
 
-- **국가 조회**: 국가명(한글/영문) 또는 alpha-2/alpha-3 코드 입력
-  - 예: `대한민국`, `South Korea`, `KR`, `KOR`
-- **지역 조회**: ISO 3166-2 코드 또는 `국가:지역명` 형식 입력
-  - 예: `KR-11`, `대한민국:서울`, `US:California`
-- **국번 조회**: 국가명이나 `+국번` 형식 입력
-  - 예: `+82`, `+1`, `대한민국 국번`
+- **Country lookup**: Country name (Korean/English) or alpha-2/alpha-3 code input
+  - e.g., `대한민국`, `South Korea`, `KR`, `KOR`
+- **Region lookup**: ISO 3166-2 code or `country:region name` format input
+  - e.g., `KR-11`, `대한민국:서울`, `US:California`
+- **Calling code lookup**: Country name or `+calling code` format input
+  - e.g., `+82`, `+1`, `대한민국 국번`
 
-하나의 국가명만 입력된 경우 해당 국가의 모든 정보(국가코드 + 지역목록 + 국번)를 함께 출력한다.
+If only a country name is entered, output all information for that country (country code + region list + calling code) together.
 
-### 2단계: 데이터 검색
+### Step 2: Data Search
 
-해당하는 데이터 파일에서 검색한다. 정확히 일치하는 항목이 없으면 부분 일치 결과를 최대 10건 보여준다.
+Search the corresponding data file. If no exact match is found, show up to 10 partial match results.
 
-### 3단계: 결과 출력
+### Step 3: Result Output
 
-## 출력 형식
+## Output Format
 
-### 국가 조회 결과
+### Country Lookup Result
 
-| 항목 | 값 |
+| Item | Value |
 |---|---|
-| **한글 국가명** | (한글명) |
-| **영문 국가명** | (ISO 공식 영문명) |
-| **Alpha-2 코드** | (2자리) |
-| **Alpha-3 코드** | (3자리) |
-| **숫자 코드** | (3자리) |
-| **독립국 여부** | 예/아니오 |
-| **국제전화 국번** | (국번) |
-| **ITU 존** | (존 번호) |
+| **Korean Country Name** | (Korean name) |
+| **English Country Name** | (ISO official English name) |
+| **Alpha-2 Code** | (2 digits) |
+| **Alpha-3 Code** | (3 digits) |
+| **Numeric Code** | (3 digits) |
+| **Independent Country** | Yes/No |
+| **International Calling Code** | (calling code) |
+| **ITU Zone** | (zone number) |
 
-### 지역 목록 (데이터가 있는 경우)
+### Region List (if data available)
 
-| # | ISO 3166-2 코드 | 영문명 | 현지어명 | 구역 유형 |
+| # | ISO 3166-2 Code | English Name | Local Name | Subdivision Type |
 |---|---|---|---|---|
 | 1 | KR-11 | Seoul | 서울특별시 | Special city |
 | 2 | ... | ... | ... | ... |
 
-### DB 컬럼 매핑
+### DB Column Mapping
 
-| 용도 | 물리 컬럼명 | 타입 | 예시 값 |
+| Purpose | Physical Column Name | Type | Example Value |
 |---|---|---|---|
-| 국가코드 저장 | `NATN_CD` | CHAR(2) | (alpha-2) |
-| 지역코드 저장 | `RGN_CD` | VARCHAR(6) | (ISO 3166-2) |
-| 국제전화번호 | `INTL_TELNO` | VARCHAR(15) | +(국번)(번호) |
+| Country code storage | `NATN_CD` | CHAR(2) | (alpha-2) |
+| Region code storage | `RGN_CD` | VARCHAR(6) | (ISO 3166-2) |
+| International phone number | `INTL_TELNO` | VARCHAR(15) | +(calling code)(number) |
 
-### 부분 일치하는 경우
+### Partial Match Found
 
-입력과 정확히 일치하는 항목이 없으면, 부분 일치 결과를 최대 10건 보여준다:
+If no exact match for the input, show up to 10 partial match results:
 
-| # | 한글명 | 영문명 | Alpha-2 | 국번 |
+| # | Korean Name | English Name | Alpha-2 | Calling Code |
 |---|---|---|---|---|
 | 1 | ... | ... | ... | ... |
 
-### 결과가 없는 경우
+### No Results Found
 
-"입력한 값과 일치하는 국제 표준 코드를 찾을 수 없습니다."
-유사한 국가명이 있으면 제안한다.
+"No international standard code matching the input was found."
+Suggest similar country names if available.

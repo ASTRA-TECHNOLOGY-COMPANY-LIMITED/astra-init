@@ -1,166 +1,166 @@
 ---
 name: international-code
 description: >
-  전화번호 입력, 국가 선택, 지역 선택 등 국제 표준 코드를 다루는 컴포넌트를
-  구현할 때, ISO 3166-1/3166-2 및 ITU-T E.164 표준 데이터를 기반으로
-  코드를 작성하도록 자동 지원합니다.
+  Automatically provides support for writing code based on ISO 3166-1/3166-2 and
+  ITU-T E.164 standard data when implementing components that handle international
+  standard codes such as phone number inputs, country selectors, and region selectors.
 ---
 
-# 국제 표준 코드 적용 스킬
+# International Standard Code Application Skill
 
-전화번호, 국가코드, 지역코드 관련 컴포넌트를 구현할 때 반드시 아래 표준을 따르라.
-상세 가이드는 이 디렉토리의 international-code-reference.md를 참조하라.
+When implementing phone number, country code, and region code related components, you must follow the standards below.
+For the detailed guide, refer to international-code-reference.md in this directory.
 
-## 적용 대상
+## Application Targets
 
-아래 조건에 해당하는 파일을 작성/수정할 때 자동 적용한다:
+Automatically applied when writing/modifying files that meet the following conditions:
 
-- 파일명에 `phone`, `tel`, `country`, `region`, `address`, `locale`, `i18n`, `intl` 포함
-- 코드 내에 전화번호 입력, 국가 선택, 지역/주소 선택 관련 로직이 포함된 경우
-- 국가코드(alpha-2/alpha-3), 지역코드(ISO 3166-2), 국제 전화번호 관련 데이터를 다루는 경우
+- File name contains `phone`, `tel`, `country`, `region`, `address`, `locale`, `i18n`, `intl`
+- Code contains logic related to phone number input, country selection, or region/address selection
+- Code handles country codes (alpha-2/alpha-3), region codes (ISO 3166-2), or international phone number data
 
-## 참조 데이터 파일
+## Reference Data Files
 
-| 파일 | 표준 | 내용 |
+| File | Standard | Contents |
 |---|---|---|
-| `data/iso_3166_1_countries.json` | ISO 3166-1 | 249개국 — alpha-2, alpha-3, numeric, 한글명, 영문명, 독립국 여부 |
-| `data/iso_3166_2_regions.json` | ISO 3166-2 | 21개국 653개 행정구역 — 지역코드, 영문명, 현지어명, 구역 유형 |
-| `data/country_calling_codes.json` | ITU-T E.164 | 245개 항목 — 국제 전화 국번, ITU 존, 공유 코드 정보 |
+| `data/iso_3166_1_countries.json` | ISO 3166-1 | 249 countries — alpha-2, alpha-3, numeric, Korean name, English name, independence status |
+| `data/iso_3166_2_regions.json` | ISO 3166-2 | 21 countries, 653 administrative regions — region code, English name, local name, subdivision type |
+| `data/country_calling_codes.json` | ITU-T E.164 | 245 entries — international calling codes, ITU zone, shared code information |
 
-## 핵심 규칙
+## Core Rules
 
-### 1. 국가 식별에는 ISO 3166-1 alpha-2 코드를 사용한다
+### 1. Use ISO 3166-1 alpha-2 codes for country identification
 
-- 국가를 식별하는 모든 필드에 2자리 대문자 alpha-2 코드를 사용한다 (예: `KR`, `US`, `JP`)
-- 풀네임 문자열이 아닌 코드로 저장한다 — 표시명은 `iso_3166_1_countries.json`에서 조회
-- 3자리 코드가 필요한 경우 alpha-3를 사용한다 (예: `KOR`, `USA`, `JPN`)
+- Use 2-character uppercase alpha-2 codes for all fields that identify a country (e.g., `KR`, `US`, `JP`)
+- Store as codes, not full name strings — display names are looked up from `iso_3166_1_countries.json`
+- Use alpha-3 when 3-character codes are needed (e.g., `KOR`, `USA`, `JPN`)
 
 ```typescript
 // Good
 interface Address {
-  countryCode: string;  // ISO 3166-1 alpha-2 (예: "KR")
-  regionCode: string;   // ISO 3166-2 (예: "KR-11")
+  countryCode: string;  // ISO 3166-1 alpha-2 (e.g., "KR")
+  regionCode: string;   // ISO 3166-2 (e.g., "KR-11")
 }
 
 // Bad
 interface Address {
-  country: string;  // "대한민국" 또는 "South Korea" — 문자열 직접 저장 금지
+  country: string;  // "South Korea" — direct string storage prohibited
 }
 ```
 
-### 2. 지역/행정구역에는 ISO 3166-2 코드를 사용한다
+### 2. Use ISO 3166-2 codes for regions/administrative divisions
 
-- 지역을 식별하는 필드에 ISO 3166-2 코드를 사용한다 (예: `KR-11`, `US-CA`)
-- 코드 형식: `{alpha-2}-{subdivision}` (국가코드 + 하이픈 + 행정구역코드)
-- 지역 목록은 선택된 국가에 따라 `iso_3166_2_regions.json`에서 필터링
+- Use ISO 3166-2 codes for fields that identify a region (e.g., `KR-11`, `US-CA`)
+- Code format: `{alpha-2}-{subdivision}` (country code + hyphen + subdivision code)
+- Region lists are filtered from `iso_3166_2_regions.json` based on the selected country
 
-### 3. 전화번호는 E.164 형식을 따른다
+### 3. Phone numbers must follow E.164 format
 
-- 국제 전화번호 형식: `+{국가번호}{번호}` (예: `+821012345678`)
-- 국가번호는 `country_calling_codes.json`에서 조회
-- 입력 UI에서는 국가 선택과 번호 입력을 분리하여 구성
-- 저장 시에는 E.164 전체 형식으로 통합 저장
+- International phone number format: `+{country code}{number}` (e.g., `+821012345678`)
+- Country codes are looked up from `country_calling_codes.json`
+- Input UI should separate country selection and number input
+- Store in full E.164 format when saving
 
 ```typescript
-// Good: 국가코드와 번호를 분리 입력, E.164로 통합 저장
+// Good: Separate country code and number input, store as E.164
 const phoneNumber = `${callingCode}${localNumber.replace(/[^0-9]/g, '')}`;
-// 예: "+82" + "1012345678" → "+821012345678"
+// e.g., "+82" + "1012345678" → "+821012345678"
 
-// Bad: 자유 입력 텍스트
-const phone = userInput; // 형식 보장 불가
+// Bad: Free-form text input
+const phone = userInput; // Format not guaranteed
 ```
 
-### 4. 국가/지역 선택 UI 데이터는 표준 JSON에서 구성한다
+### 4. Country/region selection UI data should be constructed from standard JSON files
 
-**국가 선택 드롭다운**:
-- `iso_3166_1_countries.json`에서 목록 구성
-- 표시: 한글명 또는 영문명 (로케일에 따라)
-- 값: alpha-2 코드
-- 주요 국가를 상단에 배치 (한국, 미국, 일본, 중국 등)
+**Country selection dropdown**:
+- Construct list from `iso_3166_1_countries.json`
+- Display: Korean name or English name (depending on locale)
+- Value: alpha-2 code
+- Place major countries at the top (Korea, USA, Japan, China, etc.)
 
-**지역 선택 드롭다운**:
-- `iso_3166_2_regions.json`에서 선택된 국가의 행정구역 필터링
-- 표시: 현지어명 (`nameLocal`) 또는 영문명 (`nameEn`)
-- 값: ISO 3166-2 코드 (예: `KR-11`)
-- 국가 선택 시 연동하여 지역 목록 갱신
+**Region selection dropdown**:
+- Filter administrative regions for the selected country from `iso_3166_2_regions.json`
+- Display: local name (`nameLocal`) or English name (`nameEn`)
+- Value: ISO 3166-2 code (e.g., `KR-11`)
+- Update region list in conjunction with country selection
 
-**전화번호 국가코드 선택**:
-- `country_calling_codes.json`에서 목록 구성
-- 표시: `국기 + 국가명 + 국번` (예: `🇰🇷 대한민국 +82`)
-- 값: callingCode (예: `+82`)
-- alpha-2 코드를 함께 저장하여 국가 식별
+**Phone number country code selector**:
+- Construct list from `country_calling_codes.json`
+- Display: `flag + country name + calling code` (e.g., `🇰🇷 South Korea +82`)
+- Value: callingCode (e.g., `+82`)
+- Store alpha-2 code alongside for country identification
 
-### 5. 데이터 모델 필드 규칙
+### 5. Data model field rules
 
-| 필드 용도 | 권장 필드명 | 타입 | 설명 |
+| Field Purpose | Recommended Field Name | Type | Description |
 |---|---|---|---|
-| 국가코드 | `countryCode` / `NATN_CD` | CHAR(2) | ISO 3166-1 alpha-2 |
-| 국가코드(3자리) | `countryAlpha3` / `NATN_A3_CD` | CHAR(3) | ISO 3166-1 alpha-3 |
-| 지역코드 | `regionCode` / `RGN_CD` | VARCHAR(6) | ISO 3166-2 (예: KR-11) |
-| 국제전화번호 | `phoneNumber` / `INTL_TELNO` | VARCHAR(15) | E.164 전체번호 |
-| 국가번호 | `callingCode` / `NATN_TELNO` | VARCHAR(5) | 국제 전화 국번 (예: +82) |
+| Country code | `countryCode` / `NATN_CD` | CHAR(2) | ISO 3166-1 alpha-2 |
+| Country code (3-char) | `countryAlpha3` / `NATN_A3_CD` | CHAR(3) | ISO 3166-1 alpha-3 |
+| Region code | `regionCode` / `RGN_CD` | VARCHAR(6) | ISO 3166-2 (e.g., KR-11) |
+| International phone number | `phoneNumber` / `INTL_TELNO` | VARCHAR(15) | E.164 full number |
+| Calling code | `callingCode` / `NATN_TELNO` | VARCHAR(5) | International calling code (e.g., +82) |
 
-### 6. 언어별 구현 패턴
+### 6. Language-specific implementation patterns
 
 #### TypeScript/React
 
 ```typescript
-// 국가 선택 컴포넌트 데이터 타입
+// Country selection component data type
 interface Country {
   koreanName: string;
   englishName: string;
-  alpha2: string;      // 값으로 사용
+  alpha2: string;      // Used as value
   alpha3: string;
   numeric: string;
 }
 
-// 지역 선택 데이터 타입
+// Region selection data type
 interface Region {
-  code: string;        // ISO 3166-2 코드 (예: "KR-11")
+  code: string;        // ISO 3166-2 code (e.g., "KR-11")
   nameEn: string;
   nameLocal?: string;
   type: string;
 }
 
-// 전화번호 입력 데이터 타입
+// Phone number input data type
 interface CallingCode {
   countryNameKo: string;
   alpha2: string;
-  callingCode: string;  // 예: "+82"
+  callingCode: string;  // e.g., "+82"
 }
 ```
 
 #### Java/Spring
 
 ```java
-// 국가코드 필드
+// Country code field
 @Column(name = "NATN_CD", length = 2, columnDefinition = "CHAR(2)")
 private String nationCode;  // ISO 3166-1 alpha-2
 
-// 지역코드 필드
+// Region code field
 @Column(name = "RGN_CD", length = 6)
-private String regionCode;  // ISO 3166-2 (예: "KR-11")
+private String regionCode;  // ISO 3166-2 (e.g., "KR-11")
 
-// 국제전화번호 필드
+// International phone number field
 @Column(name = "INTL_TELNO", length = 15)
-private String internationalPhoneNumber;  // E.164 형식
+private String internationalPhoneNumber;  // E.164 format
 ```
 
 #### Python/Django
 
 ```python
-# 국가코드 필드
+# Country code field
 nation_code = models.CharField(
-    max_length=2, verbose_name="국가코드"
+    max_length=2, verbose_name="Country Code"
 )  # ISO 3166-1 alpha-2
 
-# 지역코드 필드
+# Region code field
 region_code = models.CharField(
-    max_length=6, verbose_name="지역코드"
+    max_length=6, verbose_name="Region Code"
 )  # ISO 3166-2
 
-# 국제전화번호 필드
+# International phone number field
 intl_phone_number = models.CharField(
-    max_length=15, verbose_name="국제전화번호"
-)  # E.164 형식
+    max_length=15, verbose_name="International Phone Number"
+)  # E.164 format
 ```

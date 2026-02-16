@@ -1,105 +1,130 @@
 ---
 name: coding-convention
 description: >
-  코드를 작성하거나 수정할 때 프로젝트의 코딩 컨벤션을 자동 적용합니다.
-  Java, TypeScript, Python, CSS/SCSS 파일을 편집하거나 새로 생성할 때,
-  코드 리뷰나 리팩토링을 수행할 때 사용합니다.
+  Automatically applies the project's coding conventions when writing or modifying code.
+  Used when editing or creating Java, TypeScript, React Native, Python, CSS/SCSS files,
+  or when performing code reviews and refactoring.
 ---
 
-# 코딩 컨벤션 적용 스킬
+# Coding Convention Application Skill
 
-코드를 작성하거나 수정할 때 반드시 아래 컨벤션을 따르라.
-각 언어의 상세 규칙은 이 디렉토리의 참조 문서를 확인하라.
+When writing or modifying code, you must follow the conventions below.
+For detailed rules for each language, refer to the reference documents in this directory.
 
-## 언어 판별
+## Language Detection
 
-작업 대상 파일의 확장자로 언어를 판별한다:
-- `.java` → Java 컨벤션 적용 (참조: java-coding-convention.md)
-- `.ts`, `.tsx` → TypeScript 컨벤션 적용 (참조: typescript-coding-convention.md)
-- `.py` → Python 컨벤션 적용 (참조: python-coding-convention.md)
-- `.css`, `.scss`, `.sass` → CSS/SCSS 컨벤션 적용 (참조: css-scss-coding-convention.md)
+Detect the language from the target file extension:
+- `.java` → Apply Java convention (reference: java-coding-convention.md)
+- `.ts`, `.tsx` → Apply TypeScript convention (reference: typescript-coding-convention.md)
+- `.tsx`, `.ts` (React Native project) → Additionally apply React Native convention (reference: react-native-coding-convention.md)
+- `.py` → Apply Python convention (reference: python-coding-convention.md)
+- `.css`, `.scss`, `.sass` → Apply CSS/SCSS convention (reference: css-scss-coding-convention.md)
 
-## Java 컨벤션 핵심 (Google Java Style Guide 기반)
+> **React Native Detection**: If the project contains `react-native` or `expo` in `package.json` dependencies, apply the React Native convention as a complementary layer on top of the TypeScript convention for all `.tsx`/`.ts` files.
 
-- **인코딩**: UTF-8
-- **인덴트**: 2스페이스(블록), +4스페이스(연속줄)
-- **줄 길이**: 100자
-- **중괄호**: K&R 스타일, 단일 문장도 항상 사용
-- **네이밍**:
-  - 패키지: `com.example.deepspace` (전소문자)
-  - 클래스: `UpperCamelCase` (테스트 클래스는 `Test`로 끝남)
-  - 메서드: `lowerCamelCase` (동사/동사구)
-  - 상수: `UPPER_SNAKE_CASE` (`static final` + 깊이 불변)
-  - 필드/파라미터/지역변수: `lowerCamelCase`
-  - 타입 변수: `T`, `E`, `RequestT`
-- **Import**: 와일드카드 금지, static/non-static 분리, ASCII 정렬
-- **Javadoc**: 모든 `public`/`protected` 멤버에 필수. 요약은 명사/동사구(문장 아님)
-- **@Override**: 합법적 시 항상 사용
-- **예외**: 절대 조용히 무시 금지
-- **정적 멤버**: 클래스 이름으로만 접근 (`인스턴스.staticMethod()` 금지)
-- **finalize()**: 오버라이드 금지
-- **배열**: `String[] args` (O), `String args[]` (X)
-- **long 리터럴**: 대문자 `L` (`100L`)
+## Java Convention Essentials (based on Google Java Style Guide)
 
-## CSS/SCSS 컨벤션 핵심 (CSS Guidelines + Sass Guidelines 기반)
+- **Encoding**: UTF-8
+- **Indent**: 2 spaces (block), +4 spaces (continuation lines)
+- **Line length**: 100 characters
+- **Braces**: K&R style, always use even for single statements
+- **Naming**:
+  - Package: `com.example.deepspace` (all lowercase)
+  - Class: `UpperCamelCase` (test classes end with `Test`)
+  - Method: `lowerCamelCase` (verb/verb phrase)
+  - Constant: `UPPER_SNAKE_CASE` (`static final` + deeply immutable)
+  - Field/parameter/local variable: `lowerCamelCase`
+  - Type variable: `T`, `E`, `RequestT`
+- **Import**: No wildcards, separate static/non-static, ASCII sort
+- **Javadoc**: Required for all `public`/`protected` members. Summary is a noun/verb phrase (not a sentence)
+- **@Override**: Always use when legal
+- **Exceptions**: Never silently ignore
+- **Static members**: Access only via class name (`instance.staticMethod()` is prohibited)
+- **finalize()**: Do not override
+- **Arrays**: `String[] args` (O), `String args[]` (X)
+- **long literals**: Uppercase `L` (`100L`)
 
-- **인덴트**: 2스페이스, 탭 금지
-- **줄 길이**: 80자
-- **네이밍**: BEM (`block__element--modifier`), 소문자 kebab-case
-- **파일명**: `kebab-case`, SCSS 파셜은 `_` 접두사
-- **선택자**:
-  - ID 선택자 금지 (`#id` 사용 금지)
-  - 타입 한정 금지 (`div.class` 금지)
-  - 최대 깊이 3레벨 (이상적으로 1~2)
-- **속성 순서**: 유형별 그룹 (Positioning → Box Model → Typography → Visual → Animation → Misc)
-- **색상**: 소문자 hex, 축약 가능 시 축약 (`#fff`), 색상 키워드 금지
-- **단위**: 폰트 `rem`, 줄 높이 단위 없는 숫자, 0에 단위 금지
-- **값 표기**: 앞자리 0 필수 (`0.5`), `border: 0` (`none` 아님)
-- **SCSS 네스팅**: 최대 3레벨, 의사 클래스/상태 클래스만 네스팅 권장
-- **SCSS 변수**: `$kebab-case`, 상수 `$UPPER_SNAKE_CASE`, 관련 값은 Map 관리
-- **@extend**: 사용 자제, 필수 시 `%placeholder`만
-- **!important**: 유틸리티 클래스에만 사전적 사용, 사후적 사용 금지
-- **미디어 쿼리**: 모바일 퍼스트 (`min-width`), 컴포넌트와 인라인 작성
-- **z-index**: Map + getter 함수 중앙 관리, 임의 값 금지
-- **애니메이션**: `transform`/`opacity`만, `transition: all` 금지, `prefers-reduced-motion` 대응 필수
-- **파일 구조**: 7-1 패턴 (abstracts, base, components, layout, pages, themes, vendors)
-- **금지 패턴**: ID 선택자, `!important` 남용, `transition: all`, `@extend .class`, 색상 키워드, 매직 넘버, 4레벨+ 네스팅
+## CSS/SCSS Convention Essentials (based on CSS Guidelines + Sass Guidelines)
 
-## TypeScript 컨벤션 핵심 (Google TypeScript Style Guide 기반)
+- **Indent**: 2 spaces, no tabs
+- **Line length**: 80 characters
+- **Naming**: BEM (`block__element--modifier`), lowercase kebab-case
+- **File naming**: `kebab-case`, SCSS partials use `_` prefix
+- **Selectors**:
+  - No ID selectors (`#id` usage prohibited)
+  - No type qualification (`div.class` prohibited)
+  - Maximum depth 3 levels (ideally 1~2)
+- **Property order**: Group by type (Positioning → Box Model → Typography → Visual → Animation → Misc)
+- **Colors**: Lowercase hex, shorthand when possible (`#fff`), no color keywords
+- **Units**: Font in `rem`, line-height as unitless number, no units on 0
+- **Value notation**: Leading zero required (`0.5`), `border: 0` (not `none`)
+- **SCSS nesting**: Maximum 3 levels, nesting recommended only for pseudo-classes/state classes
+- **SCSS variables**: `$kebab-case`, constants `$UPPER_SNAKE_CASE`, manage related values with Map
+- **@extend**: Avoid usage, use only `%placeholder` when required
+- **!important**: Only proactive use in utility classes, reactive use prohibited
+- **Media queries**: Mobile-first (`min-width`), write inline with components
+- **z-index**: Centrally managed with Map + getter function, no arbitrary values
+- **Animations**: Only `transform`/`opacity`, no `transition: all`, `prefers-reduced-motion` support required
+- **File structure**: 7-1 pattern (abstracts, base, components, layout, pages, themes, vendors)
+- **Prohibited patterns**: ID selectors, `!important` abuse, `transition: all`, `@extend .class`, color keywords, magic numbers, 4+ level nesting
 
-- **세미콜론**: 항상 필수
-- **포매터**: Prettier
-- **네이밍**:
-  - 클래스/인터페이스/타입/enum: `UpperCamelCase`
-  - 변수/파라미터/함수/메서드: `lowerCamelCase`
-  - 전역 상수, enum 값: `CONSTANT_CASE`
-  - 파일명: `snake_case`
-  - 타입 파라미터: `T` 또는 `UpperCamelCase`
-- **Export**: `export default` 금지, named export만 사용
-- **Import**: `import type {...}` 사용, `require()` 금지
-- **타입**: `any` 금지 → `unknown` 사용. 객체는 `interface`, 유니온/튜플은 `type alias`
-- **변수**: `const` 기본, 재할당 시에만 `let`. `var` 절대 금지
-- **금지 패턴**: `var`, `const enum`, `export default`, `export let`, `namespace`, `#ident`, `.forEach()`, `.bind()/.call()/.apply()`, `@ts-ignore`, `@ts-nocheck`
-- **제어 흐름**: `===`/`!==` 필수 (예외: `== null`). `for...of` 사용 (배열에 `for...in` 금지)
-- **에러 처리**: `new Error()` 필수, catch는 `unknown`, 빈 catch 정당화 필요
+## TypeScript Convention Essentials (based on Google TypeScript Style Guide)
 
-## Python 컨벤션 핵심 (PEP 8 기반)
+- **Semicolons**: Always required
+- **Formatter**: Prettier
+- **Naming**:
+  - Class/interface/type/enum: `UpperCamelCase`
+  - Variable/parameter/function/method: `lowerCamelCase`
+  - Global constants, enum values: `CONSTANT_CASE`
+  - File names: `snake_case`
+  - Type parameter: `T` or `UpperCamelCase`
+- **Export**: `export default` prohibited, use named exports only
+- **Import**: Use `import type {...}`, `require()` prohibited
+- **Types**: `any` prohibited → use `unknown`. Use `interface` for objects, `type alias` for union/tuple
+- **Variables**: `const` by default, `let` only when reassignment is needed. `var` is strictly prohibited
+- **Prohibited patterns**: `var`, `const enum`, `export default`, `export let`, `namespace`, `#ident`, `.forEach()`, `.bind()/.call()/.apply()`, `@ts-ignore`, `@ts-nocheck`
+- **Control flow**: `===`/`!==` required (exception: `== null`). Use `for...of` (`for...in` prohibited for arrays)
+- **Error handling**: `new Error()` required, catch uses `unknown`, empty catch needs justification
 
-- **인덴트**: 4스페이스, 탭 금지
-- **줄 길이**: 79자 (주석/독스트링 72자)
-- **네이밍**:
-  - 패키지: `mypackage` (짧은 소문자)
-  - 모듈: `my_module` (소문자_언더스코어)
-  - 클래스: `CapWords` (CamelCase)
-  - 예외: `CapWords` + `Error` 접미사
-  - 함수/메서드: `lowercase_with_underscores`
-  - 상수: `UPPER_CASE_WITH_UNDERSCORES`
-  - 인스턴스 메서드 첫 인자: `self`, 클래스 메서드: `cls`
-- **Import 순서**: 표준 라이브러리 → 서드파티 → 로컬 (그룹 사이 빈 줄)
-- **와일드카드 import 금지**: `from module import *` 회피
-- **비교**: `is None` / `is not None` (`== None` 금지), `isinstance()` 사용 (`type()` 금지)
-- **빈 시퀀스**: `if not seq:` (falsy 활용), `if len(seq):` 금지
-- **독스트링**: `"""삼중 큰따옴표"""`, 명령형 ("Return X"), 모든 공개 멤버
-- **Lambda 할당 금지**: `f = lambda x: 2*x` 금지 → `def f(x): return 2*x`
-- **리소스 관리**: `with` 문 사용
-- **빈 줄**: 최상위 정의 전후 2줄, 클래스 내 메서드 전후 1줄
+## React Native Convention Essentials (based on Airbnb React/JSX + Obytes RN Starter + React Native Official Docs)
+
+> Applied as a complementary layer on top of the TypeScript convention when the project is a React Native/Expo project.
+
+- **File naming**: `kebab-case` for all files and folders (`login-screen.tsx`, `use-auth-store.ts`)
+- **Screen suffix**: `-screen.tsx` (e.g., `login-screen.tsx`, `feed-screen.tsx`)
+- **Hook prefix**: `use-` file naming (e.g., `use-auth.ts`), `use` + PascalCase in code (`useAuth`)
+- **Components**: Functional only (class components prohibited), `PascalCase` naming
+- **Exports**: Named exports only (`export default` prohibited)
+- **Props**: Always define `type` for props, destructure in parameters, `camelCase` naming
+- **JSX**: Self-closing for childless elements, omit `true` value for boolean props, no nested ternaries
+- **Styling**: Use `StyleSheet.create()` or NativeWind. No inline styles. Styles co-located at file bottom
+- **State**: TanStack Query (server state) + Zustand (client state). Separate server/client state
+- **Navigation**: Expo Router file-based routing. `app/` as thin re-export layer, logic in `features/`
+- **Structure**: Feature-based architecture (`features/` → `components/` → `lib/`). Co-locate tests
+- **Hooks**: Top-level only, correct dependency arrays, single responsibility per hook
+- **Performance**: `React.memo` for expensive components, `useCallback` for FlatList renderers, stable `keyExtractor`, no callbacks in JSX
+- **Imports**: React core → third-party → internal (`@/`) → relative → type-only
+- **Max constraints**: 3 function params, 110 lines per function
+- **Accessibility**: `accessibilityLabel` + `accessibilityRole` on interactive elements, minimum 44×44 touch target
+- **Prohibited**: Class components, `export default`, inline styles, array index as key, nested ternaries, `any` for props, `console.log` in production, `Dimensions.get()` in render
+
+## Python Convention Essentials (based on PEP 8)
+
+- **Indent**: 4 spaces, no tabs
+- **Line length**: 79 characters (comments/docstrings 72 characters)
+- **Naming**:
+  - Package: `mypackage` (short lowercase)
+  - Module: `my_module` (lowercase_underscore)
+  - Class: `CapWords` (CamelCase)
+  - Exception: `CapWords` + `Error` suffix
+  - Function/method: `lowercase_with_underscores`
+  - Constant: `UPPER_CASE_WITH_UNDERSCORES`
+  - Instance method first argument: `self`, class method: `cls`
+- **Import order**: Standard library → Third-party → Local (blank line between groups)
+- **No wildcard imports**: Avoid `from module import *`
+- **Comparison**: `is None` / `is not None` (`== None` prohibited), use `isinstance()` (`type()` prohibited)
+- **Empty sequences**: `if not seq:` (use falsy), `if len(seq):` prohibited
+- **Docstrings**: `"""triple double quotes"""`, imperative mood ("Return X"), all public members
+- **Lambda assignment prohibited**: `f = lambda x: 2*x` prohibited → `def f(x): return 2*x`
+- **Resource management**: Use `with` statement
+- **Blank lines**: 2 blank lines before/after top-level definitions, 1 blank line before/after methods within a class

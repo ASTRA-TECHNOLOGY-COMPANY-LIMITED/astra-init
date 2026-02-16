@@ -1,132 +1,132 @@
-# 테스트 전략
+# Test Strategy
 
-> 프로젝트의 테스트 범위, 전략, 기준을 정의합니다.
-> 기능 스프린트에서 `docs/tests/test-cases/` 하위에 기능별 테스트 케이스 문서가 추가됩니다.
+> Defines the project's test scope, strategy, and criteria.
+> Feature-specific test case documents are added under `docs/tests/test-cases/` during feature sprints.
 
-## 1. 테스트 레벨 정의
+## 1. Test Level Definitions
 
-### 1.1 단위 테스트 (Unit Test)
+### 1.1 Unit Test
 
-- **범위**: 개별 함수, 메서드, 클래스 단위
-- **목적**: 비즈니스 로직의 정확성 검증
-- **대상**: 서비스 레이어, 유틸리티, 도메인 로직
-- **제외**: 컨트롤러, 리포지토리 (통합 테스트에서 다룸)
+- **Scope**: Individual functions, methods, class level
+- **Purpose**: Verify correctness of business logic
+- **Target**: Service layer, utilities, domain logic
+- **Excluded**: Controllers, repositories (covered in integration tests)
 
-### 1.2 통합 테스트 (Integration Test)
+### 1.2 Integration Test
 
-- **범위**: API 엔드포인트, DB 연동, 외부 서비스 연동
-- **목적**: 모듈 간 상호작용 검증
-- **대상**: REST API, 데이터베이스 CRUD, 인증/인가 흐름
+- **Scope**: API endpoints, DB connectivity, external service integration
+- **Purpose**: Verify inter-module interactions
+- **Target**: REST API, database CRUD, authentication/authorization flows
 
-### 1.3 E2E 테스트 (End-to-End Test)
+### 1.3 E2E Test (End-to-End Test)
 
-- **범위**: 사용자 시나리오 전체 흐름
-- **목적**: 실제 사용자 관점에서의 기능 동작 확인
-- **대상**: 핵심 비즈니스 시나리오 (회원가입→로그인→주문→결제)
+- **Scope**: Complete user scenario flows
+- **Purpose**: Confirm feature behavior from the actual user's perspective
+- **Target**: Core business scenarios (Sign up → Login → Order → Payment)
 
-## 2. 테스트 커버리지 목표
+## 2. Test Coverage Goals
 
-| 레벨 | 대상 | 목표 커버리지 |
-|------|------|-------------|
-| 단위 테스트 | 서비스 레이어 | 70%+ |
-| 단위 테스트 | 핵심 비즈니스 로직 | 90%+ |
-| 통합 테스트 | API 엔드포인트 | 주요 경로 100% |
-| E2E 테스트 | 핵심 시나리오 | 주요 시나리오 100% |
+| Level | Target | Coverage Goal |
+|-------|--------|---------------|
+| Unit Test | Service layer | 70%+ |
+| Unit Test | Core business logic | 90%+ |
+| Integration Test | API endpoints | 100% of main paths |
+| E2E Test | Core scenarios | 100% of main scenarios |
 
-## 3. 테스트 네이밍 규칙
+## 3. Test Naming Rules
 
-**Given-When-Then 패턴**을 따릅니다:
+Follows the **Given-When-Then pattern**:
 
 ```
 # Java/Kotlin
 @Test
-void given_유효한사용자정보_when_회원가입요청_then_성공응답반환()
+void given_validUserInfo_when_signupRequest_then_returnsSuccessResponse()
 
 # TypeScript/JavaScript
-describe('회원가입', () => {
-  it('유효한 사용자 정보로 요청하면 성공 응답을 반환한다', () => {})
+describe('Signup', () => {
+  it('returns a success response when requested with valid user info', () => {})
 })
 
 # Python
 def test_given_valid_user_info_when_signup_then_returns_success():
 ```
 
-## 4. 테스트 환경 구성
+## 4. Test Environment Setup
 
-### 4.1 테스트 DB
+### 4.1 Test DB
 
-- 테스트 전용 데이터베이스 사용 (운영 DB와 분리)
-- 테스트 실행 전 스키마 초기화
-- `docs/database/database-design.md`의 DDL 기반 스키마 생성
+- Use a dedicated test database (separate from production DB)
+- Initialize schema before test execution
+- Generate schema based on DDL from `docs/database/database-design.md`
 
-### 4.2 목 서버 (Mock Server)
+### 4.2 Mock Server
 
-- 외부 API 연동은 목 서버로 대체
-- PG사 API, SMS API, 이메일 API 등
+- Replace external API integrations with mock servers
+- Payment gateway API, SMS API, email API, etc.
 
-### 4.3 테스트 데이터 관리
+### 4.3 Test Data Management
 
-- **Fixture 패턴**: 정적 테스트 데이터 정의
-- **Factory 패턴**: 동적 테스트 데이터 생성
-- 테스트 간 데이터 격리 보장
+- **Fixture pattern**: Define static test data
+- **Factory pattern**: Generate dynamic test data
+- Ensure data isolation between tests
 
-## 5. 주요 모듈별 테스트 범위
+## 5. Test Scope by Module
 
-### 5.1 인증 모듈
+### 5.1 Authentication Module
 
-| 시나리오 | 테스트 레벨 | 우선순위 |
-|---------|-----------|---------|
-| 회원가입 (정상) | 단위 + 통합 | 높음 |
-| 회원가입 (중복 이메일) | 단위 + 통합 | 높음 |
-| 로그인 (정상) | 단위 + 통합 | 높음 |
-| 로그인 (잘못된 비밀번호) | 단위 + 통합 | 높음 |
-| 토큰 갱신 | 단위 + 통합 | 높음 |
-| 토큰 만료 처리 | 단위 | 중간 |
+| Scenario | Test Level | Priority |
+|----------|-----------|----------|
+| Sign up (normal) | Unit + Integration | High |
+| Sign up (duplicate email) | Unit + Integration | High |
+| Login (normal) | Unit + Integration | High |
+| Login (wrong password) | Unit + Integration | High |
+| Token refresh | Unit + Integration | High |
+| Token expiration handling | Unit | Medium |
 
-### 5.2 결제 모듈
+### 5.2 Payment Module
 
-| 시나리오 | 테스트 레벨 | 우선순위 |
-|---------|-----------|---------|
-| 결제 성공 | 단위 + 통합 | 높음 |
-| 결제 실패 (잔액 부족) | 단위 + 통합 | 높음 |
-| 결제 재시도 | 단위 | 높음 |
-| 환불 처리 | 단위 + 통합 | 높음 |
+| Scenario | Test Level | Priority |
+|----------|-----------|----------|
+| Payment success | Unit + Integration | High |
+| Payment failure (insufficient balance) | Unit + Integration | High |
+| Payment retry | Unit | High |
+| Refund processing | Unit + Integration | High |
 
-### 5.3 주문 모듈
+### 5.3 Order Module
 
-| 시나리오 | 테스트 레벨 | 우선순위 |
-|---------|-----------|---------|
-| 주문 생성 | 단위 + 통합 | 높음 |
-| 주문 취소 | 단위 + 통합 | 높음 |
-| 주문 상태 변경 | 단위 | 중간 |
+| Scenario | Test Level | Priority |
+|----------|-----------|----------|
+| Order creation | Unit + Integration | High |
+| Order cancellation | Unit + Integration | High |
+| Order status change | Unit | Medium |
 
-> **기능 스프린트에서 기능별 테스트 케이스 문서가 `docs/tests/test-cases/`에 추가됩니다.**
-> 설계 문서(blueprint)의 기능 요구사항을 기반으로 테스트 케이스를 사전 정의하고,
-> AI가 코드와 테스트를 동시에 생성할 때 이 문서를 참조합니다.
+> **Feature-specific test case documents are added to `docs/tests/test-cases/` during feature sprints.**
+> Test cases are pre-defined based on the functional requirements from design documents (blueprints),
+> and AI references this document when generating code and tests simultaneously.
 
-## 6. 자동화 범위
+## 6. Automation Scope
 
-### 6.1 CI/CD 파이프라인
+### 6.1 CI/CD Pipeline
 
 ```
-PR 생성 시:
-  ├─ 단위 테스트 전체 실행
-  ├─ 통합 테스트 전체 실행
-  ├─ 코드 커버리지 리포트 생성
-  └─ 커버리지 임계값 미달 시 PR 차단
+On PR creation:
+  ├─ Run all unit tests
+  ├─ Run all integration tests
+  ├─ Generate code coverage report
+  └─ Block PR if coverage falls below threshold
 
-main 브랜치 머지 시:
-  ├─ E2E 테스트 실행
-  └─ 테스트 결과 docs/tests/test-reports/에 기록
+On merge to main branch:
+  ├─ Run E2E tests
+  └─ Record test results in docs/tests/test-reports/
 ```
 
-### 6.2 테스트 결과 보고
+### 6.2 Test Result Reporting
 
-- 스프린트별 테스트 결과를 `docs/tests/test-reports/sprint-{N}-report.md`에 기록
-- 모듈별 통과/실패 현황, 커버리지 요약, 발견된 이슈 포함
+- Record test results per sprint in `docs/tests/test-reports/sprint-{N}-report.md`
+- Include pass/fail status by module, coverage summary, and discovered issues
 
 ---
 
-> **갱신 규칙**:
-> 1. 새 모듈 추가 시 섹션 5에 테스트 범위를 추가합니다.
-> 2. 스프린트 회고에서 테스트 전략 개선사항을 반영합니다.
+> **Update Rules**:
+> 1. Add test scope to Section 5 when adding new modules.
+> 2. Reflect test strategy improvements from sprint retrospectives.

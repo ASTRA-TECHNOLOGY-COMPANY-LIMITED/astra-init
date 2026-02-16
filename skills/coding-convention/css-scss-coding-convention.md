@@ -1,77 +1,77 @@
 # CSS/SCSS Coding Convention
 
-> **CSS Guidelines (Harry Roberts) + Sass Guidelines (Kitty Giraudel)** 기반
+> **Based on CSS Guidelines (Harry Roberts) + Sass Guidelines (Kitty Giraudel)**
 >
-> - 공식 문서: https://cssguidelin.es/ , https://sass-guidelin.es/
-> - 참고: https://google.github.io/styleguide/htmlcssguide.html , https://github.com/airbnb/css
-> - 도구: https://stylelint.io/ (stylelint-config-standard-scss)
-> - 관리: Harry Roberts (CSS Wizardry) / Kitty Giraudel
+> - Official documentation: https://cssguidelin.es/ , https://sass-guidelin.es/
+> - References: https://google.github.io/styleguide/htmlcssguide.html , https://github.com/airbnb/css
+> - Tool: https://stylelint.io/ (stylelint-config-standard-scss)
+> - Maintained by: Harry Roberts (CSS Wizardry) / Kitty Giraudel
 
 ---
 
-## 1. 선정 사유
+## 1. Selection Rationale
 
-| 기준 | CSS Guidelines + Sass Guidelines | Google HTML/CSS | Airbnb CSS/Sass | SMACSS |
+| Criteria | CSS Guidelines + Sass Guidelines | Google HTML/CSS | Airbnb CSS/Sass | SMACSS |
 |---|---|---|---|---|
-| 포괄성 | 매우 높음 (CSS + SCSS 전체) | CSS 기본만 | 중간 (SCSS 포함) | 아키텍처 중심 |
-| 커뮤니티 채택 | 글로벌 표준 수준 | Google 내부 중심 | React 생태계 | 제한적 |
-| 최신성 | 활발 유지보수 | 유지보수 | 2023년 이후 중단 | 레거시 |
-| SCSS 지원 | 네이티브 | 없음 | 부분적 | 없음 |
-| 도구 지원 | Stylelint 완전 통합 | 없음 | 부분적 | 없음 |
-| 아키텍처 가이드 | ITCSS 기반 | 없음 | BEM 변형 | SMACSS 자체 |
+| Comprehensiveness | Very high (covers both CSS + SCSS) | CSS basics only | Medium (includes SCSS) | Architecture-focused |
+| Community adoption | Global standard level | Google internal focus | React ecosystem | Limited |
+| Up-to-date | Actively maintained | Maintained | Stalled since 2023 | Legacy |
+| SCSS support | Native | None | Partial | None |
+| Tooling support | Full Stylelint integration | None | Partial | None |
+| Architecture guide | ITCSS-based | None | BEM variant | SMACSS itself |
 
-CSS Guidelines는 선택자, 특이성, 아키텍처를 포괄하는 가장 상세한 CSS 가이드이며, Sass Guidelines는 SCSS에 특화된 유일한 포괄적 가이드이다. 두 가이드의 조합은 업계 표준으로 널리 인정받는다.
+CSS Guidelines is the most detailed CSS guide covering selectors, specificity, and architecture, while Sass Guidelines is the only comprehensive guide specialized for SCSS. The combination of these two guides is widely recognized as an industry standard.
 
 ---
 
-## 2. 소스 파일 기본 규칙
+## 2. Source File Basic Rules
 
-### 2.1 파일명
+### 2.1 File Names
 
-| 규칙 | 상세 |
+| Rule | Details |
 |---|---|
-| 케이스 | `kebab-case` 소문자 하이픈 구분 |
-| SCSS 파셜 | 언더스코어 접두사: `_variables.scss`, `_mixins.scss` |
-| 컴포넌트 파일 | 컴포넌트명과 일치: `_button.scss`, `_card.scss` |
+| Case | `kebab-case` lowercase hyphen-separated |
+| SCSS partials | Underscore prefix: `_variables.scss`, `_mixins.scss` |
+| Component files | Match the component name: `_button.scss`, `_card.scss` |
 
 ```
-# 올바름
+# Correct
 _variables.scss
 _button.scss
 _header.scss
 main.scss
 
-# 잘못됨
+# Incorrect
 Variables.scss
 Button.SCSS
 myStyles.css
 ```
 
-### 2.2 파일 인코딩
+### 2.2 File Encoding
 
-- UTF-8 필수
-- `@charset "UTF-8";` 선언 (SCSS 메인 파일)
+- UTF-8 required
+- `@charset "UTF-8";` declaration (in SCSS main file)
 
-### 2.3 들여쓰기
+### 2.3 Indentation
 
-| 규칙 | 상세 |
+| Rule | Details |
 |---|---|
-| 방식 | 스페이스 (탭 금지) |
-| 크기 | **2스페이스** |
+| Method | Spaces (tabs prohibited) |
+| Size | **2 spaces** |
 
-### 2.4 줄 길이
+### 2.4 Line Length
 
-- **80자** 이하 권장
-- URL 등 분리 불가한 값은 예외
+- **80 characters** or less recommended
+- Exceptions for non-splittable values such as URLs
 
 ---
 
-## 3. 포매팅
+## 3. Formatting
 
-### 3.1 선언 블록
+### 3.1 Declaration Blocks
 
 ```scss
-// 올바름
+// Correct
 .selector-a,
 .selector-b,
 .selector-c {
@@ -79,33 +79,33 @@ myStyles.css
   color: #333;
 }
 
-// 잘못됨 — 선택자를 한 줄에 나열
+// Incorrect — selectors listed on one line
 .selector-a, .selector-b, .selector-c {
   display: block;
 }
 
-// 잘못됨 — 여는 중괄호 앞 공백 없음
+// Incorrect — no space before opening brace
 .selector{
   display: block;
 }
 ```
 
-| 규칙 | 상세 |
+| Rule | Details |
 |---|---|
-| 여는 중괄호 | 선택자와 같은 줄, 앞에 공백 1개 |
-| 닫는 중괄호 | 별도 줄, 선택자와 같은 인덴트 수준 |
-| 다중 선택자 | 각 선택자를 별도 줄에 작성 |
-| 세미콜론 | 마지막 선언 포함 **모든 선언에 필수** |
-| 콜론 뒤 공백 | 필수 (`color: red`), 콜론 앞 공백 없음 |
-| 규칙셋 사이 | 빈 줄 1개 |
+| Opening brace | On the same line as the selector, preceded by one space |
+| Closing brace | On its own line, at the same indent level as the selector |
+| Multiple selectors | Each selector on its own line |
+| Semicolons | **Required for all declarations**, including the last one |
+| Space after colon | Required (`color: red`), no space before the colon |
+| Between rulesets | One blank line |
 
-### 3.2 속성 선언 순서
+### 3.2 Property Declaration Order
 
-속성은 **유형별 그룹** 순서로 정렬한다:
+Properties are ordered by **type group**:
 
 ```scss
 .selector {
-  // 1. 포지셔닝
+  // 1. Positioning
   position: absolute;
   top: 0;
   right: 0;
@@ -113,7 +113,7 @@ myStyles.css
   left: 0;
   z-index: z('default');
 
-  // 2. 디스플레이 & 박스 모델
+  // 2. Display & Box Model
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -125,7 +125,7 @@ myStyles.css
   border: 1px solid #333;
   margin: 10px;
 
-  // 3. 타이포그래피
+  // 3. Typography
   font-family: sans-serif;
   font-size: 1rem;
   font-weight: 700;
@@ -134,23 +134,23 @@ myStyles.css
   text-align: center;
   text-transform: uppercase;
 
-  // 4. 시각적 / 장식
+  // 4. Visual / Decorative
   background-color: #fff;
   border-radius: 0.25rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   opacity: 1;
 
-  // 5. 애니메이션
+  // 5. Animation
   transition: transform 0.3s ease;
   animation: fade-in 0.5s ease;
 
-  // 6. 기타
+  // 6. Misc
   cursor: pointer;
   pointer-events: auto;
 }
 ```
 
-| 그룹 순서 | 속성 범주 |
+| Group Order | Property Category |
 |---|---|
 | 1 | Positioning: `position`, `top`, `right`, `bottom`, `left`, `z-index` |
 | 2 | Box Model: `display`, `flex-*`, `grid-*`, `overflow`, `box-sizing`, `width`, `height`, `padding`, `border`, `margin` |
@@ -159,92 +159,92 @@ myStyles.css
 | 5 | Animation: `transition`, `animation`, `transform` |
 | 6 | Misc: `cursor`, `pointer-events`, `user-select`, `will-change` |
 
-### 3.3 값 표기
+### 3.3 Value Notation
 
-| 규칙 | 올바름 | 잘못됨 |
+| Rule | Correct | Incorrect |
 |---|---|---|
-| 앞자리 0 필수 | `opacity: 0.5;` | `opacity: .5;` |
-| 0에 단위 금지 | `margin: 0;` | `margin: 0px;` |
-| 소문자 hex | `color: #aabbcc;` | `color: #AABBCC;` |
-| 축약 hex 사용 | `color: #fff;` | `color: #ffffff;` |
-| 따옴표 | 작은따옴표 (`'`) 사용 | 큰따옴표 (`"`) |
-| URL 따옴표 | `url('path/to/file')` | `url(path/to/file)` |
-| border 제거 | `border: 0;` | `border: none;` |
+| Leading zero required | `opacity: 0.5;` | `opacity: .5;` |
+| No units for zero | `margin: 0;` | `margin: 0px;` |
+| Lowercase hex | `color: #aabbcc;` | `color: #AABBCC;` |
+| Use shorthand hex | `color: #fff;` | `color: #ffffff;` |
+| Quotes | Use single quotes (`'`) | Double quotes (`"`) |
+| URL quotes | `url('path/to/file')` | `url(path/to/file)` |
+| Border removal | `border: 0;` | `border: none;` |
 
 ---
 
-## 4. 선택자 규칙
+## 4. Selector Rules
 
-### 4.1 선택자 기본 원칙
+### 4.1 Selector Fundamental Principles
 
-| 규칙 | 상세 |
+| Rule | Details |
 |---|---|
-| ID 선택자 금지 | 스타일링에 `#id` 사용 금지. 클래스만 사용 |
-| 타입 한정 금지 | `div.container` 금지 → `.container` 사용 |
-| 선택자 깊이 | 최대 **3단계** (이상적으로 1~2단계) |
-| 범용 선택자 | `*` 단독 사용 자제 |
+| No ID selectors | Do not use `#id` for styling. Use classes only |
+| No type qualification | `div.container` prohibited -> use `.container` |
+| Selector depth | Maximum **3 levels** (ideally 1-2 levels) |
+| Universal selector | Avoid using `*` alone |
 
 ```scss
-// 올바름
+// Correct
 .site-nav { }
 .site-nav__item { }
 
-// 잘못됨 — ID 선택자
+// Incorrect — ID selectors
 #header { }
 #navigation { }
 
-// 잘못됨 — 타입 한정
+// Incorrect — type qualification
 ul.nav { }
 div.container { }
 input.btn { }
 
-// 잘못됨 — 과도한 깊이
+// Incorrect — excessive depth
 body .page .content .article .title { }
 ```
 
-### 4.2 선택자 의도 (Selector Intent)
+### 4.2 Selector Intent
 
-선택자는 **대상을 명확히** 표현해야 한다:
+Selectors should **clearly express the target**:
 
 ```scss
-// 잘못됨 — 너무 광범위, header 안의 모든 ul을 대상으로 함
+// Incorrect — too broad, targets all ul inside header
 header ul { }
 
-// 올바름 — 명시적 의도
+// Correct — explicit intent
 .site-nav { }
 ```
 
-### 4.3 위치 독립성
+### 4.3 Location Independence
 
-컴포넌트는 **위치에 의존하지 않아야** 한다:
+Components should **not depend on location**:
 
 ```scss
-// 잘못됨 — 위치 의존적
+// Incorrect — location dependent
 .sidebar .widget { }
 .footer .widget { }
 
-// 올바름 — 어디에든 배치 가능
+// Correct — can be placed anywhere
 .widget { }
 .widget--compact { }
 ```
 
-### 4.4 JavaScript 연결 클래스
+### 4.4 JavaScript Binding Classes
 
 ```html
-<!-- 스타일과 동작을 분리 -->
-<button class="btn btn--primary js-submit-form">제출</button>
+<!-- Separate style and behavior -->
+<button class="btn btn--primary js-submit-form">Submit</button>
 ```
 
-- `.js-` 접두사 클래스는 **절대 스타일링하지 않음**
-- JavaScript 바인딩 전용
+- `.js-` prefixed classes must **never be styled**
+- Used exclusively for JavaScript bindings
 
 ---
 
-## 5. 네이밍 컨벤션
+## 5. Naming Conventions
 
 ### 5.1 BEM (Block Element Modifier)
 
-| 구분 | 패턴 | 예시 |
+| Component | Pattern | Example |
 |---|---|---|
 | Block | `.block-name` | `.search-form` |
 | Element | `.block-name__element` | `.search-form__input` |
@@ -252,7 +252,7 @@ header ul { }
 | Element + Modifier | `.block-name__element--modifier` | `.search-form__input--disabled` |
 
 ```scss
-// 올바름
+// Correct
 .card { }
 .card__header { }
 .card__body { }
@@ -260,24 +260,24 @@ header ul { }
 .card--featured { }
 .card__header--highlighted { }
 
-// 잘못됨 — 요소의 요소 중첩
-.card__header__title { }    // → .card__title 사용
+// Incorrect — nested element of element
+.card__header__title { }    // -> use .card__title
 
-// 잘못됨 — modifier만 단독 사용
-<div class="card--featured">  // → <div class="card card--featured">
+// Incorrect — modifier used alone
+<div class="card--featured">  // -> <div class="card card--featured">
 ```
 
-**핵심 규칙:**
-- 모든 클래스명은 **소문자 + 하이픈** (kebab-case)
-- Block과 Element는 `__` (더블 언더스코어)로 구분
-- Block/Element와 Modifier는 `--` (더블 하이픈)으로 구분
-- Element의 Element 중첩 금지: `.block__elem1__elem2` → `.block__elem2`
-- Modifier는 항상 원래 클래스와 함께 사용
+**Key rules:**
+- All class names are **lowercase + hyphens** (kebab-case)
+- Block and Element are separated by `__` (double underscore)
+- Block/Element and Modifier are separated by `--` (double hyphen)
+- No nesting elements within elements: `.block__elem1__elem2` -> `.block__elem2`
+- Modifiers are always used alongside the original class
 
-### 5.2 상태 클래스
+### 5.2 State Classes
 
 ```scss
-// SMACSS 스타일 상태 접두사
+// SMACSS-style state prefix
 .is-active { }
 .is-hidden { }
 .is-disabled { }
@@ -286,10 +286,10 @@ header ul { }
 .has-children { }
 ```
 
-### 5.3 유틸리티 클래스
+### 5.3 Utility Classes
 
 ```scss
-// u- 접두사 사용
+// u- prefix usage
 .u-hidden { display: none !important; }
 .u-text-center { text-align: center !important; }
 .u-sr-only {
@@ -303,41 +303,41 @@ header ul { }
 
 ---
 
-## 6. 색상 및 값 규칙
+## 6. Color and Value Rules
 
-### 6.1 색상
+### 6.1 Colors
 
-| 규칙 | 상세 |
+| Rule | Details |
 |---|---|
-| 표기 우선순위 | HSL > RGB > Hex |
-| Hex 형식 | 소문자, 축약 가능 시 축약 |
-| 색상 키워드 금지 | `red`, `blue` 등 CSS 키워드 사용 금지 |
-| 시맨틱 변수 | 원시 색상 → 의미적 변수로 매핑 |
+| Notation priority | HSL > RGB > Hex |
+| Hex format | Lowercase, use shorthand when possible |
+| No color keywords | `red`, `blue`, and other CSS keyword colors prohibited |
+| Semantic variables | Map raw colors to semantic variables |
 
 ```scss
-// 1단계: 원시 색상 정의
+// Step 1: Define raw colors
 $blue-500: hsl(210, 100%, 50%);
 $gray-900: #1a1a1a;
 
-// 2단계: 시맨틱 매핑
+// Step 2: Semantic mapping
 $color-primary: $blue-500;
 $color-text: $gray-900;
 $color-background: #fff;
 $color-border: #ddd;
 
-// 잘못됨 — 색상 키워드
+// Incorrect — color keywords
 color: red;
 background: white;
 
-// 올바름
+// Correct
 color: #f00;
 background-color: #fff;
 ```
 
-### 6.2 색상 조작
+### 6.2 Color Manipulation
 
 ```scss
-// lighten()/darken() 대신 mix() 사용
+// Use mix() instead of lighten()/darken()
 @function tint($color, $percentage) {
   @return mix(white, $color, $percentage);
 }
@@ -346,7 +346,7 @@ background-color: #fff;
   @return mix(black, $color, $percentage);
 }
 
-// 사용
+// Usage
 .button:hover {
   background-color: tint($color-primary, 20%);
 }
@@ -354,27 +354,27 @@ background-color: #fff;
 
 ---
 
-## 7. 단위 규칙
+## 7. Unit Rules
 
-| 용도 | 권장 단위 | 이유 |
+| Purpose | Recommended Unit | Reason |
 |---|---|---|
-| 폰트 크기 | `rem` | 사용자 브라우저 설정 존중, 접근성 |
-| 간격 (padding/margin) | `rem` 또는 `em` | 폰트 크기에 비례하여 스케일 |
-| 컨테이너 너비 | `%`, `max-width`에 `px` 또는 `rem` | 유동적, 반응형 |
-| 테두리 | `px` | 고정, 정밀 |
-| 미디어 쿼리 | `em` | 브라우저 간 일관성 |
-| 줄 높이 | **단위 없는 숫자** | 복합 효과 방지 |
-| 0 값 | **단위 없음** | `margin: 0` (`0px` 아님) |
+| Font size | `rem` | Respects user browser settings, accessibility |
+| Spacing (padding/margin) | `rem` or `em` | Scales proportionally to font size |
+| Container width | `%`, `px` or `rem` for `max-width` | Fluid, responsive |
+| Borders | `px` | Fixed, precise |
+| Media queries | `em` | Cross-browser consistency |
+| Line height | **Unitless number** | Prevents compound effects |
+| Zero values | **No units** | `margin: 0` (not `0px`) |
 
 ```scss
-// 올바름
+// Correct
 html {
-  font-size: 100%; // 16px 기본
+  font-size: 100%; // 16px default
 }
 
 body {
   font-size: 1rem;
-  line-height: 1.5; // 단위 없음
+  line-height: 1.5; // unitless
 }
 
 h1 {
@@ -389,23 +389,23 @@ h1 {
   margin: 0 auto;
 }
 
-// 잘못됨 — 폰트에 px 사용 (접근성 문제)
+// Incorrect — px for fonts (accessibility issue)
 body {
   font-size: 16px;
 }
 ```
 
-### 7.1 SCSS 숫자 처리
+### 7.1 SCSS Number Handling
 
 ```scss
-// 단위 추가: 곱셈
+// Adding units: multiplication
 $value: 42;
 $length: $value * 1px; // 42px
 
-// 단위 제거: 나눗셈
+// Removing units: division
 $raw-value: $length / 1px; // 42
 
-// 계산식은 괄호로 감싸기
+// Wrap calculations in parentheses
 .element {
   width: (100% / 3);
 }
@@ -413,21 +413,21 @@ $raw-value: $length / 1px; // 42
 
 ---
 
-## 8. SCSS 네스팅 규칙
+## 8. SCSS Nesting Rules
 
-### 8.1 최대 깊이
+### 8.1 Maximum Depth
 
-**최대 3레벨** (이상적으로 1~2레벨):
+**Maximum 3 levels** (ideally 1-2 levels):
 
 ```scss
-// 올바름 — 2레벨
+// Correct — 2 levels
 .block {
   .block__element {
     color: #333;
   }
 }
 
-// 잘못됨 — 4레벨 이상
+// Incorrect — 4 levels or more
 .page {
   .content {
     .article {
@@ -439,46 +439,46 @@ $raw-value: $length / 1px; // 42
 }
 ```
 
-### 8.2 허용되는 네스팅
+### 8.2 Allowed Nesting
 
 ```scss
 .button {
-  // 의사 클래스/요소 — 허용
+  // Pseudo-classes/elements — allowed
   &:hover { }
   &:focus { }
   &::before { }
   &::after { }
 
-  // 상태 클래스 — 허용
+  // State classes — allowed
   &.is-active { }
   &.is-disabled { }
 
-  // 컨텍스트 오버라이드 — 허용
+  // Context overrides — allowed
   .no-js & { }
 }
 ```
 
-### 8.3 SCSS 규칙셋 내 선언 순서
+### 8.3 SCSS Ruleset Declaration Order
 
 ```scss
 .component {
-  // 1. 로컬 변수
+  // 1. Local variables
   $local-var: 10px;
 
-  // 2. @extend 문 (placeholder만)
+  // 2. @extend statements (placeholders only)
   @extend %clearfix;
 
-  // 3. @include 문 (@content 없는)
+  // 3. @include statements (without @content)
   @include ellipsis;
   @include box-sizing(border-box);
 
-  // 4. 표준 CSS 속성 (유형별 그룹 순서)
+  // 4. Standard CSS properties (in type group order)
   display: block;
   overflow: hidden;
   padding: $local-var;
   color: #333;
 
-  // 5. 중첩 선택자 (앞에 빈 줄)
+  // 5. Nested selectors (preceded by blank line)
 
   &:hover {
     color: #000;
@@ -488,7 +488,7 @@ $raw-value: $length / 1px; // 42
     content: '';
   }
 
-  // 6. @include with @content (미디어 쿼리)
+  // 6. @include with @content (media queries)
   @include respond-to('medium') {
     overflow: visible;
   }
@@ -497,28 +497,28 @@ $raw-value: $length / 1px; // 42
 
 ---
 
-## 9. SCSS 변수
+## 9. SCSS Variables
 
-### 9.1 네이밍
+### 9.1 Naming
 
-| 유형 | 패턴 | 예시 |
+| Type | Pattern | Example |
 |---|---|---|
-| 일반 변수 | `$kebab-case` | `$font-size-base`, `$color-primary` |
-| 상수 | `$UPPER_SNAKE_CASE` | `$MAX_WIDTH`, `$CSS_POSITIONS` |
-| Private 변수 | `$_kebab-case` | `$_column-width` |
-| 플래그/기본값 | `!default` 사용 | `$baseline: 1em !default;` |
+| General variables | `$kebab-case` | `$font-size-base`, `$color-primary` |
+| Constants | `$UPPER_SNAKE_CASE` | `$MAX_WIDTH`, `$CSS_POSITIONS` |
+| Private variables | `$_kebab-case` | `$_column-width` |
+| Flags/defaults | Use `!default` | `$baseline: 1em !default;` |
 
-### 9.2 변수 생성 기준
+### 9.2 Variable Creation Criteria
 
-변수는 다음 조건을 **모두** 충족할 때 생성:
-1. 값이 **최소 2회** 반복됨
-2. 값이 **업데이트될 가능성**이 있음
-3. 모든 사용처가 **의도적으로 연결**됨
+Create variables only when **all** of the following conditions are met:
+1. The value is repeated **at least 2 times**
+2. The value is **likely to be updated**
+3. All uses are **intentionally linked**
 
-### 9.3 Map 활용
+### 9.3 Map Usage
 
 ```scss
-// 관련 값은 Map으로 관리
+// Manage related values with Maps
 $breakpoints: (
   'small': 576px,
   'medium': 768px,
@@ -539,7 +539,7 @@ $z-indexes: (
   'toast': 800,
 );
 
-// Getter 함수
+// Getter function
 @function z($layer) {
   @if not map-has-key($z-indexes, $layer) {
     @error 'No z-index found for `#{$layer}`.';
@@ -547,16 +547,16 @@ $z-indexes: (
   @return map-get($z-indexes, $layer);
 }
 
-// 사용
+// Usage
 .modal {
   z-index: z('modal'); // 500
 }
 ```
 
-### 9.4 Map 포매팅
+### 9.4 Map Formatting
 
 ```scss
-// 마지막 항목에도 trailing comma
+// Trailing comma on the last item
 $map: (
   'key1': value1,
   'key2': value2,
@@ -570,7 +570,7 @@ $map: (
 
 ### 10.1 Mixin
 
-**동적 값이나 반복 패턴에 사용:**
+**Use for dynamic values or repeating patterns:**
 
 ```scss
 @mixin respond-to($breakpoint) {
@@ -598,14 +598,14 @@ $map: (
 
 ### 10.2 Function
 
-**계산된 반환값이 필요할 때 사용:**
+**Use when a computed return value is needed:**
 
 ```scss
 @function em($pixels, $context: 16px) {
   @return ($pixels / $context) * 1em;
 }
 
-// 프로젝트 접두사 권장
+// Project prefix recommended
 @function acme-grid-unit($n) {
   @return $n * $acme-column-width;
 }
@@ -613,12 +613,12 @@ $map: (
 
 ### 10.3 @extend
 
-**사용 자제.** 예측 불가한 동작, 미디어 쿼리 경계 불가, 소스 순서 파괴 등의 문제가 있다.
+**Use sparingly.** Issues include unpredictable behavior, inability to cross media query boundaries, and source order disruption.
 
-반드시 사용 시 **`%placeholder`만** 사용:
+When you must use it, **only use `%placeholder`**:
 
 ```scss
-// 올바름 — placeholder extend
+// Correct — placeholder extend
 %clearfix {
   &::after {
     content: '';
@@ -631,7 +631,7 @@ $map: (
   @extend %clearfix;
 }
 
-// 잘못됨 — 클래스 extend
+// Incorrect — class extend
 .foo {
   @extend .bar;
 }
@@ -639,19 +639,19 @@ $map: (
 
 ---
 
-## 11. 미디어 쿼리
+## 11. Media Queries
 
-### 11.1 모바일 퍼스트
+### 11.1 Mobile First
 
-**`min-width` (모바일 퍼스트)를 기본 접근법으로 사용:**
+**Use `min-width` (mobile first) as the default approach:**
 
 ```scss
-// 모바일 기본 스타일
+// Mobile base styles
 .container {
   padding: 1rem;
 }
 
-// 점진적 향상
+// Progressive enhancement
 @media (min-width: 768px) {
   .container {
     padding: 2rem;
@@ -666,10 +666,10 @@ $map: (
 }
 ```
 
-### 11.2 브레이크포인트 네이밍
+### 11.2 Breakpoint Naming
 
 ```scss
-// 올바름 — 크기 기반 이름
+// Correct — size-based names
 $breakpoints: (
   'small': 576px,
   'medium': 768px,
@@ -677,19 +677,19 @@ $breakpoints: (
   'xlarge': 1200px,
 );
 
-// 잘못됨 — 기기 기반 이름
+// Incorrect — device-based names
 $breakpoints: (
   'ipad': 768px,
   'iphone': 375px,
 );
 ```
 
-### 11.3 인라인 미디어 쿼리
+### 11.3 Inline Media Queries
 
-**미디어 쿼리는 컴포넌트와 함께 인라인으로 작성:**
+**Write media queries inline alongside their components:**
 
 ```scss
-// 올바름 — 컴포넌트와 함께
+// Correct — alongside component
 .card {
   padding: 1rem;
 
@@ -699,7 +699,7 @@ $breakpoints: (
   }
 }
 
-// 비권장 — 파일 하단에 별도 미디어 쿼리 블록
+// Not recommended — separate media query blocks at the bottom of the file
 @media (min-width: 768px) {
   .card { padding: 2rem; display: flex; }
   .header { height: 80px; }
@@ -708,36 +708,36 @@ $breakpoints: (
 
 ---
 
-## 12. 특이성 (Specificity) 관리
+## 12. Specificity Management
 
-| 규칙 | 상세 |
+| Rule | Details |
 |---|---|
-| ID 선택자 금지 | 스타일링에 `#id` 절대 사용 금지 |
-| 불필요한 네스팅 금지 | 선택자 깊이 최소화 |
-| 타입 한정 금지 | 클래스에 태그 선택자 추가 금지 |
-| 특이성 그래프 | 스타일시트 후반으로 갈수록 특이성이 **점진적으로 증가**해야 함 |
+| No ID selectors | Never use `#id` for styling |
+| No unnecessary nesting | Minimize selector depth |
+| No type qualification | Do not add tag selectors to classes |
+| Specificity graph | Specificity should **gradually increase** toward the end of the stylesheet |
 
 ```scss
-// 특이성 안전하게 높이기 (필요 시)
-.site-nav.site-nav { } // 클래스 이중 사용
+// Safely increasing specificity (when needed)
+.site-nav.site-nav { } // double class usage
 
-// ID를 대상으로 해야 할 때 (서드파티 등)
-[id="third-party-widget"] { } // 클래스 수준 특이성
+// When you must target an ID (e.g., third-party)
+[id="third-party-widget"] { } // class-level specificity
 
-// 제로 특이성 선택자 (Modern CSS)
+// Zero-specificity selector (Modern CSS)
 :where(.card) {
-  padding: 1rem; // 특이성: 0,0,0 — 쉽게 오버라이드 가능
+  padding: 1rem; // specificity: 0,0,0 — easily overridable
 }
 ```
 
 ---
 
-## 13. `!important` 규칙
+## 13. `!important` Rules
 
-**사전적(proactive) 사용만 허용, 사후적(reactive) 사용 금지:**
+**Only proactive use is allowed, reactive use is prohibited:**
 
 ```scss
-// 올바름 — 유틸리티 클래스 (항상 이겨야 함)
+// Correct — utility classes (must always win)
 .u-hidden {
   display: none !important;
 }
@@ -746,50 +746,50 @@ $breakpoints: (
   text-align: center !important;
 }
 
-// 잘못됨 — 특이성 문제 패치
+// Incorrect — patching specificity issues
 .header .nav .nav-item .link {
   color: blue;
 }
-// ... 다른 곳에서:
+// ... elsewhere:
 .link {
-  color: red !important; // 금지 — 근본 원인 해결 필요
+  color: red !important; // Prohibited — fix the root cause instead
 }
 ```
 
 ---
 
-## 14. Shorthand 속성
+## 14. Shorthand Properties
 
-### 14.1 의도적 사용
+### 14.1 Intentional Use
 
-**모든 값을 설정할 때만** shorthand 사용:
+**Use shorthand only when setting all values:**
 
 ```scss
-// 올바름 — 모든 면을 의도적으로 설정
+// Correct — intentionally setting all sides
 padding: 0 1em 2em;
 margin: 0 auto;
 border: 1px solid #ddd;
 
-// 잘못됨 — 의도하지 않은 속성까지 리셋
+// Incorrect — unintentionally resetting other properties
 .foo {
-  background: red; // background-image, background-position 등 리셋됨
+  background: red; // resets background-image, background-position, etc.
 }
 
-// 올바름 — 필요한 속성만 설정
+// Correct — setting only the needed property
 .foo {
   background-color: red;
 }
 ```
 
-### 14.2 font shorthand 자제
+### 14.2 Avoid font Shorthand
 
 ```scss
-// 잘못됨 — font-style, font-variant 등 리셋
+// Incorrect — resets font-style, font-variant, etc.
 .bar {
   font: bold 16px/1.5 sans-serif;
 }
 
-// 올바름 — 명시적
+// Correct — explicit
 .bar {
   font-weight: 700;
   font-size: 1rem;
@@ -799,25 +799,25 @@ border: 1px solid #ddd;
 
 ---
 
-## 15. Z-Index 관리
+## 15. Z-Index Management
 
-**중앙 집중식 z-index 스케일 사용** (9장 Map 참조):
+**Use a centralized z-index scale** (refer to Section 9 Maps):
 
-| 규칙 | 상세 |
+| Rule | Details |
 |---|---|
-| 임의 값 금지 | `z-index: 9999` 같은 임의 값 금지 |
-| Map 사용 | `$z-indexes` Map + `z()` 함수로 관리 |
-| 일관된 간격 | 100 단위 증가 |
-| 문서화 | 모든 z-index 사용처 문서화 |
-| 스태킹 컨텍스트 | z-index는 가장 가까운 스태킹 컨텍스트 기준 — 전역이 아님 |
+| No arbitrary values | `z-index: 9999` and similar arbitrary values prohibited |
+| Use Maps | Manage with `$z-indexes` Map + `z()` function |
+| Consistent intervals | Increment by 100 |
+| Documentation | Document all z-index usage locations |
+| Stacking context | z-index is relative to the nearest stacking context — not global |
 
 ```scss
-// 올바름
+// Correct
 .modal {
   z-index: z('modal');
 }
 
-// 잘못됨
+// Incorrect
 .modal {
   z-index: 99999;
 }
@@ -825,14 +825,14 @@ border: 1px solid #ddd;
 
 ---
 
-## 16. 애니메이션 / 트랜지션
+## 16. Animation / Transition
 
-### 16.1 성능 안전 속성
+### 16.1 Performance-Safe Properties
 
-**GPU 가속 속성만 애니메이션:**
+**Only animate GPU-accelerated properties:**
 
 ```scss
-// 올바름 — compositor-only 속성
+// Correct — compositor-only properties
 .element {
   transition: transform 0.3s ease, opacity 0.3s ease;
 }
@@ -842,40 +842,40 @@ border: 1px solid #ddd;
   opacity: 0.9;
 }
 
-// 잘못됨 — 레이아웃 재계산 유발
+// Incorrect — triggers layout recalculation
 .element {
   transition: width 0.3s, height 0.3s, top 0.3s, left 0.3s;
 }
 ```
 
-### 16.2 `transition: all` 금지
+### 16.2 `transition: all` Prohibited
 
 ```scss
-// 잘못됨
+// Incorrect
 .element {
   transition: all 0.3s ease;
 }
 
-// 올바름 — 속성 명시
+// Correct — specify properties
 .element {
   transition: transform 0.3s ease, opacity 0.3s ease;
 }
 ```
 
-### 16.3 이징 함수
+### 16.3 Easing Functions
 
-| 용도 | 이징 | 설명 |
+| Purpose | Easing | Description |
 |---|---|---|
-| 등장 | `ease-out` | 감속 |
-| 퇴장 | `ease-in` | 가속 |
-| 상태 변화 | `ease-in-out` | 가속 후 감속 |
-| UI 요소 | `cubic-bezier(0.4, 0, 0.2, 1)` | Material Design 표준 |
-| 금지 | `linear` | UI 요소에 사용 금지 (기계적) |
+| Entrance | `ease-out` | Deceleration |
+| Exit | `ease-in` | Acceleration |
+| State change | `ease-in-out` | Accelerate then decelerate |
+| UI elements | `cubic-bezier(0.4, 0, 0.2, 1)` | Material Design standard |
+| Prohibited | `linear` | Do not use for UI elements (mechanical feel) |
 
-### 16.4 접근성: 모션 감소 대응
+### 16.4 Accessibility: Reduced Motion Support
 
 ```scss
-// 필수: prefers-reduced-motion 대응
+// Required: prefers-reduced-motion support
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -891,30 +891,30 @@ border: 1px solid #ddd;
 ### 16.5 will-change
 
 ```scss
-// 애니메이션이 확실히 발생할 요소에만 사용
+// Use only on elements that will definitely animate
 .element-about-to-animate {
   will-change: transform;
 }
 
-// 남용 금지 — 메모리 소비
+// Do not overuse — consumes memory
 ```
 
 ---
 
-## 17. 주석
+## 17. Comments
 
-### 17.1 섹션 주석
+### 17.1 Section Comments
 
 ```scss
 /* ==========================================================================
-   섹션 제목
+   Section Title
    ========================================================================== */
 
-/* 하위 섹션
+/* Sub-section
    ========================================================================== */
 ```
 
-또는 CSS Guidelines 스타일:
+Or CSS Guidelines style:
 
 ```scss
 /*------------------------------------*\
@@ -922,28 +922,28 @@ border: 1px solid #ddd;
 \*------------------------------------*/
 ```
 
-### 17.2 SCSS 주석
+### 17.2 SCSS Comments
 
 ```scss
-// SCSS에서는 라인 주석(//)을 선호 — 컴파일 시 제거됨
-// 블록 주석(/* */)은 CSS 출력에 포함됨
+// In SCSS, prefer line comments (//) — removed during compilation
+// Block comments (/* */) are included in CSS output
 
-// 주석은 대상 위에 별도 줄로 작성
-// 줄 끝 주석 자제
+// Write comments on a separate line above the target
+// Avoid end-of-line comments
 
-// 비명시적 코드에 주석 필수:
-// - z-index 값의 이유
-// - 브라우저 특정 해결책
-// - 매직 넘버
+// Comments are required for non-obvious code:
+// - Reason for z-index values
+// - Browser-specific workarounds
+// - Magic numbers
 ```
 
-### 17.3 문서화 주석 (SassDoc)
+### 17.3 Documentation Comments (SassDoc)
 
 ```scss
-/// 요소의 크기를 설정하는 mixin.
-/// @param {Length} $width - 요소 너비
-/// @param {Length} $height [$width] - 요소 높이
-/// @example scss - 사용법
+/// Mixin to set the size of an element.
+/// @param {Length} $width - Element width
+/// @param {Length} $height [$width] - Element height
+/// @example scss - Usage
 ///   .foo {
 ///     @include size(10em);
 ///   }
@@ -953,12 +953,12 @@ border: 1px solid #ddd;
 }
 ```
 
-### 17.4 번호 주석
+### 17.4 Numbered Comments
 
 ```scss
 /**
- * 1. 마스트헤드에는 특별한 대비 처리 필요.
- * 2. 부모로부터 상속된 white-space 리셋.
+ * 1. The masthead requires special contrast treatment.
+ * 2. Reset white-space inherited from parent.
  */
 .masthead {
   color: $color-masthead; /* [1] */
@@ -968,51 +968,51 @@ border: 1px solid #ddd;
 
 ---
 
-## 18. 파일 구조 (7-1 패턴)
+## 18. File Structure (7-1 Pattern)
 
 ```
 scss/
-|-- abstracts/           # CSS 출력 없음
+|-- abstracts/           # No CSS output
 |   |-- _variables.scss
 |   |-- _functions.scss
 |   |-- _mixins.scss
 |   |-- _placeholders.scss
 |
-|-- base/                # 리셋, 타이포그래피, 기본 요소 스타일
+|-- base/                # Reset, typography, base element styles
 |   |-- _reset.scss
 |   |-- _typography.scss
 |   |-- _base.scss
 |
-|-- components/          # 마이크로 레벨: 버튼, 카드, 모달
+|-- components/          # Micro level: buttons, cards, modals
 |   |-- _button.scss
 |   |-- _card.scss
 |   |-- _dropdown.scss
 |   |-- _modal.scss
 |
-|-- layout/              # 매크로 레벨: 헤더, 푸터, 그리드
+|-- layout/              # Macro level: header, footer, grid
 |   |-- _header.scss
 |   |-- _footer.scss
 |   |-- _sidebar.scss
 |   |-- _grid.scss
 |
-|-- pages/               # 페이지별 오버라이드
+|-- pages/               # Page-specific overrides
 |   |-- _home.scss
 |   |-- _contact.scss
 |
-|-- themes/              # 테마 변형
+|-- themes/              # Theme variations
 |   |-- _default.scss
 |   |-- _dark.scss
 |
-|-- vendors/             # 서드파티 CSS
+|-- vendors/             # Third-party CSS
 |   |-- _normalize.scss
 |
-|-- main.scss            # 단일 진입점, import만
+|-- main.scss            # Single entry point, imports only
 ```
 
-### 18.1 main.scss Import 순서
+### 18.1 main.scss Import Order
 
 ```scss
-// abstracts (출력 없음)
+// abstracts (no output)
 @import 'abstracts/variables';
 @import 'abstracts/functions';
 @import 'abstracts/mixins';
@@ -1043,27 +1043,27 @@ scss/
 
 ---
 
-## 19. 금지 패턴
+## 19. Prohibited Patterns
 
-| 패턴 | 이유 | 대안 |
+| Pattern | Reason | Alternative |
 |---|---|---|
-| `#id` 선택자 | 특이성 과도 | 클래스 선택자 사용 |
-| `!important` (사후적) | 특이성 전쟁 유발 | 선택자 구조 개선 |
-| `transition: all` | 성능 저하, 의도하지 않은 속성 전환 | 개별 속성 명시 |
-| `@extend .class` | 예측 불가, 소스 순서 파괴 | mixin 사용 또는 `%placeholder` |
-| 색상 키워드 | 비표준적, 불명확 | hex / hsl / rgb |
-| `z-index: 9999` | 관리 불가 | Map + getter 함수 |
-| 4레벨 이상 네스팅 | 특이성 증가, 가독성 저하 | BEM으로 평탄화 |
-| `font-size: px` | 접근성 문제 | `rem` 사용 |
-| `div.class` | 불필요한 특이성, 재사용성 저하 | `.class`만 사용 |
-| `*` 남용 | 성능 저하 | 명시적 선택자 |
-| 매직 넘버 | 유지보수 불가 | 변수 + 주석 |
-| `width`/`height` 애니메이션 | 레이아웃 재계산 | `transform` 사용 |
-| `.5em` (앞자리 0 생략) | 가독성 저하 | `0.5em` |
+| `#id` selector | Excessive specificity | Use class selectors |
+| `!important` (reactive) | Causes specificity wars | Improve selector structure |
+| `transition: all` | Performance degradation, unintended property transitions | Specify individual properties |
+| `@extend .class` | Unpredictable, disrupts source order | Use mixin or `%placeholder` |
+| Color keywords | Non-standard, unclear | hex / hsl / rgb |
+| `z-index: 9999` | Unmanageable | Map + getter function |
+| 4+ level nesting | Increases specificity, reduces readability | Flatten with BEM |
+| `font-size: px` | Accessibility issue | Use `rem` |
+| `div.class` | Unnecessary specificity, reduces reusability | Use `.class` only |
+| `*` overuse | Performance degradation | Explicit selectors |
+| Magic numbers | Unmaintainable | Variables + comments |
+| `width`/`height` animation | Triggers layout recalculation | Use `transform` |
+| `.5em` (omitted leading zero) | Reduced readability | `0.5em` |
 
 ---
 
-## 20. Stylelint 권장 설정
+## 20. Stylelint Recommended Configuration
 
 ```json
 {
@@ -1099,30 +1099,30 @@ scss/
 
 ---
 
-## 핵심 수치 요약
+## Key Metrics Summary
 
-| 카테고리 | 규칙 | 값 |
+| Category | Rule | Value |
 |---|---|---|
-| 들여쓰기 | 스페이스 크기 | 2 |
-| 줄 길이 | 최대 문자 수 | 80 |
-| 네스팅 | 최대 깊이 | 3 |
-| 특이성 | 최대 허용 | 0,3,0 |
-| ID 선택자 | 최대 개수 | 0 |
-| 소수점 | 최대 자릿수 | 4 |
-| z-index | 기본 간격 | 100 |
-| 색상 Hex | 형식 | 소문자, 축약 |
-| 0 값 | 단위 | 없음 |
-| 앞자리 0 | 표기 | 필수 (`0.5`) |
-| 폰트 크기 | 단위 | rem |
-| 줄 높이 | 단위 | 없음 (숫자만) |
-| 네이밍 | 패턴 | BEM (kebab-case) |
-| 파일명 | 패턴 | kebab-case |
-| 변수 | 패턴 | $kebab-case |
-| 상수 | 패턴 | $UPPER_SNAKE_CASE |
+| Indentation | Space size | 2 |
+| Line length | Maximum characters | 80 |
+| Nesting | Maximum depth | 3 |
+| Specificity | Maximum allowed | 0,3,0 |
+| ID selectors | Maximum count | 0 |
+| Decimal | Maximum digits | 4 |
+| z-index | Base interval | 100 |
+| Color hex | Format | Lowercase, shorthand |
+| Zero value | Units | None |
+| Leading zero | Notation | Required (`0.5`) |
+| Font size | Unit | rem |
+| Line height | Unit | None (number only) |
+| Naming | Pattern | BEM (kebab-case) |
+| File names | Pattern | kebab-case |
+| Variables | Pattern | $kebab-case |
+| Constants | Pattern | $UPPER_SNAKE_CASE |
 
 ---
 
-## 참고 자료
+## References
 
 - [CSS Guidelines - Harry Roberts](https://cssguidelin.es/)
 - [Sass Guidelines - Kitty Giraudel](https://sass-guidelin.es/)

@@ -1,28 +1,28 @@
 ---
 name: project-test
-description: "서버를 실행하고 Chrome MCP로 통합 테스트를 수행합니다. 서버 로그 모니터링, 페이지 검증, API 동작 확인, 성능 측정을 자동으로 진행합니다."
-argument-hint: "[테스트 대상 URL 또는 시나리오]"
+description: "Launches the server and performs integration testing with Chrome MCP. Automatically conducts server log monitoring, page verification, API behavior checks, and performance measurement."
+argument-hint: "[target URL or scenario]"
 allowed-tools: Read, Write, Edit, Bash, Glob, Grep, AskUserQuestion, mcp__chrome-devtools__take_snapshot, mcp__chrome-devtools__take_screenshot, mcp__chrome-devtools__navigate_page, mcp__chrome-devtools__click, mcp__chrome-devtools__fill, mcp__chrome-devtools__fill_form, mcp__chrome-devtools__press_key, mcp__chrome-devtools__hover, mcp__chrome-devtools__list_console_messages, mcp__chrome-devtools__get_console_message, mcp__chrome-devtools__list_network_requests, mcp__chrome-devtools__get_network_request, mcp__chrome-devtools__evaluate_script, mcp__chrome-devtools__wait_for, mcp__chrome-devtools__emulate, mcp__chrome-devtools__resize_page, mcp__chrome-devtools__list_pages, mcp__chrome-devtools__select_page, mcp__chrome-devtools__new_page, mcp__chrome-devtools__handle_dialog, mcp__chrome-devtools__performance_start_trace, mcp__chrome-devtools__performance_stop_trace, mcp__chrome-devtools__performance_analyze_insight
 ---
 
-# ASTRA 통합 테스트
+# ASTRA Integration Testing
 
-서버를 실행하고 Chrome MCP(chrome-devtools)를 통해 실제 브라우저 환경에서 통합 테스트를 수행합니다.
-LLM이 서버 로그를 직접 모니터링하여 오류를 감지하고, 페이지 동작을 검증합니다.
+Launches the server and performs integration testing in a real browser environment through Chrome MCP (chrome-devtools).
+The LLM directly monitors server logs to detect errors and verifies page behavior.
 
-## 실행 절차
+## Execution Procedure
 
-### 1단계: 프로젝트 환경 파악
+### Step 1: Assess Project Environment
 
-현재 프로젝트의 기술 스택과 서버 실행 방법을 파악합니다:
+Assess the current project's tech stack and server launch method:
 
-1. `CLAUDE.md`에서 기술 스택 확인 (백엔드, 프론트엔드, DB)
-2. `package.json`, `build.gradle`, `pom.xml`, `pyproject.toml` 등에서 실행 스크립트 확인
-3. `.env`, `.env.local` 등에서 환경변수 확인 (포트 번호, DB URL 등)
+1. Check tech stack in `CLAUDE.md` (backend, frontend, DB)
+2. Check run scripts in `package.json`, `build.gradle`, `pom.xml`, `pyproject.toml`, etc.
+3. Check environment variables in `.env`, `.env.local`, etc. (port number, DB URL, etc.)
 
-**기술 스택별 서버 실행 명령어 감지:**
+**Server launch command detection by tech stack:**
 
-| 기술 스택 | 감지 파일 | 실행 명령어 |
+| Tech Stack | Detection File | Launch Command |
 |----------|----------|-----------|
 | Next.js | `package.json` → `next dev` | `npm run dev` |
 | React (CRA/Vite) | `package.json` → `vite` / `react-scripts` | `npm run dev` / `npm start` |
@@ -32,261 +32,261 @@ LLM이 서버 로그를 직접 모니터링하여 오류를 감지하고, 페이
 | FastAPI | `pyproject.toml` / `main.py` | `uvicorn main:app --reload` |
 | Django | `manage.py` | `python manage.py runserver` |
 
-### 2단계: 서버 시작 및 로그 모니터링
+### Step 2: Start Server and Monitor Logs
 
-**백그라운드로 서버를 실행하고 로그를 캡처합니다:**
+**Launch the server in the background and capture logs:**
 
 ```
-# 서버를 백그라운드로 실행 (Bash run_in_background=true)
-{서버 실행 명령어}
+# Launch server in background (Bash run_in_background=true)
+{server launch command}
 
-# 서버 시작 대기 (포트가 열릴 때까지)
-# 최대 60초 대기, 5초 간격 확인
+# Wait for server startup (until port is open)
+# Maximum 60 seconds wait, check every 5 seconds
 ```
 
-**서버 시작 확인 순서:**
-1. Bash `run_in_background=true`로 서버 프로세스 시작
-2. `TaskOutput`으로 서버 로그를 주기적으로 확인하여 시작 완료 메시지 감지
-3. 시작 실패 시 로그에서 오류 원인 분석 후 사용자에게 보고
+**Server startup verification sequence:**
+1. Start server process with Bash `run_in_background=true`
+2. Periodically check server logs with `TaskOutput` to detect startup completion message
+3. If startup fails, analyze error cause from logs and report to user
 
-**로그 모니터링 패턴:**
+**Log monitoring patterns:**
 
-| 기술 스택 | 시작 완료 시그널 | 오류 패턴 |
+| Tech Stack | Startup Complete Signal | Error Pattern |
 |----------|---------------|----------|
 | Next.js | `Ready in` / `Local:` | `Error:` / `EADDRINUSE` |
 | Spring Boot | `Started .* in .* seconds` | `APPLICATION FAILED TO START` |
 | NestJS | `Nest application successfully started` | `Error:` / `Cannot find module` |
 | FastAPI | `Uvicorn running on` | `ERROR:` / `ModuleNotFoundError` |
 
-### 3단계: 테스트 케이스 작성
+### Step 3: Write Test Cases
 
-프로젝트를 분석하여 테스트 케이스를 직접 작성합니다.
+Analyze the project and write test cases directly.
 
-#### A. 테스트 대상 분석
+#### A. Analyze Test Targets
 
-`$ARGUMENTS`를 확인합니다:
+Check `$ARGUMENTS`:
 
-- **URL이 제공된 경우**: 해당 페이지를 분석하여 테스트 케이스 작성
-- **시나리오가 제공된 경우**: 시나리오를 기반으로 테스트 케이스 작성
-- **인자 없는 경우**: 프로젝트 전체를 분석하여 테스트 케이스 작성
+- **If URL is provided**: Analyze the page and write test cases
+- **If scenario is provided**: Write test cases based on the scenario
+- **If no arguments**: Analyze the entire project and write test cases
 
-#### B. 프로젝트 분석 항목
+#### B. Project Analysis Items
 
-테스트 케이스 작성을 위해 다음을 분석합니다:
+Analyze the following to write test cases:
 
-1. **라우트/페이지 구조**: `src/app/`, `src/pages/`, `routes/` 등에서 페이지 목록 파악
-2. **API 엔드포인트**: 컨트롤러, API 라우트 파일에서 엔드포인트 목록 파악
-3. **핵심 기능**: CLAUDE.md, README.md, 블루프린트 문서에서 주요 기능 파악
-4. **폼/입력 요소**: 사용자 입력이 필요한 화면 파악
-5. **인증/인가**: 로그인, 권한 체크가 필요한 화면 파악
+1. **Route/page structure**: Identify page list from `src/app/`, `src/pages/`, `routes/`, etc.
+2. **API endpoints**: Identify endpoint list from controllers and API route files
+3. **Core features**: Identify key features from CLAUDE.md, README.md, and blueprint documents
+4. **Forms/input elements**: Identify screens requiring user input
+5. **Authentication/authorization**: Identify screens requiring login and permission checks
 
-#### C. 테스트 케이스 작성
+#### C. Write Test Cases
 
-`docs/tests/test-cases/` 디렉토리에 테스트 케이스를 작성합니다:
+Write test cases in the `docs/tests/test-cases/` directory:
 
 ```markdown
-# {기능명} 테스트 케이스
+# {Feature Name} Test Cases
 
-## TC-001: {테스트 케이스 제목}
-- **전제조건**: {필요한 사전 상태}
-- **테스트 단계**:
-  1. {단계 1}
-  2. {단계 2}
-- **예상 결과**: {기대하는 결과}
-- **검증 방법**: snapshot / console / network / server-log
+## TC-001: {Test Case Title}
+- **Preconditions**: {required pre-state}
+- **Test Steps**:
+  1. {step 1}
+  2. {step 2}
+- **Expected Result**: {expected outcome}
+- **Verification Method**: snapshot / console / network / server-log
 
-## TC-002: {테스트 케이스 제목}
+## TC-002: {Test Case Title}
 ...
 ```
 
-**테스트 케이스 유형:**
+**Test case types:**
 
-| 유형 | 설명 | 예시 |
+| Type | Description | Example |
 |------|------|------|
-| 페이지 로드 | 페이지 접근 및 렌더링 확인 | 메인 페이지 200 응답 |
-| 폼 제출 | 입력값 검증 및 제출 동작 | 회원가입 폼 정상 제출 |
-| CRUD 동작 | 데이터 생성/조회/수정/삭제 | 게시글 작성 후 목록 반영 |
-| 인증 플로우 | 로그인/로그아웃/권한 확인 | 비로그인 시 리다이렉트 |
-| 에러 처리 | 잘못된 입력/접근 시 동작 | 404 페이지 표시 |
-| 반응형 | 뷰포트별 레이아웃 확인 | 모바일에서 메뉴 접힘 |
+| Page Load | Page access and rendering verification | Main page 200 response |
+| Form Submission | Input validation and submit behavior | Successful registration form submission |
+| CRUD Operations | Data create/read/update/delete | Post creation reflected in list |
+| Auth Flow | Login/logout/permission verification | Redirect when not logged in |
+| Error Handling | Behavior on invalid input/access | 404 page display |
+| Responsive | Layout verification per viewport | Menu collapse on mobile |
 
-작성 완료 후 사용자에게 테스트 케이스 목록을 보여주고 확인을 받습니다.
+After writing, show the test case list to the user and get confirmation.
 
-### 4단계: 페이지 기본 검증
+### Step 4: Basic Page Verification
 
-각 페이지에 대해 다음을 자동 수행합니다:
+Automatically perform the following for each page:
 
-#### A. 페이지 로드 검증
+#### A. Page Load Verification
 
 ```
-1. chrome-devtools navigate_page로 대상 URL 접속
-2. wait_for로 핵심 콘텐츠 로드 확인
-3. take_snapshot으로 페이지 구조 확인
+1. Navigate to target URL with chrome-devtools navigate_page
+2. Verify core content load with wait_for
+3. Check page structure with take_snapshot
 ```
 
-#### B. 콘솔 에러 확인
+#### B. Console Error Check
 
 ```
 1. list_console_messages (types: ["error", "warn"])
-2. 에러가 있으면 get_console_message로 상세 내용 확인
-3. 서버 로그와 대조하여 백엔드/프론트엔드 오류 분류
+2. If errors exist, get details with get_console_message
+3. Cross-reference with server logs to classify backend/frontend errors
 ```
 
-#### C. 네트워크 요청 검증
+#### C. Network Request Verification
 
 ```
 1. list_network_requests (resourceTypes: ["xhr", "fetch"])
-2. 실패한 요청 (4xx, 5xx) 감지
-3. get_network_request로 요청/응답 상세 확인
-4. 서버 로그에서 해당 요청의 백엔드 처리 로그 확인
+2. Detect failed requests (4xx, 5xx)
+3. Check request/response details with get_network_request
+4. Check backend processing logs for corresponding requests in server logs
 ```
 
-#### D. 반응형 레이아웃 검증
+#### D. Responsive Layout Verification
 
 ```
-1. 데스크톱 (1280x720) → take_snapshot
-2. 태블릿 (768x1024) → take_snapshot
-3. 모바일 (375x667) → take_snapshot
-4. 각 뷰포트에서 레이아웃 깨짐 확인
+1. Desktop (1280x720) → take_snapshot
+2. Tablet (768x1024) → take_snapshot
+3. Mobile (375x667) → take_snapshot
+4. Check for layout breakage at each viewport
 ```
 
-### 5단계: 시나리오 기반 통합 테스트
+### Step 5: Scenario-based Integration Testing
 
-3단계에서 작성한 테스트 케이스를 순서대로 실행합니다:
+Execute test cases written in Step 3 in order:
 
-#### 폼 입력 테스트
-
-```
-1. take_snapshot으로 폼 요소 uid 확인
-2. fill / fill_form으로 테스트 데이터 입력
-3. click으로 제출 버튼 클릭
-4. wait_for로 응답 대기
-5. list_network_requests로 API 호출 확인
-6. 서버 로그에서 요청 처리 확인
-7. take_snapshot으로 결과 화면 확인
-```
-
-#### 인증 플로우 테스트
+#### Form Input Testing
 
 ```
-1. 로그인 페이지 접속
-2. 테스트 계정으로 로그인 시도
-3. 토큰 발급 확인 (네트워크 요청)
-4. 인증 필요 페이지 접근 확인
-5. 토큰 만료 시 갱신 동작 확인
+1. Check form element uids with take_snapshot
+2. Enter test data with fill / fill_form
+3. Click submit button with click
+4. Wait for response with wait_for
+5. Verify API calls with list_network_requests
+6. Verify request processing in server logs
+7. Verify result screen with take_snapshot
 ```
 
-#### API 연동 테스트
+#### Authentication Flow Testing
 
 ```
-1. 기능 페이지 접속
-2. 데이터 로드 요청 확인 (네트워크)
-3. 서버 로그에서 DB 쿼리 실행 확인
-4. 응답 데이터와 화면 표시 일치 확인
-5. CRUD 작업 수행 후 서버 로그 및 화면 검증
+1. Navigate to login page
+2. Attempt login with test account
+3. Verify token issuance (network requests)
+4. Verify access to authenticated pages
+5. Verify token refresh behavior on expiration
 ```
 
-### 6단계: 서버 로그 분석
+#### API Integration Testing
 
-테스트 중 서버 로그를 주기적으로 확인합니다:
-
-**확인 항목:**
-- 예외/스택트레이스 발생 여부
-- SQL 쿼리 실행 로그 (N+1 문제 감지)
-- API 응답 시간 이상 (3초 이상)
-- 메모리/리소스 경고
-- 인증/인가 실패 로그
-
-**로그 확인 방법:**
 ```
-# TaskOutput으로 서버 프로세스의 최근 출력 확인 (block=false)
-# 오류 패턴 검색: ERROR, Exception, WARN, FATAL
+1. Navigate to feature page
+2. Verify data load requests (network)
+3. Verify DB query execution in server logs
+4. Verify response data matches screen display
+5. Perform CRUD operations and verify server logs and screen
 ```
 
-### 7단계: 성능 측정 (선택)
+### Step 6: Server Log Analysis
 
-사용자가 성능 측정을 요청하거나, 주요 페이지인 경우:
+Periodically check server logs during testing:
+
+**Check items:**
+- Exception/stack trace occurrence
+- SQL query execution logs (N+1 problem detection)
+- API response time anomalies (over 3 seconds)
+- Memory/resource warnings
+- Authentication/authorization failure logs
+
+**Log checking method:**
+```
+# Check recent output from server process with TaskOutput (block=false)
+# Search for error patterns: ERROR, Exception, WARN, FATAL
+```
+
+### Step 7: Performance Measurement (optional)
+
+When the user requests performance measurement, or for key pages:
 
 ```
 1. performance_start_trace (reload=true, autoStop=true)
-2. 트레이스 완료 후 결과 분석
-3. Core Web Vitals (LCP, FID, CLS) 확인
-4. 병목 지점 식별 및 개선 제안
+2. Analyze results after trace completion
+3. Check Core Web Vitals (LCP, FID, CLS)
+4. Identify bottlenecks and suggest improvements
 ```
 
-### 8단계: 테스트 결과 보고서 생성
+### Step 8: Generate Test Result Report
 
-`docs/tests/test-reports/`에 테스트 결과를 기록합니다:
+Record test results in `docs/tests/test-reports/`:
 
 ```markdown
-# 통합 테스트 보고서
+# Integration Test Report
 
-## 테스트 환경
-- 일시: {날짜}
-- 서버: {기술 스택 + 버전}
-- 브라우저: Chrome (chrome-devtools MCP)
+## Test Environment
+- Date: {date}
+- Server: {tech stack + version}
+- Browser: Chrome (chrome-devtools MCP)
 
-## 테스트 결과 요약
+## Test Result Summary
 
-| 항목 | 결과 | 비고 |
+| Item | Result | Notes |
 |------|------|------|
-| 서버 시작 | PASS/FAIL | |
-| 콘솔 에러 | {건수} | |
-| 네트워크 실패 | {건수} | |
-| 반응형 레이아웃 | PASS/FAIL | |
-| 시나리오 테스트 | {통과}/{전체} | |
-| 서버 로그 오류 | {건수} | |
+| Server Startup | PASS/FAIL | |
+| Console Errors | {count} | |
+| Network Failures | {count} | |
+| Responsive Layout | PASS/FAIL | |
+| Scenario Tests | {passed}/{total} | |
+| Server Log Errors | {count} | |
 
-## 상세 결과
+## Detailed Results
 
-### 페이지별 검증
-{페이지별 결과}
+### Per-page Verification
+{per-page results}
 
-### 시나리오 테스트
-{시나리오별 결과}
+### Scenario Tests
+{per-scenario results}
 
-### 서버 로그 분석
-{주요 로그 이슈}
+### Server Log Analysis
+{key log issues}
 
-### 발견된 이슈
-1. [심각도] {이슈 설명}
-   - 발견 위치: {페이지/API}
-   - 서버 로그: {관련 로그}
-   - 재현 방법: {단계}
+### Issues Found
+1. [Severity] {issue description}
+   - Location: {page/API}
+   - Server Log: {related log}
+   - Reproduction Steps: {steps}
 
-## 성능 측정 (수행한 경우)
-{Core Web Vitals 결과}
+## Performance Measurement (if performed)
+{Core Web Vitals results}
 ```
 
-### 9단계: 서버 종료
+### Step 9: Shut Down Server
 
-테스트 완료 후 서버 프로세스를 종료합니다:
-
-```
-# TaskStop으로 백그라운드 서버 프로세스 종료
-# 또는 Ctrl+C 시그널 전송
-```
-
-사용자에게 서버 종료 여부를 확인한 후 종료합니다.
-
-## 빠른 실행 예시
+Shut down the server process after testing is complete:
 
 ```
-# 특정 URL 테스트 (해당 페이지 분석 후 테스트 케이스 작성 → 실행)
+# Stop background server process with TaskStop
+# Or send Ctrl+C signal
+```
+
+Confirm with the user before shutting down the server.
+
+## Quick Run Examples
+
+```
+# Test specific URL (analyze the page → write test cases → execute)
 /project-test http://localhost:3000
 
-# 특정 시나리오 테스트 (시나리오 기반 테스트 케이스 작성 → 실행)
-/project-test 로그인 플로우
+# Test specific scenario (write test cases based on scenario → execute)
+/project-test login flow
 
-# 전체 통합 테스트 (프로젝트 분석 → 테스트 케이스 작성 → 실행)
+# Full integration test (analyze project → write test cases → execute)
 /project-test
 ```
 
-## 주의사항
+## Notes
 
-- 서버가 이미 실행 중인 경우 중복 실행하지 않습니다. 포트 사용 여부를 먼저 확인합니다.
-- `.env` 파일의 민감 정보는 로그에 노출하지 않습니다.
-- 테스트 데이터는 테스트 전용 DB/환경에서만 사용합니다.
-- 서버 로그에서 개인정보가 포함된 부분은 마스킹 처리합니다.
-- 성능 측정은 개발 환경 기준이며, 프로덕션 성능과 차이가 있을 수 있습니다.
-- 테스트 완료 후 반드시 서버 프로세스를 종료합니다.
+- If the server is already running, do not start it again. Check port usage first.
+- Do not expose sensitive information from `.env` files in logs.
+- Use test data only in test-dedicated DB/environments.
+- Mask sections containing personal information in server logs.
+- Performance measurements are based on the development environment and may differ from production performance.
+- Always shut down the server process after testing is complete.

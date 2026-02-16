@@ -1,11 +1,11 @@
 #!/bin/bash
 # ==========================================================================
-# ASTRA Sprint 0: 설정 검증 스크립트
+# ASTRA Sprint 0: Setup Verification Script
 #
-# 사용법: ./verify-setup.sh [project-root-path]
+# Usage: ./verify-setup.sh [project-root-path]
 #
-# 전역 설정과 프로젝트 구조를 검증합니다.
-# /astra-checklist 스킬에서 호출하거나 독립 실행할 수 있습니다.
+# Verifies global settings and project structure.
+# Can be invoked from the /astra-checklist skill or run independently.
 # ==========================================================================
 
 set -euo pipefail
@@ -30,24 +30,24 @@ check() {
 }
 
 echo "========================================"
-echo "  ASTRA Sprint 0 설정 검증"
+echo "  ASTRA Sprint 0 Setup Verification"
 echo "========================================"
 echo ""
 
-# 1. 전역 설정 검증
-echo "--- 전역 설정 ---"
-check "~/.claude/settings.json 존재" "[ -f ~/.claude/settings.json ]"
-check "~/.claude/.mcp.json 존재" "[ -f ~/.claude/.mcp.json ]"
-check "Node.js 설치" "command -v node"
-check "npx 설치" "command -v npx"
-check "Git 설치" "command -v git"
-check "GitHub CLI 설치" "command -v gh"
+# 1. Global settings verification
+echo "--- Global Settings ---"
+check "~/.claude/settings.json exists" "[ -f ~/.claude/settings.json ]"
+check "~/.claude/.mcp.json exists" "[ -f ~/.claude/.mcp.json ]"
+check "Node.js installed" "command -v node"
+check "npx installed" "command -v npx"
+check "Git installed" "command -v git"
+check "GitHub CLI installed" "command -v gh"
 echo ""
 
-# 2. 프로젝트 구조 검증
-echo "--- 프로젝트 구조 (${PROJECT_ROOT}) ---"
+# 2. Project structure verification
+echo "--- Project Structure (${PROJECT_ROOT}) ---"
 check "CLAUDE.md" "[ -f '${PROJECT_ROOT}/CLAUDE.md' ]"
-check ".claude/ 디렉토리" "[ -d '${PROJECT_ROOT}/.claude' ]"
+check ".claude/ directory" "[ -d '${PROJECT_ROOT}/.claude' ]"
 check "docs/design-system/" "[ -d '${PROJECT_ROOT}/docs/design-system' ]"
 check "docs/blueprints/" "[ -d '${PROJECT_ROOT}/docs/blueprints' ]"
 check "docs/database/" "[ -d '${PROJECT_ROOT}/docs/database' ]"
@@ -61,8 +61,8 @@ check "docs/delivery/" "[ -d '${PROJECT_ROOT}/docs/delivery' ]"
 check "src/" "[ -d '${PROJECT_ROOT}/src' ]"
 echo ""
 
-# 3. 필수 파일 검증
-echo "--- 필수 파일 ---"
+# 3. Required files verification
+echo "--- Required Files ---"
 check "design-tokens.css" "[ -f '${PROJECT_ROOT}/docs/design-system/design-tokens.css' ]"
 check "components.md" "[ -f '${PROJECT_ROOT}/docs/design-system/components.md' ]"
 check "layout-grid.md" "[ -f '${PROJECT_ROOT}/docs/design-system/layout-grid.md' ]"
@@ -70,34 +70,34 @@ check "overview.md" "[ -f '${PROJECT_ROOT}/docs/blueprints/overview.md' ]"
 check "database-design.md" "[ -f '${PROJECT_ROOT}/docs/database/database-design.md' ]"
 check "naming-rules.md" "[ -f '${PROJECT_ROOT}/docs/database/naming-rules.md' ]"
 check "test-strategy.md" "[ -f '${PROJECT_ROOT}/docs/tests/test-strategy.md' ]"
-check "sprint-1.md (프롬프트 맵)" "[ -f '${PROJECT_ROOT}/docs/prompts/sprint-1.md' ]"
+check "sprint-1.md (prompt map)" "[ -f '${PROJECT_ROOT}/docs/prompts/sprint-1.md' ]"
 echo ""
 
-# 4. CLAUDE.md 내용 검증
-echo "--- CLAUDE.md 내용 ---"
+# 4. CLAUDE.md content verification
+echo "--- CLAUDE.md Content ---"
 if [ -f "${PROJECT_ROOT}/CLAUDE.md" ]; then
-    check "아키텍처 섹션" "grep -q '아키텍처\|Architecture' '${PROJECT_ROOT}/CLAUDE.md'"
-    check "코딩 규칙 섹션" "grep -q '코딩 규칙\|코딩규칙' '${PROJECT_ROOT}/CLAUDE.md'"
-    check "디자인 규칙 섹션" "grep -q '디자인 규칙\|디자인규칙' '${PROJECT_ROOT}/CLAUDE.md'"
-    check "금지 사항 섹션" "grep -q '금지' '${PROJECT_ROOT}/CLAUDE.md'"
-    check "테스트 규칙 섹션" "grep -q '테스트' '${PROJECT_ROOT}/CLAUDE.md'"
-    check "커밋 컨벤션 섹션" "grep -q '커밋\|Commit' '${PROJECT_ROOT}/CLAUDE.md'"
-    check "DB 설계 문서 참조" "grep -q 'docs/database/database-design' '${PROJECT_ROOT}/CLAUDE.md'"
+    check "Architecture section" "grep -q 'Architecture' '${PROJECT_ROOT}/CLAUDE.md'"
+    check "Coding rules section" "grep -q 'Coding' '${PROJECT_ROOT}/CLAUDE.md'"
+    check "Design rules section" "grep -q 'Design' '${PROJECT_ROOT}/CLAUDE.md'"
+    check "Restrictions section" "grep -q 'Restriction\|Forbidden\|Prohibit' '${PROJECT_ROOT}/CLAUDE.md'"
+    check "Test rules section" "grep -q 'Test' '${PROJECT_ROOT}/CLAUDE.md'"
+    check "Commit convention section" "grep -q 'Commit' '${PROJECT_ROOT}/CLAUDE.md'"
+    check "DB design doc reference" "grep -q 'docs/database/database-design' '${PROJECT_ROOT}/CLAUDE.md'"
 else
-    echo "  [SKIP] CLAUDE.md가 존재하지 않아 내용 검증 불가"
+    echo "  [SKIP] CLAUDE.md not found, content verification skipped"
 fi
 echo ""
 
-# 결과 요약
+# Results summary
 echo "========================================"
-echo "  검증 결과: ${PASS}/${TOTAL} 통과 (${FAIL}건 실패)"
+echo "  Results: ${PASS}/${TOTAL} passed (${FAIL} failed)"
 echo "========================================"
 
 if [ $FAIL -eq 0 ]; then
-    echo "  Sprint 0 설정이 완료되었습니다!"
+    echo "  Sprint 0 setup is complete!"
     exit 0
 else
-    echo "  ${FAIL}건의 항목이 미완료 상태입니다."
-    echo "  /astra-checklist 로 상세 안내를 확인하세요."
+    echo "  ${FAIL} item(s) are incomplete."
+    echo "  Run /astra-checklist for detailed guidance."
     exit 1
 fi

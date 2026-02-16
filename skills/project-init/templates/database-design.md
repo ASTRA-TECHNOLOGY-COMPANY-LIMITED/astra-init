@@ -1,14 +1,14 @@
-# 데이터베이스 설계 문서
+# Database Design Document
 
-> **Single Source of Truth**: 모든 테이블 설계를 이 문서에서 통합 관리합니다.
-> 기능별 설계 문서에 테이블 DDL을 분산시키지 않습니다.
+> **Single Source of Truth**: All table designs are managed centrally in this document.
+> Do not scatter table DDL across feature-specific design documents.
 
-## 1. 전체 ERD
+## 1. Overall ERD
 
 ```
-[모듈별 테이블 관계도를 여기에 작성합니다]
+[Draw the module-level table relationship diagram here]
 
-예시:
+Example:
 TB_COMM_USER ──┬── TH_COMM_USER_AGRE ── TB_COMM_TRMS
                │
                ├── TB_PAY_SBSC ── TB_PAY_PLAN
@@ -16,53 +16,53 @@ TB_COMM_USER ──┬── TH_COMM_USER_AGRE ── TB_COMM_TRMS
                └── TB_ORDR ── TB_ORDR_PRDT
 ```
 
-## 2. 공통 규칙
+## 2. Common Rules
 
-### 2.1 테이블 접두사
+### 2.1 Table Prefixes
 
-| 접두사 | 유형 | 예시 |
-|--------|------|------|
-| TB_ | 일반 테이블 | TB_COMM_USER (사용자) |
-| TC_ | 코드 테이블 | TC_COMM_CD (공통코드) |
-| TH_ | 이력 테이블 | TH_COMM_USER_AGRE (동의이력) |
-| TL_ | 로그 테이블 | TL_SYS_API_LOG (API로그) |
-| TR_ | 관계 테이블 | TR_USER_ROLE (사용자-역할 매핑) |
+| Prefix | Type | Example |
+|--------|------|---------|
+| TB_ | General table | TB_COMM_USER (User) |
+| TC_ | Code table | TC_COMM_CD (Common code) |
+| TH_ | History table | TH_COMM_USER_AGRE (Consent history) |
+| TL_ | Log table | TL_SYS_API_LOG (API log) |
+| TR_ | Relation table | TR_USER_ROLE (User-Role mapping) |
 
-### 2.2 공통 감사 컬럼
+### 2.2 Common Audit Columns
 
-모든 테이블에 다음 컬럼을 포함합니다:
+All tables include the following columns:
 
-| 컬럼명 | 타입 | 설명 | 비고 |
-|--------|------|------|------|
-| CRTR_ID | VARCHAR(50) | 생성자 ID | NOT NULL |
-| CRT_DT | TIMESTAMP | 생성일시 | NOT NULL, DEFAULT CURRENT_TIMESTAMP |
-| MDFR_ID | VARCHAR(50) | 수정자 ID | NULL 허용 |
-| MDFCN_DT | TIMESTAMP | 수정일시 | NULL 허용 |
+| Column Name | Type | Description | Notes |
+|-------------|------|-------------|-------|
+| CRTR_ID | VARCHAR(50) | Creator ID | NOT NULL |
+| CRT_DT | TIMESTAMP | Creation datetime | NOT NULL, DEFAULT CURRENT_TIMESTAMP |
+| MDFR_ID | VARCHAR(50) | Modifier ID | NULL allowed |
+| MDFCN_DT | TIMESTAMP | Modification datetime | NULL allowed |
 
-### 2.3 네이밍 규칙
+### 2.3 Naming Rules
 
-- **테이블명**: `{접두사}_{모듈약어}_{엔티티명}` (예: TB_COMM_USER)
-- **컬럼명**: `{한글의미의 영문약어}` (예: USER_NM, TELNO, STLM_AMT)
-- **PK**: `{엔티티}_ID` 또는 `{엔티티}_SN` (일련번호)
-- **FK**: 참조 테이블의 PK 컬럼명 그대로 사용
-- **상태코드**: `{대상}_STTS_CD` (예: ORDR_STTS_CD)
-- **코드값**: `{의미}_CD` (예: PAY_MTHD_CD)
-- **금액**: `{의미}_AMT` (예: STLM_AMT)
-- **수량**: `{의미}_QTY` (예: ORDR_QTY)
-- **일시**: `{의미}_DT` (예: ORDR_DT)
-- **여부**: `{의미}_YN` (예: USE_YN)
+- **Table name**: `{prefix}_{module_abbr}_{entity_name}` (e.g., TB_COMM_USER)
+- **Column name**: `{English abbreviation of Korean meaning}` (e.g., USER_NM, TELNO, STLM_AMT)
+- **PK**: `{entity}_ID` or `{entity}_SN` (sequence number)
+- **FK**: Use the same column name as the referenced table's PK
+- **Status code**: `{target}_STTS_CD` (e.g., ORDR_STTS_CD)
+- **Code value**: `{meaning}_CD` (e.g., PAY_MTHD_CD)
+- **Amount**: `{meaning}_AMT` (e.g., STLM_AMT)
+- **Quantity**: `{meaning}_QTY` (e.g., ORDR_QTY)
+- **Datetime**: `{meaning}_DT` (e.g., ORDR_DT)
+- **Boolean flag**: `{meaning}_YN` (e.g., USE_YN)
 
-> 공공 데이터 표준 용어 사전을 준수합니다. `/lookup-term`으로 용어를 조회하세요.
+> Follows the public data standard terminology dictionary. Use `/lookup-term` to look up terms.
 
-## 3. 모듈별 테이블
+## 3. Module Tables
 
-### 3.1 공통 모듈 (COMM)
+### 3.1 Common Module (COMM)
 
-#### TB_COMM_USER (사용자)
+#### TB_COMM_USER (User)
 
-| 컬럼명 | 타입 | PK | FK | NULL | 설명 |
-|--------|------|----|----|------|------|
-| USER_ID | VARCHAR(50) | PK | | NOT NULL | 사용자 ID |
+| Column Name | Type | PK | FK | NULL | Description |
+|-------------|------|----|----|------|-------------|
+| USER_ID | VARCHAR(50) | PK | | NOT NULL | User ID |
 | ... | | | | | |
 
 ```sql
@@ -78,25 +78,25 @@ CREATE TABLE TB_COMM_USER (
 );
 ```
 
-### 3.2 {모듈명} ({약어})
+### 3.2 {Module Name} ({Abbreviation})
 
-> 기능 개발 시 `/feature-dev`로 이 섹션에 테이블을 추가합니다.
+> When developing features, use `/feature-dev` to add tables to this section.
 
-## 4. Enum/코드 값 정의
+## 4. Enum/Code Value Definitions
 
-| 코드 타입 | 코드 값 | 설명 |
-|----------|---------|------|
+| Code Type | Code Value | Description |
+|-----------|-----------|-------------|
 | | | |
 
-## 5. 테이블 간 FK 관계 요약
+## 5. FK Relationship Summary Between Tables
 
-| FK 이름 | 자식 테이블 | 자식 컬럼 | 부모 테이블 | 부모 컬럼 | ON DELETE |
-|---------|-----------|----------|-----------|----------|-----------|
+| FK Name | Child Table | Child Column | Parent Table | Parent Column | ON DELETE |
+|---------|-------------|-------------|--------------|--------------|-----------|
 | | | | | | |
 
 ---
 
-> **갱신 규칙**:
-> 1. 새 기능 개발 시 이 문서에 테이블을 먼저 추가합니다.
-> 2. 표준 용어 사전 준수 여부를 `/lookup-term`으로 확인합니다.
-> 3. VA가 검토 후 코드 반영을 진행합니다.
+> **Update Rules**:
+> 1. When developing a new feature, add the table to this document first.
+> 2. Verify compliance with the standard terminology dictionary using `/lookup-term`.
+> 3. VA reviews and then proceeds with code implementation.

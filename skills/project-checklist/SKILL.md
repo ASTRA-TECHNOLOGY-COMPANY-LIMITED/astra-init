@@ -1,108 +1,108 @@
 ---
 name: project-checklist
-description: "ASTRA Sprint 0 완료 체크리스트를 검증합니다. 필수 파일, 설정, 품질 게이트 구성을 확인합니다."
+description: "Verifies the ASTRA Sprint 0 completion checklist. Checks required files, settings, and quality gate configurations."
 allowed-tools: Read, Bash, Glob, Grep
 ---
 
-# ASTRA Sprint 0 완료 체크리스트 검증
+# ASTRA Sprint 0 Completion Checklist Verification
 
-현재 프로젝트의 ASTRA Sprint 0 세팅이 올바르게 완료되었는지 검증합니다.
+Verifies that the ASTRA Sprint 0 setup for the current project has been correctly completed.
 
-## 검증 항목
+## Verification Items
 
-### A. 프로젝트 구조 검증
+### A. Project Structure Verification
 
-다음 파일/디렉토리의 존재 여부를 확인합니다:
+Checks the existence of the following files/directories:
 
-| 경로 | 필수 | 설명 |
-|------|------|------|
-| `CLAUDE.md` | 필수 | 프로젝트 AI 규칙 |
-| `.claude/settings.json` | 선택 | 프로젝트별 설정 |
-| `docs/design-system/design-tokens.css` | 필수 | 디자인 토큰 |
-| `docs/design-system/components.md` | 필수 | 컴포넌트 가이드 |
-| `docs/design-system/layout-grid.md` | 필수 | 레이아웃 그리드 |
-| `docs/blueprints/overview.md` | 필수 | 프로젝트 개요 |
-| `docs/database/database-design.md` | 필수 | 중앙 DB 설계 문서 |
-| `docs/database/naming-rules.md` | 필수 | DB 네이밍 규칙 |
-| `docs/tests/test-strategy.md` | 필수 | 테스트 전략 문서 |
-| `docs/prompts/sprint-1.md` | 필수 | 첫 스프린트 프롬프트 맵 |
+| Path | Required | Description |
+|------|----------|-------------|
+| `CLAUDE.md` | Required | Project AI rules |
+| `.claude/settings.json` | Optional | Project-specific settings |
+| `docs/design-system/design-tokens.css` | Required | Design tokens |
+| `docs/design-system/components.md` | Required | Component guide |
+| `docs/design-system/layout-grid.md` | Required | Layout grid |
+| `docs/blueprints/overview.md` | Required | Project overview |
+| `docs/database/database-design.md` | Required | Central DB design document |
+| `docs/database/naming-rules.md` | Required | DB naming rules |
+| `docs/tests/test-strategy.md` | Required | Test strategy document |
+| `docs/prompts/sprint-1.md` | Required | First sprint prompt map |
 
-### B. CLAUDE.md 내용 검증
+### B. CLAUDE.md Content Verification
 
-CLAUDE.md에 다음 섹션이 포함되어 있는지 확인합니다:
+Checks whether CLAUDE.md contains the following sections:
 
-- [ ] 아키텍처 (백엔드, 프론트엔드, DB)
-- [ ] 코딩 규칙
-- [ ] 디자인 규칙
-- [ ] 금지 사항
-- [ ] 테스트 규칙
-- [ ] 커밋 컨벤션
-- [ ] 설계 문서 규칙
+- [ ] Architecture (backend, frontend, DB)
+- [ ] Coding rules
+- [ ] Design rules
+- [ ] Prohibited practices
+- [ ] Testing rules
+- [ ] Commit convention
+- [ ] Design document rules
 
-### C. 디자인 시스템 검증
+### C. Design System Verification
 
-`docs/design-system/design-tokens.css`에 다음 토큰이 정의되어 있는지 확인:
+Checks whether the following tokens are defined in `docs/design-system/design-tokens.css`:
 
-- [ ] 컬러 토큰 (`--color-*`)
-- [ ] 타이포그래피 토큰 (`--font-size-*`, `--font-weight-*`)
-- [ ] 스페이싱 토큰 (`--spacing-*`)
-- [ ] 반응형 브레이크포인트
+- [ ] Color tokens (`--color-*`)
+- [ ] Typography tokens (`--font-size-*`, `--font-weight-*`)
+- [ ] Spacing tokens (`--spacing-*`)
+- [ ] Responsive breakpoints
 
-### D. DB 설계 문서 검증
+### D. DB Design Document Verification
 
-`docs/database/database-design.md`에 다음 섹션이 포함되어 있는지 확인:
+Checks whether `docs/database/database-design.md` contains the following sections:
 
-- [ ] 전체 ERD 섹션
-- [ ] 공통 규칙 (테이블 접두사, 감사 컬럼, 네이밍)
-- [ ] 모듈별 테이블 섹션
-- [ ] FK 관계 요약 섹션
+- [ ] Full ERD section
+- [ ] Common rules (table prefixes, audit columns, naming)
+- [ ] Module-specific table sections
+- [ ] FK relationship summary section
 
-`docs/database/naming-rules.md`에 다음이 포함되어 있는지 확인:
+Checks whether `docs/database/naming-rules.md` contains the following:
 
-- [ ] 테이블 접두사 규칙
-- [ ] 컬럼 네이밍 규칙
-- [ ] 표준 용어 사전 연동 방법
+- [ ] Table prefix rules
+- [ ] Column naming rules
+- [ ] Standard terminology dictionary integration method
 
-### E. 테스트 전략 문서 검증
+### E. Test Strategy Document Verification
 
-`docs/tests/test-strategy.md`에 다음 섹션이 포함되어 있는지 확인:
+Checks whether `docs/tests/test-strategy.md` contains the following sections:
 
-- [ ] 테스트 레벨 정의 (단위/통합/E2E)
-- [ ] 테스트 커버리지 목표
-- [ ] 테스트 네이밍 규칙
-- [ ] 테스트 데이터 관리 전략
+- [ ] Test level definitions (unit/integration/E2E)
+- [ ] Test coverage goals
+- [ ] Test naming conventions
+- [ ] Test data management strategy
 
-### F. 전역 설정 검증
+### F. Global Settings Verification
 
-- [ ] `~/.claude/settings.json` 에 Agent Teams 환경변수
-- [ ] `~/.claude/.mcp.json` 에 MCP 서버 3개 (chrome-devtools, postgres, context7)
+- [ ] Agent Teams environment variable in `~/.claude/settings.json`
+- [ ] 3 MCP servers in `~/.claude/.mcp.json` (chrome-devtools, postgres, context7)
 
-### G. 품질 게이트 검증
+### G. Quality Gate Verification
 
-hookify 규칙이 설정되어 있는지 확인:
-- `.claude/` 디렉토리에 `hookify.*.local.md` 파일 존재 여부
+Checks whether hookify rules are configured:
+- Existence of `hookify.*.local.md` files in the `.claude/` directory
 
-## 결과 출력
+## Result Output
 
-검증 결과를 다음 형식으로 출력합니다:
+Outputs verification results in the following format:
 
 ```
-## ASTRA Sprint 0 체크리스트 검증 결과
+## ASTRA Sprint 0 Checklist Verification Results
 
-### 점수: {통과}/{전체} ({퍼센트}%)
+### Score: {passed}/{total} ({percent}%)
 
-### 통과 항목
-- [x] {항목명}
+### Passed Items
+- [x] {item name}
 
-### 미통과 항목
-- [ ] {항목명} - {해결 방법}
+### Failed Items
+- [ ] {item name} - {resolution method}
 
-### 권장 조치
-1. {구체적인 조치 사항}
+### Recommended Actions
+1. {specific action items}
 ```
 
-## 주의사항
+## Notes
 
-- 이 스킬은 읽기 전용입니다. 파일을 수정하지 않습니다.
-- 각 항목의 통과/미통과를 명확히 표시합니다.
-- 미통과 항목에는 구체적인 해결 방법을 제시합니다.
+- This skill is read-only. It does not modify files.
+- Clearly marks each item as passed/failed.
+- Provides specific resolution methods for failed items.

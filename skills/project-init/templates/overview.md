@@ -1,64 +1,64 @@
-# 프로젝트 개요
+# Project Overview
 
-## 1. 비전
+## 1. Vision
 
-[프로젝트의 비전과 목표를 서술합니다]
+[Describe the project's vision and goals]
 
-## 2. 목표
+## 2. Goals
 
-### 비즈니스 목표
-- [목표 1]
-- [목표 2]
+### Business Goals
+- [Goal 1]
+- [Goal 2]
 
-### 기술 목표
-- [목표 1]
-- [목표 2]
+### Technical Goals
+- [Goal 1]
+- [Goal 2]
 
-## 3. 기술 스택
+## 3. Technology Stack
 
-| 영역 | 기술 | 버전 | 선택 근거 |
-|------|------|------|----------|
-| 백엔드 | | | |
-| 프론트엔드 | | | |
-| 데이터베이스 | | | |
-| 인프라 | | | |
+| Area | Technology | Version | Selection Rationale |
+|------|-----------|---------|---------------------|
+| Backend | | | |
+| Frontend | | | |
+| Database | | | |
+| Infrastructure | | | |
 
-## 4. 모듈 구조
+## 4. Module Structure
 
 ```
-[모듈 간 의존성과 데이터 흐름을 도식화합니다]
+[Diagram the dependencies and data flow between modules]
 
-예시:
-사용자 인증 ─→ 주문 관리 ─→ 결제 처리
-                  │              │
-                  ↓              ↓
-            상품 관리        알림 서비스
+Example:
+User Auth ─→ Order Management ─→ Payment Processing
+                  │                    │
+                  ↓                    ↓
+            Product Management    Notification Service
 ```
 
-### 모듈 목록
+### Module List
 
-| 모듈 | 설명 | 핵심 기능 |
-|------|------|----------|
+| Module | Description | Core Features |
+|--------|-------------|---------------|
 | | | |
 
-## 5. 비기능 요구사항
+## 5. Non-Functional Requirements
 
-| 항목 | 목표 | 비고 |
-|------|------|------|
-| 응답 시간 | | |
-| 동시 사용자 | | |
-| 가용성 | | |
-| 보안 | | |
+| Item | Target | Notes |
+|------|--------|-------|
+| Response Time | | |
+| Concurrent Users | | |
+| Availability | | |
+| Security | | |
 
-## 6. 프로젝트 일정
+## 6. Project Schedule
 
-| 스프린트 | 기간 | 목표 |
-|---------|------|------|
-| Sprint 0 | Week 1 | 프로젝트 셋업 |
+| Sprint | Period | Goal |
+|--------|--------|------|
+| Sprint 0 | Week 1 | Project setup |
 | Sprint 1 | Week 2 | |
 | Sprint 2 | Week 3 | |
-| Release | Week N | 배포 준비 |
+| Release | Week N | Deployment preparation |
 
 ---
 
-> 이 문서는 Sprint 0에서 작성하고, 이후 스프린트에서 필요 시 갱신합니다.
+> This document is written during Sprint 0 and updated as needed in subsequent sprints.

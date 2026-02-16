@@ -1,20 +1,20 @@
 #!/bin/bash
 # ==========================================================================
-# ASTRA Sprint 0: 프로젝트 디렉토리 구조 생성 스크립트
+# ASTRA Sprint 0: Project Directory Structure Generation Script
 #
-# 사용법: ./init-project.sh <project-root-path>
+# Usage: ./init-project.sh <project-root-path>
 #
-# /astra-methodology 스킬에서 호출하거나 독립 실행할 수 있습니다.
+# Can be invoked from the /astra-methodology skill or run independently.
 # ==========================================================================
 
 set -euo pipefail
 
 PROJECT_ROOT="${1:-.}"
 
-echo "ASTRA Sprint 0: 프로젝트 구조 생성 중..."
-echo "대상 경로: ${PROJECT_ROOT}"
+echo "ASTRA Sprint 0: Generating project structure..."
+echo "Target path: ${PROJECT_ROOT}"
 
-# 디렉토리 생성
+# Create directories
 directories=(
     ".claude"
     "docs/design-system/references"
@@ -32,13 +32,13 @@ for dir in "${directories[@]}"; do
     target="${PROJECT_ROOT}/${dir}"
     if [ ! -d "$target" ]; then
         mkdir -p "$target"
-        echo "  [생성] ${dir}/"
+        echo "  [Created] ${dir}/"
     else
-        echo "  [존재] ${dir}/"
+        echo "  [Exists]  ${dir}/"
     fi
 done
 
-# 빈 디렉토리에 .gitkeep 추가
+# Add .gitkeep to empty directories
 gitkeep_dirs=(
     "docs/design-system/references"
     "docs/database/migration"
@@ -57,8 +57,8 @@ for dir in "${gitkeep_dirs[@]}"; do
 done
 
 echo ""
-echo "ASTRA 프로젝트 구조 생성 완료!"
+echo "ASTRA project structure generation complete!"
 echo ""
-echo "다음 단계:"
-echo "  1. /astra-methodology 스킬로 템플릿 파일 생성"
-echo "  2. 또는 수동으로 CLAUDE.md, 디자인 시스템 파일 작성"
+echo "Next steps:"
+echo "  1. Generate template files with the /astra-methodology skill"
+echo "  2. Or manually create CLAUDE.md and design system files"

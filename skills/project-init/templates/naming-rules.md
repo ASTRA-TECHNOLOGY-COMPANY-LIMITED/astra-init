@@ -1,101 +1,101 @@
-# DB 네이밍 규칙
+# DB Naming Rules
 
-> 공공 데이터 표준 용어 사전을 기반으로 테이블명, 컬럼명의 네이밍 규칙을 정의합니다.
-> `/lookup-term`으로 표준 용어를 조회하세요.
+> Defines naming rules for table names and column names based on the public data standard terminology dictionary.
+> Use `/lookup-term` to look up standard terms.
 
-## 1. 테이블 네이밍
+## 1. Table Naming
 
-### 1.1 접두사 규칙
+### 1.1 Prefix Rules
 
-| 접두사 | 유형 | 예시 |
-|--------|------|------|
-| TB_ | 일반 테이블 | TB_COMM_USER (사용자) |
-| TC_ | 코드 테이블 | TC_COMM_CD (공통코드) |
-| TH_ | 이력 테이블 | TH_COMM_USER_AGRE (동의이력) |
-| TL_ | 로그 테이블 | TL_SYS_API_LOG (API로그) |
-| TR_ | 관계 테이블 | TR_USER_ROLE (사용자-역할 매핑) |
+| Prefix | Type | Example |
+|--------|------|---------|
+| TB_ | General table | TB_COMM_USER (User) |
+| TC_ | Code table | TC_COMM_CD (Common code) |
+| TH_ | History table | TH_COMM_USER_AGRE (Consent history) |
+| TL_ | Log table | TL_SYS_API_LOG (API log) |
+| TR_ | Relation table | TR_USER_ROLE (User-Role mapping) |
 
-### 1.2 테이블명 패턴
+### 1.2 Table Name Pattern
 
-`{접두사}_{모듈약어}_{엔티티명}`
+`{prefix}_{module_abbr}_{entity_name}`
 
-| 모듈 | 약어 | 예시 테이블 |
-|------|------|-----------|
-| 공통 | COMM | TB_COMM_USER, TC_COMM_CD |
-| 결제 | PAY | TB_PAY_PLAN, TB_PAY_SBSC |
-| 주문 | ORDR | TB_ORDR, TB_ORDR_PRDT |
-| 알림 | NTFC | TH_NTFC_HIST |
-| 시스템 | SYS | TL_SYS_API_LOG |
+| Module | Abbreviation | Example Tables |
+|--------|-------------|----------------|
+| Common | COMM | TB_COMM_USER, TC_COMM_CD |
+| Payment | PAY | TB_PAY_PLAN, TB_PAY_SBSC |
+| Order | ORDR | TB_ORDR, TB_ORDR_PRDT |
+| Notification | NTFC | TH_NTFC_HIST |
+| System | SYS | TL_SYS_API_LOG |
 
-## 2. 컬럼 네이밍
+## 2. Column Naming
 
-### 2.1 기본 패턴
+### 2.1 Base Pattern
 
-`{한글 의미의 영문 약어}`
+`{English abbreviation of Korean meaning}`
 
-- 표준 용어 사전에 등록된 약어를 우선 사용합니다.
-- `/lookup-term [한글 용어]`로 약어를 조회합니다.
+- Use abbreviations registered in the standard terminology dictionary first.
+- Look up abbreviations with `/lookup-term [Korean term]`.
 
-### 2.2 접미사 규칙
+### 2.2 Suffix Rules
 
-| 접미사 | 용도 | 예시 |
-|--------|------|------|
-| _ID | 식별자 | USER_ID, ORDR_ID |
-| _SN | 일련번호 | STLM_SN |
-| _NM | 이름 | USER_NM, PRDT_NM |
-| _CD | 코드 | ORDR_STTS_CD, PAY_MTHD_CD |
-| _AMT | 금액 | STLM_AMT, ORDR_AMT |
-| _QTY | 수량 | ORDR_QTY |
-| _DT | 일시 | ORDR_DT, CRT_DT |
-| _YN | 여부 | USE_YN, DEL_YN |
-| _CN | 내용 | NTFC_CN |
-| _ADDR | 주소 | DLVR_ADDR |
-| _TELNO | 전화번호 | MBTLNUM |
+| Suffix | Usage | Example |
+|--------|-------|---------|
+| _ID | Identifier | USER_ID, ORDR_ID |
+| _SN | Sequence number | STLM_SN |
+| _NM | Name | USER_NM, PRDT_NM |
+| _CD | Code | ORDR_STTS_CD, PAY_MTHD_CD |
+| _AMT | Amount | STLM_AMT, ORDR_AMT |
+| _QTY | Quantity | ORDR_QTY |
+| _DT | Datetime | ORDR_DT, CRT_DT |
+| _YN | Boolean flag | USE_YN, DEL_YN |
+| _CN | Content | NTFC_CN |
+| _ADDR | Address | DLVR_ADDR |
+| _TELNO | Phone number | MBTLNUM |
 
-### 2.3 공통 감사 컬럼
+### 2.3 Common Audit Columns
 
-모든 테이블에 포함하는 필수 컬럼:
+Required columns included in all tables:
 
-| 컬럼명 | 타입 | 설명 |
-|--------|------|------|
-| CRTR_ID | VARCHAR(50) | 생성자 ID |
-| CRT_DT | TIMESTAMP | 생성일시 |
-| MDFR_ID | VARCHAR(50) | 수정자 ID |
-| MDFCN_DT | TIMESTAMP | 수정일시 |
+| Column Name | Type | Description |
+|-------------|------|-------------|
+| CRTR_ID | VARCHAR(50) | Creator ID |
+| CRT_DT | TIMESTAMP | Creation datetime |
+| MDFR_ID | VARCHAR(50) | Modifier ID |
+| MDFCN_DT | TIMESTAMP | Modification datetime |
 
-## 3. PK/FK 네이밍
+## 3. PK/FK Naming
 
 ### 3.1 PK (Primary Key)
 
-- 제약조건명: `PK_{모듈약어}_{엔티티명}`
-- 예시: `PK_COMM_USER`, `PK_PAY_PLAN`
+- Constraint name: `PK_{module_abbr}_{entity_name}`
+- Example: `PK_COMM_USER`, `PK_PAY_PLAN`
 
 ### 3.2 FK (Foreign Key)
 
-- 제약조건명: `FK_{자식테이블약어}_{부모테이블약어}`
-- 컬럼명: 참조 테이블의 PK 컬럼명 그대로 사용
-- 예시: TB_ORDR의 USER_ID → TB_COMM_USER의 USER_ID 참조
+- Constraint name: `FK_{child_table_abbr}_{parent_table_abbr}`
+- Column name: Use the same column name as the referenced table's PK
+- Example: USER_ID in TB_ORDR → References USER_ID in TB_COMM_USER
 
-## 4. 인덱스 네이밍
+## 4. Index Naming
 
-- 일반 인덱스: `IDX_{테이블약어}_{컬럼명}`
-- 유니크 인덱스: `UDX_{테이블약어}_{컬럼명}`
-- 예시: `IDX_COMM_USER_EMAIL`, `UDX_COMM_USER_LOGIN_ID`
+- Regular index: `IDX_{table_abbr}_{column_name}`
+- Unique index: `UDX_{table_abbr}_{column_name}`
+- Example: `IDX_COMM_USER_EMAIL`, `UDX_COMM_USER_LOGIN_ID`
 
-## 5. 표준 용어 매핑 예시
+## 5. Standard Term Mapping Examples
 
-| 한글 용어 | 영문 약어 | 도메인 | 데이터 타입 |
-|----------|----------|--------|-----------|
-| 사용자 | USER | | |
-| 결제금액 | STLM_AMT | 금액 | NUMERIC |
-| 주문번호 | ORDR_NO | 번호 | VARCHAR |
-| 주문일시 | ORDR_DT | 일시 | TIMESTAMP |
-| 상품명 | PRDT_NM | 명 | VARCHAR |
+| Korean Term | English Abbreviation | Domain | Data Type |
+|-------------|---------------------|--------|-----------|
+| User | USER | | |
+| Settlement amount | STLM_AMT | Amount | NUMERIC |
+| Order number | ORDR_NO | Number | VARCHAR |
+| Order datetime | ORDR_DT | Datetime | TIMESTAMP |
+| Product name | PRDT_NM | Name | VARCHAR |
 
-> 전체 표준 용어 목록은 `/lookup-term` 커맨드로 조회합니다.
+> Look up the full standard term list with the `/lookup-term` command.
 
 ---
 
-> **갱신 규칙**:
-> 1. 새로운 도메인 용어가 필요할 때 이 문서에 추가합니다.
-> 2. 표준 용어 사전에 없는 용어는 VA가 약어를 결정하고 등록합니다.
+> **Update Rules**:
+> 1. Add to this document when new domain terms are needed.
+> 2. For terms not in the standard terminology dictionary, VA determines and registers the abbreviation.
