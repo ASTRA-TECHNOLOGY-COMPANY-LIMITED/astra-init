@@ -1103,12 +1103,13 @@ project-root/
 │   │   └── test-reports/        # 스프린트별 테스트 결과 보고서
 │   │       └── sprint-1-report.md
 │   │
-│   ├── prompts/                 # 스프린트별 프롬프트 맵
-│   │   ├── sprint-1.md
-│   │   └── sprint-2.md
-│   │
-│   ├── retrospectives/          # 스프린트 회고 기록
-│   │   └── sprint-1-retro.md
+│   ├── sprints/                 # 스프린트 문서 (프롬프트 맵, 진행 추적, 회고)
+│   │   ├── sprint-1/
+│   │   │   ├── prompt-map.md
+│   │   │   ├── progress.md
+│   │   │   └── retrospective.md
+│   │   └── sprint-2/
+│   │       └── prompt-map.md
 │   │
 │   └── delivery/                # Release Sprint 산출물
 │       ├── operation-manual.md
