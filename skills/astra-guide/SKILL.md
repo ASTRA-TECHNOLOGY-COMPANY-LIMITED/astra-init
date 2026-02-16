@@ -54,7 +54,7 @@ Code Review:
 
 ```
 Step R.1: System Integration Testing
-  /project-test               Server launch + Chrome MCP integration testing
+  /project-test-run               Server launch + Chrome MCP integration testing
   - API integration testing
   - DB data consistency verification
   - Performance profiling
@@ -96,7 +96,7 @@ ASTRA Tools:
   /project-init [project info]   Sprint 0 initial setup
   /astra-setup                   Global dev environment setup
   /project-sprint [number]       Sprint initialization
-  /project-test [URL/scenario]   Server launch + Chrome MCP integration testing
+  /project-test-run [URL/scenario]   Server launch + Chrome MCP integration testing
   /project-checklist             Sprint 0 completion verification
   /astra-guide [section]         Quick reference guide
 ```
