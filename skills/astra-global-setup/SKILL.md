@@ -76,21 +76,19 @@ allowed-tools: Read, Write, Edit, Bash, Glob, Grep, AskUserQuestion
 다음 플러그인 설치 명령어를 안내합니다 (직접 실행하지 않음):
 
 ```bash
-# 공식 마켓플레이스 등록
-claude plugins marketplace add claude-plugins-official --github anthropics/claude-plugins-official
-
-# standard-enforcer 마켓플레이스 등록
-claude plugins marketplace add standard-enforcer --github zeanxai/standard-enforcer
+# 마켓플레이스 등록
+claude plugin marketplace add anthropics/claude-plugins-official
+claude plugin marketplace add ASTRA-TECHNOLOGY-COMPANY-LIMITED/astra-methodology
 
 # 필수 플러그인 설치 (8개)
-claude plugins install code-review@claude-plugins-official
-claude plugins install commit-commands@claude-plugins-official
-claude plugins install feature-dev@claude-plugins-official
-claude plugins install frontend-design@claude-plugins-official
-claude plugins install hookify@claude-plugins-official
-claude plugins install security-guidance@claude-plugins-official
-claude plugins install context7@claude-plugins-official
-claude plugins install standard-enforcer@standard-enforcer
+claude plugin install code-review@claude-plugins-official
+claude plugin install commit-commands@claude-plugins-official
+claude plugin install feature-dev@claude-plugins-official
+claude plugin install frontend-design@claude-plugins-official
+claude plugin install hookify@claude-plugins-official
+claude plugin install security-guidance@claude-plugins-official
+claude plugin install context7@claude-plugins-official
+claude plugin install astra-methodology@astra
 ```
 
 ### 6단계: 설정 확인 결과 출력

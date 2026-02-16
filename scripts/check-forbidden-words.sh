@@ -73,7 +73,7 @@ while IFS=$'\t' read -r standard_word forbidden_words; do
 done < <(jq -r '.[] | select(.금칙어목록 != null and .금칙어목록 != "") | [.공통표준단어명, .금칙어목록] | @tsv' "$WORDS_FILE" 2>/dev/null)
 
 if [ -n "$WARNINGS" ]; then
-  echo -e "[astra-init] 금칙어 검사 결과 (${FILE_PATH}):"
+  echo -e "[astra-methodology] 금칙어 검사 결과 (${FILE_PATH}):"
   echo -e "$WARNINGS"
 fi
 

@@ -4,7 +4,7 @@
 #
 # 사용법: ./init-project.sh <project-root-path>
 #
-# /astra-init 스킬에서 호출하거나 독립 실행할 수 있습니다.
+# /astra-methodology 스킬에서 호출하거나 독립 실행할 수 있습니다.
 # ==========================================================================
 
 set -euo pipefail
@@ -60,5 +60,5 @@ echo ""
 echo "ASTRA 프로젝트 구조 생성 완료!"
 echo ""
 echo "다음 단계:"
-echo "  1. /astra-init 스킬로 템플릿 파일 생성"
+echo "  1. /astra-methodology 스킬로 템플릿 파일 생성"
 echo "  2. 또는 수동으로 CLAUDE.md, 디자인 시스템 파일 작성"

@@ -93,7 +93,7 @@ Git 워크플로우:
   /hookify:list               현재 규칙 목록
 
 ASTRA 도구:
-  /astra-init [프로젝트 정보] Sprint 0 초기 세팅
+  /astra-methodology [프로젝트 정보] Sprint 0 초기 세팅
   /astra-global-setup         전역 개발환경 설정
   /astra-sprint [번호]        스프린트 초기화
   /astra-integration-test [URL/시나리오] 서버 실행 + Chrome MCP 통합 테스트

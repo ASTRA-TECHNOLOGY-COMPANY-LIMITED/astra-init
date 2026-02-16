@@ -1,5 +1,5 @@
 ---
-name: astra-init
+name: astra-methodology
 description: "ASTRA Sprint 0 프로젝트 초기 세팅. 프로젝트 디렉토리 구조, CLAUDE.md, 디자인 시스템 템플릿, 블루프린트 템플릿, 스프린트 템플릿을 생성합니다."
 argument-hint: "[프로젝트명] [백엔드기술] [프론트엔드기술] [DB종류]"
 allowed-tools: Read, Write, Edit, Bash, Glob, Grep, AskUserQuestion

@@ -122,7 +122,7 @@ if [[ "$FILENAME" == *.py ]]; then
 fi
 
 if [ -n "$WARNINGS" ]; then
-  echo -e "[astra-init] 네이밍 규칙 검사 결과 (${FILE_PATH}):"
+  echo -e "[astra-methodology] 네이밍 규칙 검사 결과 (${FILE_PATH}):"
   echo -e "$WARNINGS"
 fi
 
