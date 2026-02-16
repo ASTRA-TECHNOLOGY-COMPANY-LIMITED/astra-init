@@ -1,5 +1,5 @@
 ---
-name: astra-methodology
+name: project-init
 description: "ASTRA Sprint 0 프로젝트 초기 세팅. 프로젝트 디렉토리 구조, CLAUDE.md, 디자인 시스템 템플릿, 블루프린트 템플릿, 스프린트 템플릿을 생성합니다."
 argument-hint: "[프로젝트명] [백엔드기술] [프론트엔드기술] [DB종류]"
 allowed-tools: Read, Write, Edit, Bash, Glob, Grep, AskUserQuestion
@@ -186,13 +186,13 @@ allowed-tools: Read, Write, Edit, Bash, Glob, Grep, AskUserQuestion
 ### 다음 단계 (Sprint 0 진행)
 1. [ ] CLAUDE.md 검토 및 프로젝트에 맞게 수정
 2. [ ] DSA와 docs/design-system/ 파일 정의
-3. [ ] /astra-global-setup 으로 전역 개발환경 확인
+3. [ ] /astra-setup 으로 전역 개발환경 확인
 4. [ ] /feature-dev 로 핵심 기능 설계 문서 생성
 5. [ ] docs/database/database-design.md 작성
 6. [ ] docs/database/naming-rules.md 검토
 7. [ ] docs/tests/test-strategy.md 작성
 8. [ ] hookify 규칙 설정
-9. [ ] /astra-checklist 로 Sprint 0 완료 확인
+9. [ ] /project-checklist 로 Sprint 0 완료 확인
 ```
 
 ## 주의사항

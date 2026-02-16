@@ -1,5 +1,5 @@
 ---
-name: astra-global-setup
+name: astra-setup
 description: "ASTRA 방법론의 전역 개발환경(Step 0.0)을 설정합니다. ~/.claude/settings.json, MCP 서버, 필수 플러그인을 구성합니다."
 allowed-tools: Read, Write, Edit, Bash, Glob, Grep, AskUserQuestion
 ---

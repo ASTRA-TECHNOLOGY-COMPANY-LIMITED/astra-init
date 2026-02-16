@@ -1,5 +1,5 @@
 ---
-name: astra-sprint
+name: project-sprint
 description: "ASTRA 새로운 스프린트를 초기화합니다. 스프린트 프롬프트 맵과 회고 템플릿을 생성합니다."
 argument-hint: "[스프린트번호]"
 allowed-tools: Read, Write, Edit, Bash, Glob, Grep, AskUserQuestion

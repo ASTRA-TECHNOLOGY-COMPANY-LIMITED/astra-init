@@ -1,10 +1,20 @@
 ---
 description: 표준 용어 사전에서 한글 용어의 영문 약어, 도메인, 데이터 타입을 조회합니다
+argument-hint: "<한글 용어> (예: 고객명, 등록일시, 사업자등록번호)"
+allowed-tools: Read
 ---
 
 # 표준 용어 조회
 
 "$ARGUMENTS" 에 해당하는 표준 용어를 조회하라.
+
+## 참조 데이터
+
+| 파일 | 내용 | 용도 |
+|---|---|---|
+| `data/standard_terms.json` | 13,176건 표준 용어 | 한글 용어명 → 영문 약어, 도메인, 타입 |
+| `data/standard_words.json` | 3,284건 표준 단어 | 개별 단어 약어, 조합 제안 |
+| `data/standard_domains.json` | 123건 표준 도메인 | 도메인별 타입/길이 상세 |
 
 ## 조회 절차
 

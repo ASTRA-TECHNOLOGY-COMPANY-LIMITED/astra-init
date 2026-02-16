@@ -1,5 +1,5 @@
 ---
-name: astra-checklist
+name: project-checklist
 description: "ASTRA Sprint 0 완료 체크리스트를 검증합니다. 필수 파일, 설정, 품질 게이트 구성을 확인합니다."
 allowed-tools: Read, Bash, Glob, Grep
 ---

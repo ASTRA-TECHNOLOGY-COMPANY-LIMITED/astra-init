@@ -1,5 +1,5 @@
 ---
-name: data-standard
+name: project-standard
 description: >
   데이터베이스 테이블, 엔티티 클래스, SQL, 마이그레이션 파일을 작성할 때
   공공 데이터 표준 용어 사전을 자동 적용합니다. DB 컬럼명, 테이블명,

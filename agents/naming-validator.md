@@ -3,6 +3,10 @@ name: naming-validator
 description: >
   DB 엔티티, SQL, DTO의 네이밍이 공공 데이터 표준 용어 사전을 준수하는지 검증합니다.
   데이터 모델링, 엔티티 작성, SQL 작성, DTO 설계 시 사용합니다.
+tools: Read, Grep, Glob, Bash
+disallowedTools: Write, Edit
+model: haiku
+maxTurns: 20
 ---
 
 당신은 데이터 표준 네이밍 검증 전문가 에이전트입니다.

@@ -1,10 +1,20 @@
 ---
 description: 한글 테이블/컬럼 정의로부터 표준을 준수하는 엔티티 코드를 생성합니다
+argument-hint: "<한글 테이블 정의> (예: 고객 테이블: 고객명, 고객번호, 가입일자)"
+allowed-tools: Read, Write, Glob, Grep
 ---
 
 # 표준 엔티티 생성
 
 $ARGUMENTS 의 한글 테이블/컬럼 정의를 바탕으로 표준을 준수하는 엔티티 코드를 생성하라.
+
+## 참조 데이터
+
+| 파일 | 용도 |
+|---|---|
+| `data/standard_terms.json` | 한글 용어 → 영문 약어, 도메인 매핑 |
+| `data/standard_words.json` | 개별 단어 약어, 금칙어 확인 |
+| `data/standard_domains.json` | 도메인별 데이터 타입/길이 매핑 |
 
 ## 입력 형식 예시
 
@@ -34,16 +44,16 @@ $ARGUMENTS 의 한글 테이블/컬럼 정의를 바탕으로 표준을 준수�
 - `@Column(name = "...", length = ...)` 으로 물리 컬럼명 매핑
 - CHAR 타입은 `columnDefinition` 명시
 - 도메인에 따른 Java 타입 매핑 (BigDecimal, LocalDateTime, String 등)
-- Google Java Style Guide 준수 (2스페이스 인덴트, K&R 중괄호 등)
+- Google Java Style Guide 준수 (참조: `skills/coding-convention/java-coding-convention.md`)
 
 #### TypeScript (TypeORM)
 - `@Entity()`, `@Column()` 데코레이터
 - 표준 접미사에 따른 타입 매핑
-- Google TypeScript Style Guide 준수 (named export, const, === 등)
+- Google TypeScript Style Guide 준수 (참조: `skills/coding-convention/typescript-coding-convention.md`)
 
 #### Python (SQLAlchemy)
 - `Column()`, `Table()` 정의
-- PEP 8 준수 (snake_case, 4스페이스 등)
+- PEP 8 준수 (참조: `skills/coding-convention/python-coding-convention.md`)
 
 ### 4단계: DDL 생성
 표준 테이블명 규칙(TB_ 접두사)을 적용한 SQL DDL도 함께 생성한다.
@@ -61,3 +71,4 @@ CREATE TABLE TB_테이블약어 (
 - 사용여부(USE_YN) 컬럼이 명시되면 DEFAULT 'Y' 설정
 - 삭제여부(DEL_YN) 컬럼이 명시되면 DEFAULT 'N' 설정
 - PK는 테이블명_SN (순번) 패턴으로 자동 생성 (명시되지 않은 경우)
+- 금칙어 사전(`data/standard_words.json`의 `금칙어목록`)에 해당하는 단어가 있으면 표준어로 대체

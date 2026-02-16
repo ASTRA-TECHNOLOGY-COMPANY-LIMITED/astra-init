@@ -1,5 +1,5 @@
 ---
-name: astra-integration-test
+name: project-test
 description: "서버를 실행하고 Chrome MCP로 통합 테스트를 수행합니다. 서버 로그 모니터링, 페이지 검증, API 동작 확인, 성능 측정을 자동으로 진행합니다."
 argument-hint: "[테스트 대상 URL 또는 시나리오]"
 allowed-tools: Read, Write, Edit, Bash, Glob, Grep, AskUserQuestion, mcp__chrome-devtools__take_snapshot, mcp__chrome-devtools__take_screenshot, mcp__chrome-devtools__navigate_page, mcp__chrome-devtools__click, mcp__chrome-devtools__fill, mcp__chrome-devtools__fill_form, mcp__chrome-devtools__press_key, mcp__chrome-devtools__hover, mcp__chrome-devtools__list_console_messages, mcp__chrome-devtools__get_console_message, mcp__chrome-devtools__list_network_requests, mcp__chrome-devtools__get_network_request, mcp__chrome-devtools__evaluate_script, mcp__chrome-devtools__wait_for, mcp__chrome-devtools__emulate, mcp__chrome-devtools__resize_page, mcp__chrome-devtools__list_pages, mcp__chrome-devtools__select_page, mcp__chrome-devtools__new_page, mcp__chrome-devtools__handle_dialog, mcp__chrome-devtools__performance_start_trace, mcp__chrome-devtools__performance_stop_trace, mcp__chrome-devtools__performance_analyze_insight
@@ -58,13 +58,59 @@ LLM이 서버 로그를 직접 모니터링하여 오류를 감지하고, 페이
 | NestJS | `Nest application successfully started` | `Error:` / `Cannot find module` |
 | FastAPI | `Uvicorn running on` | `ERROR:` / `ModuleNotFoundError` |
 
-### 3단계: 테스트 시나리오 결정
+### 3단계: 테스트 케이스 작성
+
+프로젝트를 분석하여 테스트 케이스를 직접 작성합니다.
+
+#### A. 테스트 대상 분석
 
 `$ARGUMENTS`를 확인합니다:
 
-- **URL이 제공된 경우**: 해당 페이지에 대한 기본 검증 수행
-- **시나리오가 제공된 경우**: 시나리오에 따라 단계별 테스트 수행
-- **인자 없는 경우**: `docs/tests/test-cases/` 디렉토리에서 테스트 케이스 목록을 확인하고, 사용자에게 테스트 대상을 질문
+- **URL이 제공된 경우**: 해당 페이지를 분석하여 테스트 케이스 작성
+- **시나리오가 제공된 경우**: 시나리오를 기반으로 테스트 케이스 작성
+- **인자 없는 경우**: 프로젝트 전체를 분석하여 테스트 케이스 작성
+
+#### B. 프로젝트 분석 항목
+
+테스트 케이스 작성을 위해 다음을 분석합니다:
+
+1. **라우트/페이지 구조**: `src/app/`, `src/pages/`, `routes/` 등에서 페이지 목록 파악
+2. **API 엔드포인트**: 컨트롤러, API 라우트 파일에서 엔드포인트 목록 파악
+3. **핵심 기능**: CLAUDE.md, README.md, 블루프린트 문서에서 주요 기능 파악
+4. **폼/입력 요소**: 사용자 입력이 필요한 화면 파악
+5. **인증/인가**: 로그인, 권한 체크가 필요한 화면 파악
+
+#### C. 테스트 케이스 작성
+
+`docs/tests/test-cases/` 디렉토리에 테스트 케이스를 작성합니다:
+
+```markdown
+# {기능명} 테스트 케이스
+
+## TC-001: {테스트 케이스 제목}
+- **전제조건**: {필요한 사전 상태}
+- **테스트 단계**:
+  1. {단계 1}
+  2. {단계 2}
+- **예상 결과**: {기대하는 결과}
+- **검증 방법**: snapshot / console / network / server-log
+
+## TC-002: {테스트 케이스 제목}
+...
+```
+
+**테스트 케이스 유형:**
+
+| 유형 | 설명 | 예시 |
+|------|------|------|
+| 페이지 로드 | 페이지 접근 및 렌더링 확인 | 메인 페이지 200 응답 |
+| 폼 제출 | 입력값 검증 및 제출 동작 | 회원가입 폼 정상 제출 |
+| CRUD 동작 | 데이터 생성/조회/수정/삭제 | 게시글 작성 후 목록 반영 |
+| 인증 플로우 | 로그인/로그아웃/권한 확인 | 비로그인 시 리다이렉트 |
+| 에러 처리 | 잘못된 입력/접근 시 동작 | 404 페이지 표시 |
+| 반응형 | 뷰포트별 레이아웃 확인 | 모바일에서 메뉴 접힘 |
+
+작성 완료 후 사용자에게 테스트 케이스 목록을 보여주고 확인을 받습니다.
 
 ### 4단계: 페이지 기본 검증
 
@@ -106,7 +152,7 @@ LLM이 서버 로그를 직접 모니터링하여 오류를 감지하고, 페이
 
 ### 5단계: 시나리오 기반 통합 테스트
 
-테스트 케이스 문서(`docs/tests/test-cases/`)를 참조하여 사용자 시나리오를 실행합니다:
+3단계에서 작성한 테스트 케이스를 순서대로 실행합니다:
 
 #### 폼 입력 테스트
 
@@ -226,17 +272,14 @@ LLM이 서버 로그를 직접 모니터링하여 오류를 감지하고, 페이
 ## 빠른 실행 예시
 
 ```
-# 특정 URL 테스트
-/astra-integration-test http://localhost:3000
+# 특정 URL 테스트 (해당 페이지 분석 후 테스트 케이스 작성 → 실행)
+/project-test http://localhost:3000
 
-# 특정 시나리오 테스트
-/astra-integration-test 로그인 플로우
+# 특정 시나리오 테스트 (시나리오 기반 테스트 케이스 작성 → 실행)
+/project-test 로그인 플로우
 
-# 전체 통합 테스트 (test-cases 디렉토리 기반)
-/astra-integration-test
-
-# 특정 테스트 케이스 파일 기반
-/astra-integration-test docs/tests/test-cases/auth-test-cases.md
+# 전체 통합 테스트 (프로젝트 분석 → 테스트 케이스 작성 → 실행)
+/project-test
 ```
 
 ## 주의사항

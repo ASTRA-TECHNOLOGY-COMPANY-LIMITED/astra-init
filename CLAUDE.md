@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**astra-methodology** is a Claude Code plugin that implements the ASTRA (AI-augmented Sprint Through Rapid Assembly) methodology. It provides Sprint 0 project initialization, data standard enforcement, naming validation, and quality gates for Korean enterprise software development.
+**astra-methodology** is a Claude Code plugin that implements the ASTRA (AI-augmented Sprint Through Rapid Assembly) methodology. It provides Sprint 0 project initialization, coding convention enforcement (Java/TypeScript/Python/CSS/SCSS), Korean public data standard enforcement, international code standards (ISO 3166-1/2, ITU-T E.164), naming validation, and quality gates for Korean enterprise software development.
 
 This is NOT an application codebase — it is a Claude Code plugin consisting of skills, agents, hooks, commands, and scripts that get installed into target projects.
 
@@ -12,28 +12,42 @@ This is NOT an application codebase — it is a Claude Code plugin consisting of
 
 ```
 astra-methodology/
-├── skills/              # Claude Code skills (invoked via /command)
-│   ├── astra-methodology/      # Sprint 0 project scaffolding (/astra-methodology)
-│   ├── astra-sprint/    # Sprint initialization (/astra-sprint)
+├── skills/              # Claude Code skills (invoked via /command or auto-applied)
+│   ├── astra-setup/     # Global dev environment setup (/astra-setup)
 │   ├── astra-guide/     # Quick reference guide (/astra-guide)
-│   ├── astra-checklist/ # Sprint 0 completion verification (/astra-checklist)
-│   ├── astra-global-setup/  # Global dev environment setup (/astra-global-setup)
-│   ├── astra-integration-test/ # Chrome MCP integration testing (/astra-integration-test)
-│   └── data-standard/   # Korean public data standard terminology
-├── agents/              # Specialized Claude Code agents
-│   ├── naming-validator.md  # DB naming standard validation agent
-│   └── astra-verifier.md   # ASTRA methodology compliance checker (read-only)
+│   ├── project-init/    # Sprint 0 project scaffolding (/project-init)
+│   ├── project-sprint/  # Sprint initialization (/project-sprint)
+│   ├── project-checklist/ # Sprint 0 completion verification (/project-checklist)
+│   ├── project-standard/  # Korean public data standard terminology (/project-standard)
+│   ├── project-test/    # Chrome MCP integration testing (/project-test)
+│   ├── coding-convention/ # Auto-applied coding convention (Java/TS/Python/CSS/SCSS)
+│   └── international-code/ # Auto-applied international code standards (ISO/ITU)
+├── agents/              # Specialized Claude Code subagents (read-only, auto-discovered)
+│   ├── astra-verifier.md        # ASTRA methodology compliance checker (haiku)
+│   ├── naming-validator.md      # DB naming standard validation (haiku)
+│   ├── convention-checker.md    # Coding convention deep analysis (haiku)
+│   ├── blueprint-reviewer.md    # Design document quality & consistency (sonnet) — Gate 2
+│   ├── design-token-validator.md # Design token system compliance (haiku) — Gate 2.5
+│   ├── sprint-analyzer.md       # Sprint progress & retrospective analysis (sonnet)
+│   ├── quality-gate-runner.md   # Integrated quality gate execution (sonnet) — Gate 3
+│   └── test-coverage-analyzer.md # Test strategy & coverage analysis (haiku) — Gate 2
 ├── commands/            # Slash commands
-│   ├── generate-entity.md   # /generate-entity — entity code from Korean definitions
-│   ├── check-naming.md      # /check-naming — DB naming standard compliance check
-│   └── lookup-term.md       # /lookup-term — standard term dictionary lookup
+│   ├── generate-entity.md       # /generate-entity — entity code from Korean definitions
+│   ├── check-naming.md          # /check-naming — DB naming standard compliance check
+│   ├── check-convention.md      # /check-convention — coding convention compliance check
+│   ├── lookup-term.md           # /lookup-term — standard term dictionary lookup
+│   ├── lookup-code.md           # /lookup-code — international code lookup (ISO/ITU)
+│   └── generate-intl-component.md # /generate-intl-component — international code component generation
 ├── hooks/               # PostToolUse hooks (hooks.json)
 ├── scripts/             # Shell scripts for hooks and verification
-├── data/                # Standard dictionary JSON files
-│   ├── standard_terms.json    # 13,176 standard terms (Korean→English abbreviation)
-│   ├── standard_words.json    # 3,284 standard words (abbreviations, forbidden words)
-│   └── standard_domains.json  # 123 standard domains (type codes, lengths)
-└── .claude-plugin/      # Plugin manifest (plugin.json)
+├── data/                # Standard dictionary and international code JSON files
+│   ├── standard_terms.json        # 13,176 standard terms (Korean→English abbreviation)
+│   ├── standard_words.json        # 3,284 standard words (abbreviations, forbidden words)
+│   ├── standard_domains.json      # 123 standard domains (type codes, lengths)
+│   ├── iso_3166_1_countries.json  # 249 ISO 3166-1 country codes
+│   ├── iso_3166_2_regions.json    # 653 ISO 3166-2 region codes (21 countries)
+│   └── country_calling_codes.json # 245 ITU-T E.164 calling codes
+└── .claude-plugin/      # Plugin manifest (plugin.json, marketplace.json)
 ```
 
 ## Key Concepts
@@ -52,6 +66,27 @@ The plugin enforces naming conventions from the Korean Ministry of the Interior 
 - **Table prefixes**: `TB_` (general), `TC_` (code), `TH_` (history), `TL_` (log), `TR_` (relation)
 - **Column suffixes**: `_YMD` (date), `_DT` (datetime), `_AMT` (amount), `_NM` (name), `_CD` (code), `_NO` (number), `_CN` (content), `_YN` (yes/no), `_SN` (sequence), `_ADDR` (address)
 - **Forbidden words**: `standard_words.json` contains a `금칙어목록` field; violations trigger warnings with standard alternatives
+
+### Coding Convention Enforcement
+
+The plugin auto-applies coding conventions when editing language-specific files:
+
+- **Java** (Google Java Style Guide): 2-space indent, 100-char limit, K&R braces, no wildcard imports, `UpperCamelCase` classes, `lowerCamelCase` methods, `UPPER_SNAKE_CASE` constants
+- **TypeScript** (Google TypeScript Style Guide): Prettier formatting, no `export default`, no `any`, no `var`, no `.forEach()`, `===`/`!==` required, named exports only
+- **Python** (PEP 8): 4-space indent, 79-char limit, `snake_case` functions, `CapWords` classes, `is None` required, no bare `except:`
+- **CSS/SCSS** (CSS Guidelines + Sass Guidelines): 2-space indent, 80-char limit, BEM naming, no ID selectors, max 3-level nesting, mobile-first media queries
+
+Reference files are in `skills/coding-convention/` (e.g., `java-coding-convention.md`, `typescript-coding-convention.md`).
+
+### International Code Standards (ISO 3166-1/2, ITU-T E.164)
+
+The plugin auto-applies international code standards when implementing phone number inputs, country/region selectors, and address forms:
+
+- **ISO 3166-1**: alpha-2 country codes (e.g., `KR`, `US`, `JP`) — stored as `NATN_CD CHAR(2)`
+- **ISO 3166-2**: region/subdivision codes (e.g., `KR-11`, `US-CA`) — stored as `RGN_CD VARCHAR(6)`
+- **E.164**: international phone numbers (e.g., `+821012345678`) — stored as `INTL_TELNO VARCHAR(15)`
+
+Data files: `iso_3166_1_countries.json` (249 countries), `iso_3166_2_regions.json` (653 regions), `country_calling_codes.json` (245 calling codes).
 
 ### Hooks Architecture
 
@@ -102,9 +137,11 @@ When the plugin initializes a target project, it creates:
 
 ## Conventions
 
+- **버전업 필수**: main 브랜치에 푸시하기 전 반드시 `.claude-plugin/plugin.json`과 `.claude-plugin/marketplace.json`의 `version` 필드를 업데이트해야 한다. SemVer 규칙을 따른다 — 버그 수정은 patch(x.x.+1), 기능 추가는 minor(x.+1.0), 호환성 깨지는 변경은 major(+1.0.0).
 - Skill SKILL.md files follow a strict procedural format (단계: step-by-step instructions)
 - Commands are simpler than skills — they define input/output format and delegate to data files
-- The astra-verifier agent is read-only (`disallowedTools: Write, Edit`) and uses haiku model
+- All agents are read-only (`disallowedTools: Write, Edit`) — they analyze and report but never modify files
+- Agent model selection: `haiku` for rule-based validation (fast), `sonnet` for complex analysis (accurate)
 - Hook scripts must always `exit 0` to avoid blocking the user's workflow
 - `standard_terms.json` fields: `공통표준용어명` (Korean term), `공통표준용어영문약어명` (English abbreviation), `공통표준도메인명` (domain)
 - `standard_words.json` fields: `공통표준단어명` (word), `공통표준단어영문약어명` (abbreviation), `금칙어목록` (forbidden words), `이음동의어목록` (synonyms)

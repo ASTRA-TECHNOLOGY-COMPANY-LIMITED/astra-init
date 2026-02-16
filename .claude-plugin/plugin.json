@@ -1,7 +1,7 @@
 {
   "name": "astra-methodology",
-  "version": "1.0.0",
-  "description": "ASTRA(AI-augmented Sprint Through Rapid Assembly) methodology Sprint 0 project initializer. Sets up project structure, CLAUDE.md, design system templates, blueprints, and quality gates according to the ASTRA methodology.",
+  "version": "2.0.0",
+  "description": "ASTRA(AI-augmented Sprint Through Rapid Assembly) methodology plugin. Sprint 0 project initialization, coding convention enforcement (Java/TypeScript/Python/CSS/SCSS), Korean public data standard, international code standards (ISO 3166-1/2, ITU-T E.164), naming validation, and quality gates.",
   "author": {
     "name": "Zeans.L",
     "email": "zeans@astravision.co.kr"
@@ -18,6 +18,14 @@
     "methodology",
     "data-standard",
     "naming",
-    "korean-standard"
+    "korean-standard",
+    "coding-convention",
+    "java",
+    "typescript",
+    "python",
+    "css",
+    "scss",
+    "iso-3166",
+    "international-code"
   ]
 }
