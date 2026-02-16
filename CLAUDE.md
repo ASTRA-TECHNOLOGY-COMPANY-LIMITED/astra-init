@@ -21,6 +21,7 @@ astra-methodology/
 │   ├── data-standard/     # Korean public data standard terminology (/data-standard)
 │   ├── test-run/          # Chrome MCP integration testing (/test-run)
 │   ├── test-scenario/     # E2E test scenario generation (/test-scenario)
+│   ├── pr-merge/          # Commit→review→fix→merge full cycle (/pr-merge)
 │   ├── coding-convention/ # Auto-applied coding convention (Java/TS/Python/CSS/SCSS)
 │   ├── code-standard/     # Auto-applied international code standards (ISO/ITU)
 │   └── sprint-progress/   # Auto-applied sprint progress tracking

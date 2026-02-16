@@ -45,6 +45,7 @@ Design Review (1 hour - led by DSA):
 
 Code Review:
   /commit-push-pr        # Create PR
+  /pr-merge       # Commit→review→fix→merge full cycle
   /code-review           # 5-agent parallel review
   /check-convention src/ # Coding standard check
   /check-naming src/entity/ # DB naming check
@@ -86,6 +87,7 @@ Code Quality:
 Git Workflow:
   /commit                        Auto commit
   /commit-push-pr                Commit+push+PR batch
+  /pr-merge               Commit→review→fix→merge full cycle
   /clean_gone                    Branch cleanup
 
 Quality Rules:
