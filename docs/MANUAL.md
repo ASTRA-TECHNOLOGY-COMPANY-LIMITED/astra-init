@@ -13,31 +13,28 @@
 1. [방법론 개요](#1-방법론-개요)
 2. [스크럼에서 ASTRA로의 진화](#2-스크럼에서-astra로의-진화)
 3. [역할 정의](#3-역할-정의)
-4. [Sprint 0: 프로젝트 셋업](#4-sprint-0-프로젝트-셋업)
-   - [Step 0.0: 개발환경 설정 (전역)](#step-00-개발환경-설정-전역)
-   - [Step 0.1: Vision & Backlog](#step-01-vision--backlog-day-1-2)
-   - [Step 0.2: Design System 구축](#step-02-design-system-구축-day-2-3---dsa-주관)
-   - [Step 0.3: Architecture & Standards](#step-03-architecture--standards-day-3-4)
-   - [Step 0.4: Guard Rails 설정](#step-04-guard-rails-설정-day-4-5)
-5. [품질 게이트](#5-품질-게이트)
-   - [Gate 1: WRITE-TIME (작성 시점)](#gate-1-write-time-작성-시점)
-   - [Gate 2: REVIEW-TIME (리뷰 시점)](#gate-2-review-time-리뷰-시점)
-   - [Gate 2.5: DESIGN-TIME (디자인 검수 시점)](#gate-25-design-time-디자인-검수-시점)
-   - [Gate 3: BRIDGE-TIME (릴리스 시점)](#gate-3-bridge-time-릴리스-시점)
-6. [기능 스프린트 실행](#6-기능-스프린트-실행)
-   - [6.1 주간 일정](#61-주간-일정)
-   - [6.2 Sprint Planning](#62-sprint-planning-1시간)
-   - [6.3 Feature Build](#63-feature-build-mondaythursday-오전)
-   - [6.4 Daily Scrum → 비동기 AI 보고](#64-daily-scrum--비동기-ai-보고)
-   - [6.5 Design Review & Code Review](#65-design-review-thursday-오후--code-review-friday-오전)
-   - [6.6 Sprint Review](#66-sprint-review-friday-1시간)
-   - [6.7 Sprint Retrospective](#67-sprint-retrospective-friday-30분)
-   - [6.8 Backlog Refinement](#68-backlog-refinement-30분)
-   - [6.9 요구사항 변경 대응](#69-요구사항-변경-대응)
-7. [Release Sprint: 배포 준비](#7-release-sprint-배포-준비)
-8. [프로젝트 템플릿](#8-프로젝트-템플릿)
-9. [기대 효과](#9-기대-효과)
+- [개발 워크플로우](#개발-워크플로우)
+4. [디자인 시스템 작성](#4-디자인-시스템-작성)
+5. [블루프린트 작성](#5-블루프린트-작성)
+6. [데이터베이스 설계](#6-데이터베이스-설계)
+7. [블루프린트 기반 스프린트 작성](#7-블루프린트-기반-스프린트-작성)
+8. [구현](#8-구현)
+9. [테스트 시나리오 작성](#9-테스트-시나리오-작성)
+10. [테스트 실행](#10-테스트-실행)
+11. [PR / 리뷰](#11-pr--리뷰)
+12. [스테이징 브랜치 머지](#12-스테이징-브랜치-머지)
+13. [사용자 테스트](#13-사용자-테스트)
+14. [메인 브랜치 머지](#14-메인-브랜치-머지)
 - [부록](#부록)
+  - [A: Claude Code 도구 빠른 참조](#부록-a-claude-code-도구-빠른-참조)
+  - [A-2: 에이전트 빠른 참조](#부록-a-2-에이전트-빠른-참조)
+  - [B: 프롬프트 작성 가이드](#부록-b-프롬프트-작성-가이드)
+  - [C: 위험 관리](#부록-c-위험-관리)
+  - [D: AI 에이전트 작업 시간 추정 근거](#부록-d-ai-에이전트-작업-시간-추정-근거)
+  - [E: Sprint 0 프로젝트 셋업](#부록-e-sprint-0-프로젝트-셋업)
+  - [F: 프로젝트 템플릿](#부록-f-프로젝트-템플릿)
+  - [G: 기대 효과](#부록-g-기대-효과)
+  - [H: 비용 효과](#부록-h-비용-효과)
 
 ---
 
@@ -124,7 +121,7 @@ ASTRA:
 | Daily Scrum | 15분 x 10일 = 2.5h | 비동기 | 커밋 기반 자동 진척 보고 |
 | Design Review | (별도 없음) | 1시간 | DSA의 AI 생성 UI 검수 |
 | Sprint Review | 2시간 | 1시간 | `chrome-devtools` 실시간 데모 |
-| Retrospective | 1.5시간 | 30분 | AI 분석 → `hookify` 자동화 |
+| Retrospective | 1.5시간 | 30분 | `sprint-analyzer` AI 분석 → `hookify` 자동화 |
 | Backlog Refinement | 2시간 | 30분 | `feature-dev` code-explorer 자동 분석 |
 | **합계** | **~12시간/스프린트** | **~4시간/스프린트** | **67% 절감** |
 
@@ -171,7 +168,7 @@ ASTRA:
 
 ---
 
-4. ## 3. 역할 정의
+## 3. 역할 정의
 
 ### VA (Vibe Architect) - 시니어 개발자 1명
 
@@ -228,139 +225,32 @@ AI가 UI 코드를 생성하더라도, **디자인 품질과 일관성은 전문
 
 ---
 
-## 4. Sprint 0: 프로젝트 셋업
 
-Sprint 0는 1주간 프로젝트의 기반을 설정합니다. CLAUDE.md, 디자인 시스템, 설계 문서, 품질 규칙 등 모든 스프린트에 영향을 미치는 기반을 구축합니다.
+## 개발 워크플로우
 
-**가장 먼저 Claude Code의 전역 개발환경을 설정합니다.** 이 설정은 프로젝트 단위가 아닌 개발자 머신 단위로 한 번만 수행하면 되며, 이후 모든 프로젝트에 공통 적용됩니다.
-
-### Step 0.0: 개발환경 설정 (전역)
-
-> **범위**: 개발자 머신 단위 (1회 설정, 모든 프로젝트에 적용)
-> **소요 시간**: 30분~1시간
-> **설정 경로**: `~/.claude/`
-
-ASTRA 방법론의 모든 도구와 자동화가 동작하려면, Claude Code의 전역 설정이 사전에 완료되어 있어야 합니다. 프로젝트 설정(CLAUDE.md, hookify 등)은 Step 0.4에서 다루며, 이 단계에서는 **전역 인프라**만 구성합니다.
-
-#### A. 전역 설정 (`~/.claude/settings.json`) — `astra-setup`이 자동 구성
-
-> 아래 설정은 `/astra-methodology:astra-setup` 실행 시 자동으로 구성됩니다.
-> 수동 설정이 필요한 경우에만 참고하세요.
-
-```json
-{
-  "env": {
-    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
-  },
-  "permissions": {
-    "defaultMode": "bypassPermissions"
-  },
-  "alwaysThinkingEnabled": true,
-  "skipDangerousModePermissionPrompt": true
-}
-```
-
-| 항목 | 값 | ASTRA에서의 역할 |
-|------|-----|-----------------|
-| Agent Teams | `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` | `feature-dev`의 다중 에이전트 병렬 실행 (code-explorer, code-architect, code-reviewer) |
-| 권한 모드 | `bypassPermissions` | AI 에이전트가 파일 편집/명령 실행 시 매번 승인 없이 자동 허용 |
-| Always Thinking | `true` | AI의 사고 과정을 항상 표시하여 의사결정 과정 투명화 |
-
-> **보안 참고**: `bypassPermissions`는 AI가 모든 도구를 자동 실행합니다.
-> `security-guidance` 훅이 위험한 코드 패턴을 자동 차단하고,
-> `hookify` 규칙이 프로젝트별 안전장치 역할을 하므로, ASTRA 환경에서는 안전하게 사용할 수 있습니다.
-
-#### B. astra-methodology 플러그인 설치 및 전역 셋업
-
-**1단계: 플러그인 마켓플레이스 추가**
-
-```bash
-claude plugin marketplace add https://github.com/ASTRA-TECHNOLOGY-COMPANY-LIMITED/astra-methodology.git
-```
-
-**2단계: astra-methodology 플러그인 설치**
-
-```bash
-claude plugin install astra-methodology@astra
-```
-
-**3단계: 전역 개발환경 자동 셋업**
-
-Claude Code CLI 창에서 다음 명령어를 실행합니다:
+> **사전 준비**: 아래 워크플로우는 **Sprint 0(프로젝트 초기 셋업)이 완료된 상태**를 전제합니다.
+> Sprint 0에서는 개발환경 설정(`/astra-setup`), 프로젝트 구조 생성(`/project-init`), 디자인 시스템 구축, CLAUDE.md 작성, hookify 규칙 설정 등을 수행합니다.
+> 상세 내용은 [부록 E: Sprint 0 프로젝트 셋업](#부록-e-sprint-0-프로젝트-셋업)을 참고하세요.
 
 ```
-/astra-methodology:astra-setup
+[Sprint 0]
+디자인 시스템 작성
+
+[기능 스프린트]
+블루프린트 작성 → 데이터베이스 설계 → 스프린트 작성 → 구현 → 테스트 시나리오 → 테스트 실행 → PR/리뷰
+                                                                                                       ↓
+                                               메인 브랜치 머지 ← 사용자 테스트 ← 스테이징 브랜치 머지 ←──┘
 ```
-
-> **이 명령어 하나로 자동 설치되는 항목:**
-> - 필수 플러그인 9개 설치 (claude-code-setup, code-review, code-simplifier, commit-commands, feature-dev, frontend-design, hookify, security-guidance, context7)
-> - MCP 서버 3개 등록 (chrome-devtools, postgres, context7)
-> - 전역 설정 구성 (Agent Teams, bypassPermissions, Always Thinking)
-
-**자동 설치되는 플러그인별 ASTRA 역할 요약**:
-
-| 플러그인 | 타입 | ASTRA 역할 | 품질 게이트 |
-|----------|------|-----------|-----------|
-| `claude-code-setup` | 슬래시 커맨드 | Claude Code 초기 환경 설정 자동화 | - |
-| `code-review` | 슬래시 커맨드 | PR 자동 리뷰 (5개 에이전트 병렬, 80점+ 필터링) | Gate 2 |
-| `code-simplifier` | 슬래시 커맨드 | 복잡한 코드를 간결하게 리팩토링 | - |
-| `commit-commands` | 슬래시 커맨드 (3개) | Git 워크플로우 자동화 (커밋, PR 생성, 브랜치 정리) | - |
-| `feature-dev` | 슬래시 커맨드 + 에이전트 (3종) | 7단계 기능 개발 워크플로우 (설계→구현→리뷰) | Gate 2 |
-| `frontend-design` | 스킬 (자동 감지) | 프로덕션급 UI 자동 생성 | Gate 2.5 |
-| `hookify` | 훅 + 슬래시 커맨드 | 프로젝트별 행동 방지 규칙 생성/관리 | Gate 1 |
-| `security-guidance` | 훅 (자동) | 9개 보안 패턴 실시간 차단 (eval, innerHTML 등) | Gate 1 |
-| `context7` | MCP 서버 | 라이브러리 최신 문서 조회 (환각 방지) | - |
-| `astra-methodology` | 훅 + 커맨드 + 스킬 + 에이전트 | 코딩 컨벤션 (Java/TS/Python/CSS/SCSS) + 공공 데이터 표준 네이밍 + 국제 코드 표준 (ISO/ITU) 자동 검사 (사전 설치) | Gate 1 |
-
-#### D. 설치 확인
-
-```bash
-# 전역 설정 확인
-cat ~/.claude/settings.json
-
-# MCP 서버 상태 확인
-claude mcp list
-
-# 설치된 플러그인 확인
-claude plugin list
-```
-
-**전역 설정 완료 체크리스트:**
-- [ ] `claude plugin marketplace add` 로 마켓플레이스 등록 완료
-- [ ] `claude plugin install astra-methodology@astra` 실행 완료
-- [ ] `/astra-methodology:astra-setup` 실행 완료 (전역 설정, MCP, 플러그인 자동 구성)
-- [ ] `claude mcp list`로 MCP 서버 연결 확인 (chrome-devtools, postgres, context7)
-- [ ] `claude plugin list`로 플러그인 활성화 확인 (10개)
-- [ ] 사전 요구사항 확인: Node.js, Python 3.7+, jq, GitHub CLI (`gh`)
-
-> **이 설정은 1회만 수행합니다.** 이후 새 프로젝트를 시작할 때는 Step 0.1부터 진행하면 됩니다.
-> 프로젝트별 설정(CLAUDE.md, hookify 규칙 등)은 Step 0.4에서 다룹니다.
 
 ---
 
-### Step 0.1: Vision & Backlog (Day 1-2)
+## 4. 디자인 시스템 작성
 
-DE와 킥오프 미팅을 통해 프로젝트 비전을 수립하고, Product Backlog를 초기 작성합니다.
+Sprint 0에서 DSA가 주관하여 프로젝트의 **디자인 시스템**을 구축합니다. 디자인 시스템은 AI가 일관된 UI를 생성하기 위한 핵심 기반이며, `docs/design-system/`에서 관리합니다.
 
-```
-# 기술 스택의 최신 문서 확인
-"use context7 - Spring Boot 3의 WebClient와 RestTemplate 비교. 최신 권장 방식은?"
+> **핵심 원칙**: 디자인 시스템 없이 AI가 생성한 UI는 화면마다 스타일이 달라집니다. 토큰 시스템이 AI의 디자인 가드레일 역할을 합니다.
 
-"use context7 - Next.js 15의 App Router 서버 컴포넌트 패턴을 알려줘"
-
-# 핵심 기능에 대한 사전 분석 (코드 수정 없이 설계 문서만 생성)
-/feature-dev "온라인 결제 시스템의 전체 아키텍처를 분석하고
-docs/blueprints/overview.md로 작성해줘.
-주요 모듈: 회원관리, 상품관리, 주문, 결제, 알림.
-각 모듈 간 의존성과 데이터 흐름을 포함할 것.
-아직 실제 코드는 수정하지 마."
-```
-
-### Step 0.2: Design System 구축 (Day 2-3) - DSA 주관
-
-AI가 일관된 UI를 생성할 수 있도록 디자인 시스템을 정의합니다.
-
-**DSA가 작성하는 산출물:**
+### 4.1 디자인 시스템 디렉토리 구조
 
 ```
 docs/design-system/
@@ -371,308 +261,204 @@ docs/design-system/
 └── references/             # 디자인 레퍼런스/무드보드 이미지
 ```
 
-### Step 0.3: Architecture & Standards (Day 3-4)
+### 4.2 디자인 토큰 정의
 
-핵심 기능에 대해 AI 기반 설계 문서를 생성하고, **중앙 DB 설계 문서**와 **테스트 전략 문서**를 작성합니다.
+디자인 토큰은 컬러, 타이포그래피, 스페이싱 등의 디자인 값을 CSS Custom Properties로 정의합니다.
 
-#### A. 기능 설계 문서 생성
+```
+# 디자인 토큰 파일 생성
+/feature-dev "docs/design-system/design-tokens.css에 프로젝트 디자인 토큰을 정의해줘.
+- 컬러 팔레트 (Primary, Secondary, Neutral, Semantic)
+- 타이포그래피 (Font Family, Size Scale, Weight, Line Height)
+- 스페이싱 (4px 기반 그리드: 4, 8, 12, 16, 24, 32, 48, 64)
+- 브레이크포인트 (모바일: 375px, 태블릿: 768px, 데스크톱: 1024px, 와이드: 1440px)
+- 그림자, 라운딩, 트랜지션
+아직 코드는 수정하지 마."
+```
+
+### 4.3 컴포넌트 스타일 가이드
+
+핵심 UI 컴포넌트의 디자인 규격을 문서화합니다.
+
+```
+# 컴포넌트 스타일 가이드 작성
+/feature-dev "docs/design-system/components.md에 핵심 컴포넌트 스타일 가이드를 작성해줘.
+- Button (Primary, Secondary, Ghost, Danger — 각 상태: default, hover, active, disabled)
+- Input (Text, Password, Search, TextArea — 상태: default, focus, error, disabled)
+- Card, Modal, Toast/Alert
+- Navigation (Header, Sidebar, Breadcrumb, Tab)
+- Table, Pagination
+- 각 컴포넌트는 design-tokens.css의 토큰만 사용할 것
+아직 코드는 수정하지 마."
+```
+
+### 4.4 레이아웃 그리드 시스템
+
+```
+# 레이아웃 그리드 시스템 정의
+/feature-dev "docs/design-system/layout-grid.md에 레이아웃 그리드 시스템을 정의해줘.
+- 12컬럼 그리드 (거터: 16px 모바일, 24px 데스크톱)
+- 페이지 레이아웃 패턴 (Sidebar + Content, Full-width, Centered)
+- 반응형 규칙 (모바일 퍼스트)
+- 컨테이너 최대 너비
+아직 코드는 수정하지 마."
+```
+
+### 4.5 디자인 시스템 프리뷰 페이지 생성
+
+디자인 토큰, 컴포넌트, 레이아웃 그리드가 정의되면, **실제 브라우저에서 확인할 수 있는 프리뷰 페이지**를 생성합니다. 문서만으로는 컬러, 타이포그래피, 컴포넌트 상태 등을 정확히 판단하기 어렵기 때문에, DSA와 팀 전체가 시각적으로 검증할 수 있는 페이지가 필요합니다.
+
+> **왜 프리뷰 페이지가 필요한가?**
+> - 디자인 토큰 값(컬러, 폰트, 스페이싱)을 **실제 렌더링 결과**로 확인
+> - 컴포넌트의 각 상태(default, hover, active, disabled)를 **인터랙티브하게 검증**
+> - DSA가 `chrome-devtools` MCP로 반응형/접근성을 **즉시 테스트**
+> - 기능 스프린트에서 AI가 생성하는 UI의 **기준점(Baseline)** 역할
+
+```
+# 디자인 시스템 프리뷰 페이지 생성
+/frontend-design "docs/design-system/의 디자인 토큰, 컴포넌트 스타일 가이드,
+레이아웃 그리드를 한눈에 확인할 수 있는 디자인 시스템 프리뷰 페이지를 만들어줘.
+- 컬러 팔레트 스와치 (Primary, Secondary, Neutral, Semantic 전체)
+- 타이포그래피 스케일 미리보기 (각 사이즈/웨이트 조합)
+- 스페이싱 시스템 시각화 (4px 그리드 단위별 블록)
+- 핵심 컴포넌트 쇼케이스 (Button, Input, Card, Modal, Toast — 모든 상태 포함)
+- 레이아웃 그리드 오버레이 (12컬럼 그리드 시각화)
+- 반응형 브레이크포인트별 미리보기
+- docs/design-system/design-tokens.css의 토큰만 사용할 것"
+```
+
+> **프리뷰 페이지 검증 (DSA 주관):**
+> - `chrome-devtools` MCP로 각 뷰포트(375px, 768px, 1024px, 1440px)에서 렌더링 확인
+> - 컬러 대비율, 포커스 표시 등 접근성 기본 항목 확인
+> - 이슈 발견 시 디자인 토큰 또는 컴포넌트 가이드를 수정하고 프리뷰 페이지에 즉시 반영
+
+### 4.6 디자인 시스템 완료 체크리스트
+
+- [ ] 컬러 팔레트 정의 완료 (접근성 대비율 4.5:1 이상)
+- [ ] 타이포그래피 스케일 정의 완료
+- [ ] 스페이싱 시스템 정의 완료 (4px 또는 8px 기반)
+- [ ] 핵심 컴포넌트 스타일 가이드 작성 완료
+- [ ] 레이아웃 그리드 시스템 정의 완료
+- [ ] **디자인 시스템 프리뷰 페이지 생성 및 DSA 검증 완료**
+- [ ] 디자인 레퍼런스/무드보드 수집 완료 (해당 시)
+
+---
+
+## 5. 블루프린트 작성
+
+기능 구현에 앞서 **설계 문서(Blueprint)**를 먼저 작성합니다. 블루프린트는 AI가 정확한 코드를 생성하기 위한 핵심 입력이며, `docs/blueprints/`에서 관리합니다.
+
+> **핵심 원칙**: 좋은 블루프린트 = 좋은 코드. 스펙 품질이 AI 결과물 품질을 결정합니다.
+> (스펙 기반 시 1~2시간, 스펙 없이 4~8시간+ 소요 — [부록 D](#부록-d-ai-에이전트-작업-시간-추정-근거) 참고)
+
+### 5.1 기능 설계 문서 작성
 
 ```
 # 핵심 기능의 설계 문서 자동 생성
-/feature-dev "결제 알림 시스템의 설계 문서를 docs/blueprints/payment-notification.md로
-작성해줘. 다음을 포함할 것:
-- 목표: 결제 완료/실패 시 사용자에게 실시간 알림
-- 알림 채널: 이메일, SMS, 푸시 알림
-- 재시도 정책: 실패 시 3회까지 지수 백오프
-아직 실제 코드는 수정하지 마."
+/feature-dev "JWT 기반 사용자 인증 시스템의 설계 문서를
+docs/blueprints/auth.md로 작성해줘.
+- 회원가입, 로그인, 토큰 갱신, 권한 관리(RBAC) 기능을 포함
+- 비밀번호는 bcrypt 해싱
+- Access Token 유효기간 30분, Refresh Token 7일
+- DB 스키마는 docs/database/database-design.md를 참조할 것
+아직 코드는 수정하지 마."
+
+# → VA/DE가 생성된 docs/blueprints/auth.md를 직접 열어 검토 및 수정
+# → DE 승인 후 다음 단계 진행
 ```
 
-#### B. 중앙 DB 설계 문서 작성 (핵심!)
+### 5.2 블루프린트 완료 체크리스트
 
-**모든 테이블 설계를 `docs/database/database-design.md` 단일 문서에서 관리합니다.**
+- [ ] 기능 설계 문서 작성 완료 (`docs/blueprints/`)
+- [ ] DE 승인 완료
+
+---
+
+## 6. 데이터베이스 설계
+
+블루프린트가 완료되면, 기능에 필요한 **데이터베이스 테이블을 중앙 DB 설계 문서에 반영**합니다. 모든 테이블 설계는 `docs/database/database-design.md` 단일 문서에서 관리합니다.
 
 > **왜 하나의 문서인가?**
 > - AI가 전체 테이블 구조와 연관관계를 **한번에 인식**하여 정합성 있는 설계 가능
 > - 테이블 간 FK 참조, 컬럼 중복, 네이밍 일관성을 단일 컨텍스트에서 검증
-> - 기능별 설계 문서에 테이블 DDL을 분산시키면 AI가 전체 스키마를 파악할 수 없음
+
+### 6.1 DB 설계 문서 반영
 
 ```
-# 1단계: 전체 DB 설계 문서 초안 생성
-/feature-dev "프로젝트의 데이터베이스 설계 문서를 docs/database/database-design.md로
-작성해줘. 다음 구조로 작성할 것:
+# 블루프린트 기반 DB 테이블 설계
+/feature-dev "docs/blueprints/auth.md 블루프린트를 분석해서
+필요한 데이터베이스 테이블을 docs/database/database-design.md에 설계해줘.
+- 블루프린트의 기능 요구사항에서 필요한 테이블, 컬럼, 관계를 도출할 것
+- 기존 테이블과의 FK 관계를 ERD와 관계 요약 섹션에도 반영할 것
+- 표준 용어 사전을 준수할 것 (/lookup-term 활용)
+아직 코드는 수정하지 마."
 
-## 포함 내용:
-- 전체 ERD (모듈별 테이블 관계도)
-- 모듈별 테이블 목록 및 DDL (인증, 워크스페이스, 결제, IAM 등)
-- 테이블 간 FK 관계 명세
-- 공통 컬럼 패턴 (감사 컬럼, 상태 코드 등)
-- Enum/코드 값 정의
+# 테이블을 직접 지정하여 반영할 수도 있음
+/feature-dev "docs/database/database-design.md에 인증 모듈 테이블을
+추가/갱신해줘:
+- TB_COMM_USER (사용자), TB_COMM_TRMS (약관), TH_COMM_USER_AGRE (동의이력)
+- 기존 테이블과의 FK 관계를 ERD와 관계 요약 섹션에도 반영할 것
+- 표준 용어 사전을 준수할 것 (/lookup-term 활용)
+아직 코드는 수정하지 마."
 
-## 테이블 설계 규칙:
-- 테이블명 접두사: TB_(일반), TC_(코드), TH_(이력), TL_(로그), TR_(관계)
-- 공공 데이터 표준 용어 사전 준수 (/lookup-term 활용)
-- 모든 테이블에 감사 컬럼 포함 (CRTR_ID, CRT_DT, MDFR_ID, MDFCN_DT)
-
-## 주요 모듈:
-- 인증: 회원(TB_COMM_USER), 약관(TB_COMM_TRMS), 동의이력(TH_COMM_USER_AGRE)
-- 결제: 플랜(TB_PAY_PLAN), 구독(TB_PAY_SBSC), 결제(TB_PAY_STLM)
-- 주문: 주문(TB_ORDR), 주문상품(TB_ORDR_PRDT)
-- 알림: 알림이력(TH_NTFC_HIST)
-
-아직 실제 코드는 수정하지 마."
-
-# 2단계: 표준 용어 조회 및 검증
+# 표준 용어 조회
 /lookup-term 결제금액
 /lookup-term 주문번호
-
-# 3단계: DB 설계 문서의 네이밍 표준 검증
-# → VA가 docs/database/database-design.md를 검토
-# → 표준 용어 사전 준수 여부 확인, DE 승인
 ```
 
-**DB 설계 문서 구조 예시** (`docs/database/database-design.md`):
+### 6.2 국제 코드 표준 적용 (해당 시)
 
-```markdown
-# 데이터베이스 설계 문서
+전화번호 입력, 국가/지역 선택기, 주소 양식 등 국제 코드가 필요한 기능이 있을 때 적용합니다.
 
-## 1. 전체 ERD
-[모듈별 테이블 관계도]
+| 표준 | 용도 | DB 컬럼 규칙 |
+|------|------|-------------|
+| ISO 3166-1 (alpha-2) | 국가 코드 (`KR`, `US`, `JP`) | `NATN_CD CHAR(2)` |
+| ISO 3166-2 | 지역 코드 (`KR-11`, `US-CA`) | `RGN_CD VARCHAR(6)` |
+| ITU-T E.164 | 국제 전화번호 (`+821012345678`) | `INTL_TELNO VARCHAR(15)` |
 
-## 2. 공통 규칙
-### 2.1 테이블 접두사
-### 2.2 공통 감사 컬럼
-### 2.3 네이밍 규칙
-
-## 3. 인증 모듈 (COMM)
-### 3.1 TB_COMM_USER (사용자)
-### 3.2 TB_COMM_TRMS (약관)
-### 3.3 TH_COMM_USER_AGRE (동의이력)
-
-## 4. 결제 모듈 (PAY)
-### 4.1 TB_PAY_PLAN (플랜)
-### 4.2 TB_PAY_SBSC (구독)
-...
-
-## 5. 테이블 간 FK 관계 요약
 ```
-
-#### C. 국제 코드 표준 적용 (ISO 3166-1/2, ITU-T E.164)
-
-전화번호 입력, 국가/지역 선택기, 주소 양식 등 **국제 코드가 필요한 기능**이 있다면 Sprint 0에서 표준을 사전 정의합니다.
-
-**지원 표준:**
-
-| 표준 | 용도 | DB 컬럼 규칙 | 데이터 |
-|------|------|-------------|--------|
-| ISO 3166-1 (alpha-2) | 국가 코드 (`KR`, `US`, `JP`) | `NATN_CD CHAR(2)` | 249개국 |
-| ISO 3166-2 | 지역/행정구역 코드 (`KR-11`, `US-CA`) | `RGN_CD VARCHAR(6)` | 653개 지역 (21개국) |
-| ITU-T E.164 | 국제 전화번호 (`+821012345678`) | `INTL_TELNO VARCHAR(15)` | 245개 국가 코드 |
-
-**설계 문서에 반영:**
-```
-# 국제 코드 조회
 /lookup-code KR
 /lookup-code US-CA
 /lookup-code +82
-
-# DB 설계 문서에 국제 코드 컬럼 반영 (필요 시)
-/feature-dev "docs/database/database-design.md의 사용자 테이블에
-국가코드(NATN_CD), 지역코드(RGN_CD), 국제전화번호(INTL_TELNO) 컬럼을
-ISO 3166-1/2, E.164 표준에 맞게 추가해줘.
-아직 코드는 수정하지 마."
-
 ```
 
-> **`code-standard` 스킬은 전화번호 입력, 국가/지역 선택기, 주소 양식 작업 시 자동 감지되어 적용됩니다.**
-> 국제 코드 컴포넌트(국가 선택기, 전화번호 입력 등)는 `/feature-dev`로 구현 요청 시 `code-standard` 스킬이 자동으로 ISO 3166-1/2, E.164 표준 데이터를 제공합니다.
-
-#### D. 테스트 전략 문서 작성
-
-**테스트 범위, 전략, 기준을 `docs/tests/test-strategy.md`에서 관리합니다.**
+### 6.3 마이그레이션 SQL 작성
 
 ```
-# 테스트 전략 문서 생성
-/feature-dev "프로젝트의 테스트 전략 문서를 docs/tests/test-strategy.md로
-작성해줘. 다음 구조로 작성할 것:
-
-## 포함 내용:
-- 테스트 레벨 정의 (단위/통합/E2E 각 레벨의 범위와 목적)
-- 테스트 커버리지 목표 (서비스 레이어 70%+, 핵심 비즈니스 로직 90%+)
-- 테스트 환경 구성 (테스트 DB, 목 서버, 테스트 데이터 관리)
-- 테스트 네이밍 규칙 (Given-When-Then 패턴)
-- 테스트 데이터 관리 전략 (Fixture, Factory 패턴)
-- 자동화 범위 (CI/CD 파이프라인 연동)
-
-## 주요 모듈별 테스트 범위:
-- 인증: 회원가입/로그인/토큰갱신 시나리오
-- 결제: 결제 성공/실패/재시도/환불 시나리오
-- 주문: 주문 생성/취소/상태 변경 시나리오
-
-아직 실제 코드는 수정하지 마."
+# 마이그레이션 SQL 기록
+/feature-dev "docs/database/database-design.md에서 이번에 추가된 주문 모듈 테이블의
+마이그레이션 SQL을 docs/database/migration/v1.1.0-order.sql로 작성해줘.
+- CREATE TABLE 문 + 인덱스 + FK 제약조건 포함
+- 롤백 SQL도 함께 작성할 것
+아직 실제 DB에는 적용하지 마."
 ```
 
-> **기능 스프린트에서 `docs/tests/test-cases/sprint-{N}/` 하위에 기능별 테스트 케이스 문서가 추가됩니다.**
-> 설계 문서(blueprint)에 정의된 기능 요구사항을 기반으로 테스트 케이스를 사전 정의하고,
-> AI가 코드와 테스트를 동시에 생성할 때 이 문서를 참조합니다.
+### 6.4 데이터베이스 설계 완료 체크리스트
 
-### Step 0.4: Guard Rails 설정 (Day 4-5)
-
-스프린트 전체에 적용될 품질 규칙을 사전 설정합니다.
-
-**CLAUDE.md 작성:**
-```markdown
-# Project: 온라인 결제 시스템
-
-## 아키텍처
-- 백엔드: Spring Boot 3
-- 프론트엔드: Next.js 15
-- 데이터베이스: PostgreSQL 16
-
-## 코딩 규칙
-- 모든 API 엔드포인트에 인증 미들웨어 필수
-- DB 스키마는 docs/database/database-design.md를 Single Source of Truth로 관리
-- DB 엔티티는 공공 데이터 표준 용어 사전 준수 (/lookup-term 활용)
-- 테이블명 접두사: TB_(일반), TC_(코드), TH_(이력), TL_(로그), TR_(관계)
-- REST API 응답 형식: { success: boolean, data: T, error?: string }
-- 에러 처리: 비즈니스 예외와 시스템 예외를 구분
-
-## 디자인 규칙 (DSA 정의)
-- 디자인 토큰: docs/design-system/design-tokens.css 참조 필수
-- 컬러는 반드시 CSS Variable (--color-*) 사용, 하드코딩 금지
-- 폰트 사이즈는 토큰 스케일 사용 (--font-size-*)
-- 스페이싱은 8px 그리드 시스템 준수 (--spacing-*)
-- 반응형 브레이크포인트: mobile(~767px), tablet(768~1023px), desktop(1024px~)
-
-## 금지 사항
-- console.log 사용 금지 (logger 사용)
-- any 타입 사용 금지
-- raw SQL 직접 작성 금지 (ORM 사용)
-- .env 파일 커밋 금지
-
-## 테스트 규칙
-- 모든 서비스 레이어에 단위 테스트 작성
-- 테스트 커버리지 최소 70%
-
-## 커밋 컨벤션
-- Conventional Commits (feat:, fix:, refactor:, docs:, test:)
-```
-
-**hookify 규칙 설정:**
-```
-# 프로젝트별 커스텀 규칙 생성
-/hookify 모든 API 엔드포인트에는 인증 미들웨어를 반드시 포함할 것
-/hookify console.log 대신 logger 라이브러리를 사용할 것
-/hookify SQL 쿼리에 raw string을 직접 사용하지 말 것
-/hookify CSS에서 하드코딩된 컬러값 대신 CSS Variable을 사용할 것
-
-# 현재 규칙 확인
-/hookify:list
-```
-
-**Sprint 0 완료 체크리스트:**
-- [ ] Product Backlog 초기 작성 완료
-- [ ] 디자인 시스템 구축 완료 (디자인 토큰, 컴포넌트 가이드)
-- [ ] 핵심 기능별 설계 문서(MD) 생성 및 DE 승인
-- [ ] **중앙 DB 설계 문서 작성 완료** (`docs/database/database-design.md`)
-- [ ] DB 네이밍 규칙 문서 작성 완료 (`docs/database/naming-rules.md`)
-- [ ] DB 설계 문서 표준 네이밍 검증 완료
-- [ ] **국제 코드 표준 적용 확인** (해당 시: ISO 3166-1/2, ITU-T E.164)
-- [ ] **테스트 전략 문서 작성 완료** (`docs/tests/test-strategy.md`)
-- [ ] CLAUDE.md 작성 완료 (디자인 원칙 포함)
-- [ ] hookify 규칙 설정 완료
-- [ ] 기술 스택 최신 문서 확인 (Context7)
+- [ ] DB 설계 문서에 테이블 반영 완료 (`docs/database/database-design.md`)
+- [ ] 표준 용어 사전 준수 확인 (`/lookup-term`)
+- [ ] 국제 코드 표준 적용 확인 (해당 시)
+- [ ] 마이그레이션 SQL 작성 완료
 
 ---
 
-## 5. 품질 게이트
+## 7. 블루프린트 기반 스프린트 작성
 
-3단계 자동 품질 게이트로 Definition of Done을 자동 검증합니다.
+블루프린트가 완료되면, 이를 기반으로 스프린트를 계획합니다. `/sprint-plan` 명령으로 스프린트 문서를 초기화하고, 블루프린트의 기능을 스프린트 백로그로 분배합니다.
 
-### Gate 1: WRITE-TIME (작성 시점)
-
-모든 코드 작성(Write/Edit)에 자동 적용됩니다. Sprint 0에서 한 번 설정하면 이후 개입이 불필요합니다.
-
-| 도구 | 검사 내용 | 동작 방식 |
-|------|----------|----------|
-| `security-guidance` | 9개 보안 패턴 (eval, innerHTML 등) | PreToolUse 훅, **차단** (exit 2) |
-| `astra-methodology` | 금칙어 + 네이밍 규칙 | PostToolUse 훅, 경고 (exit 0) |
-| `hookify` | 프로젝트별 커스텀 규칙 | PreToolUse/PostToolUse 훅 |
-| `coding-convention` 스킬 | Java/TS/Python/CSS/SCSS 컨벤션 자동 적용 | Skill (자동 감지) |
-| `data-standard` 스킬 | 공공 데이터 표준 용어 사전 적용 | Skill (DB 코드 시 자동 감지) |
-| `code-standard` 스킬 | ISO 3166-1/2, ITU-T E.164 표준 적용 | Skill (전화번호/국가/주소 코드 시 자동 감지) |
-
-**코딩 컨벤션 상세 (언어별 자동 적용 규칙):**
-
-| 언어 | 기반 표준 | 핵심 규칙 |
-|------|----------|----------|
-| Java | Google Java Style Guide | 2-space 들여쓰기, 100자 제한, K&R 브레이스, 와일드카드 import 금지, `UpperCamelCase` 클래스, `UPPER_SNAKE_CASE` 상수 |
-| TypeScript | Google TypeScript Style Guide | Prettier 포맷팅, `export default` 금지, `any` 금지, `var` 금지, `.forEach()` 금지, `===`/`!==` 필수 |
-| React Native | Airbnb React/JSX + Obytes RN Starter | TypeScript 컨벤션 + `kebab-case` 파일, 함수형 컴포넌트 전용, `PascalCase` 컴포넌트, `StyleSheet.create()` 또는 NativeWind, 함수당 최대 3파라미터/110줄 |
-| Python | PEP 8 | 4-space 들여쓰기, 79자 제한, `snake_case` 함수, `CapWords` 클래스, `is None` 필수, bare `except:` 금지 |
-| CSS/SCSS | CSS Guidelines + Sass Guidelines | 2-space 들여쓰기, 80자 제한, BEM 네이밍, ID 선택자 금지, 최대 3단계 중첩, 모바일 우선 미디어 쿼리 |
-
-### Gate 2: REVIEW-TIME (리뷰 시점)
-
-PR 생성/기능 완료 시 실행합니다.
-
-| 도구 | 검사 내용 | 동작 방식 |
-|------|----------|----------|
-| `feature-dev` code-reviewer | 코드 품질/버그/컨벤션 | 3개 에이전트 병렬, Sonnet |
-| `/code-review` | CLAUDE.md 준수, 버그, 이력 분석 | 5개 에이전트 병렬, 80점+ 필터링 |
-| `blueprint-reviewer` 에이전트 | 설계 문서 품질/일관성 검증 | Sonnet, 읽기 전용 |
-| `test-coverage-analyzer` 에이전트 | 테스트 전략/커버리지 분석 | Haiku, 읽기 전용 |
-| `convention-validator` 에이전트 | 코딩 컨벤션 검증 | Haiku, 읽기 전용 |
-
-### Gate 2.5: DESIGN-TIME (디자인 검수 시점)
-
-UI 기능 완료 시 DSA가 수동 검수합니다. **디자이너의 전문 판단이 필요한 영역**입니다.
-
-| 검수 항목 | 확인 방법 |
-|----------|----------|
-| 디자인 토큰 준수 (컬러, 폰트, 스페이싱) | `chrome-devtools` 스냅샷 + `design-token-validator` 에이전트 (Haiku, 자동 검증) |
-| 컴포넌트 일관성 | 화면별 비교 |
-| 반응형 레이아웃 | `chrome-devtools` 뷰포트 전환 |
-| 접근성 기본 확인 | 컬러 대비, 포커스 확인 |
-
-이슈 발견 시: DSA 피드백 → PE 프롬프트 수정 → AI 재생성 → DSA 재검수 (1시간 내 완료)
-
-### Gate 3: BRIDGE-TIME (릴리스 시점)
-
-Release Sprint에서 실행합니다.
-
-| 도구 | 검사 내용 |
-|------|----------|
-| `quality-gate-runner` 에이전트 | Gate 1~3 통합 실행 (Sonnet, 읽기 전용) |
-| `/check-convention src/` | 전체 코드 컨벤션 |
-| `/check-naming src/entity/` | 전체 DB 네이밍 표준 |
-| `chrome-devtools` | UI/성능/네트워크/콘솔 에러 |
-
-### 통과 기준 요약
-
-| 게이트 | 통과 기준 | 차단 시 조치 |
-|--------|----------|-------------|
-| Gate 1 | security-guidance 경고 0건, astra-methodology 금칙어 0건 | 즉시 수정 후 재작성 |
-| Gate 2 | code-review 고신뢰 이슈 0건, 테스트 커버리지 70%+ | fix now / fix later 결정 |
-| Gate 2.5 | DSA 디자인 검수 승인 | 프롬프트 수정 → 재생성 → 재검수 |
-| Gate 3 | convention/naming 위반 0건, 콘솔 에러 0건 | 일괄 수정 후 배포 |
-
----
-
-## 6. 기능 스프린트 실행
-
-### 6.1 주간 일정
+### 7.1 스프린트 초기화
 
 ```
-Monday: Sprint Planning (1시간) + Feature Build 시작
-
-Tuesday-Thursday 오전: Feature Build (핵심 개발일, AI 코드 생성+인간 검증 반복)
-
-Thursday 오후: Design Review (DSA 검수)
-
-Friday: Code Review + Sprint Review + Retrospective
+# 스프린트 문서 생성 (프롬프트 맵, 진행 추적, 회고 템플릿)
+/sprint-plan 1
 ```
 
-### 6.2 Sprint Planning (1시간)
+> 생성되는 파일:
+> - `docs/sprints/sprint-1/prompt-map.md` — 기능별 프롬프트 계획
+> - `docs/sprints/sprint-1/progress.md` — 진행 추적 테이블
+> - `docs/sprints/sprint-1/retrospective.md` — 회고 템플릿
+
+### 7.2 Sprint Planning (1시간)
 
 #### 사전 준비 (Planning 전날, VA가 실행)
 
@@ -694,43 +480,62 @@ Friday: Code Review + Sprint Review + Retrospective
 | 20분 | 아이템별 프롬프트 설계 방향 논의 + DSA 디자인 방향 공유 | VA, PE, DSA |
 | 10분 | 스프린트 백로그 확정 | 전원 |
 
-### 6.3 Feature Build (Monday~Thursday 오전)
+### 7.3 프롬프트 맵 작성
 
-#### A. 설계 문서 기반 구현
+블루프린트의 각 기능을 프롬프트 단위로 분해하여 `prompt-map.md`에 기록합니다.
 
-3단계 워크플로우: **기능 설계 문서 생성 → DB 설계 문서 반영 → 문서 기반 구현**
+```markdown
+# Sprint 1 프롬프트 맵
+
+## 스프린트 목표
+[이번 스프린트에서 달성할 비즈니스 가치를 서술]
+
+## 기능 1: 사용자 인증
+### 1.1 블루프린트 참조
+- docs/blueprints/auth.md
+- docs/database/database-design.md (인증 모듈)
+
+### 1.2 구현 프롬프트
+/feature-dev "docs/blueprints/auth.md와
+docs/database/database-design.md의 내용을 엄격히 준수해서
+개발을 진행해줘."
+
+## 기능 2: 결제 대시보드
+### 2.1 블루프린트 참조
+- docs/blueprints/payment-dashboard.md
+
+### 2.2 구현 프롬프트
+/feature-dev "docs/blueprints/payment-dashboard.md와
+docs/database/database-design.md의 내용을 엄격히 준수해서
+개발을 진행해줘."
+```
+
+### 7.4 Backlog Refinement (30분)
 
 ```
-# 1단계: 기능 설계 문서 생성
-/feature-dev "JWT 기반 사용자 인증 시스템의 설계 문서를
-docs/blueprints/auth.md로 작성해줘.
-- 회원가입, 로그인, 토큰 갱신, 권한 관리(RBAC) 기능을 포함
-- 비밀번호는 bcrypt 해싱
-- Access Token 유효기간 30분, Refresh Token 7일
-- DB 스키마는 docs/database/database-design.md를 참조할 것
+# 사전 AI 분석 (Refinement 전)
+/feature-dev "다음 백로그 아이템들을 분석해줘:
+1. 주문 취소/환불 프로세스
+2. 관리자 대시보드 통계 페이지
+3. 사용자 알림 설정 관리
+기존 코드베이스와의 관련성, 기술적 위험, 선행 조건을 정리해줘.
 아직 코드는 수정하지 마."
 
-# → VA/DE가 생성된 docs/blueprints/auth.md를 직접 열어 검토 및 수정
-# → DE 승인 후 다음 단계 진행
+# Refinement 미팅 (30분)
+# ├─ AI 분석 결과 리뷰
+# ├─ DE와 비즈니스 가치/우선순위 확인
+# └─ 필요 시 아이템 분할
+```
 
-# 2단계: DB 설계 문서에 신규/변경 테이블 반영
-/feature-dev "docs/database/database-design.md에 인증 모듈 테이블을
-추가/갱신해줘:
-- TB_COMM_USER (사용자), TB_COMM_TRMS (약관), TH_COMM_USER_AGRE (동의이력)
-- 기존 테이블과의 FK 관계를 ERD와 관계 요약 섹션에도 반영할 것
-- 표준 용어 사전을 준수할 것 (/lookup-term 활용)
-아직 코드는 수정하지 마."
+---
 
-# 3단계: 테스트 케이스 사전 정의 (Sprint 1 기준 예시 — 이후 스프린트는 sprint-{N} 사용)
-/feature-dev "docs/blueprints/auth.md의 기능 요구사항을 기반으로
-테스트 케이스 문서를 docs/tests/test-cases/sprint-1/auth-test-cases.md로 작성해줘.
-- 단위 테스트: 서비스 레이어 핵심 로직 (해싱, 토큰 생성/검증)
-- 통합 테스트: API 엔드포인트 (회원가입/로그인/토큰갱신)
-- 엣지 케이스: 만료 토큰, 잘못된 비밀번호, 중복 이메일
-- Given-When-Then 형식으로 작성
-아직 코드는 수정하지 마."
+## 8. 구현
 
-# 4단계: 설계 문서 기반 구현
+스프린트 프롬프트 맵에 따라 실제 코드를 구현합니다. 구현 중에는 **Gate 1(작성 시점)** 품질 게이트가 자동 적용됩니다.
+
+### 8.1 설계 문서 기반 구현
+
+```
 /feature-dev "docs/blueprints/auth.md와
 docs/database/database-design.md의 내용을 엄격히 준수해서
 개발을 진행해줘. 테스트는 docs/tests/test-cases/sprint-1/auth-test-cases.md를
@@ -749,7 +554,7 @@ docs/database/database-design.md의 내용을 엄격히 준수해서
 > 5. `code-reviewer`가 품질 검사 (3개 병렬)
 > 6. 완료 요약 문서 생성
 
-#### B. UI 구현 (frontend-design 자동 활성화)
+### 8.2 UI 구현
 
 프론트엔드 작업을 요청하면 `frontend-design` 스킬이 자동으로 활성화되어 프로덕션 수준 UI를 생성합니다.
 
@@ -765,64 +570,9 @@ docs/database/database-design.md의 내용을 엄격히 준수해서
 # 다양한 미학 방향 지정 예시
 "brutalist 스타일의 포트폴리오 페이지를 만들어줘"
 "art deco 느낌의 고급스러운 상품 상세 페이지를 만들어줘"
-"retro-futuristic 스타일의 관리자 대시보드를 만들어줘"
 ```
 
-#### C. DB 작업
-
-**모든 DB 변경은 `docs/database/database-design.md`를 먼저 갱신한 후 코드에 반영합니다.**
-
-```
-# 1. DB 설계 문서에 테이블 추가/변경 (문서 먼저!)
-/feature-dev "docs/database/database-design.md에 주문 모듈 테이블을 추가해줘:
-- TB_ORDR (주문): 주문번호, 주문일시, 주문금액, 배송주소, 주문상태코드
-- TB_ORDR_PRDT (주문상품): 주문번호FK, 상품번호FK, 수량, 단가
-- 기존 테이블(TB_COMM_USER, TB_PAY_STLM 등)과의 FK 관계를 ERD에 반영
-- 표준 용어 사전을 준수할 것
-아직 코드는 수정하지 마."
-
-# 2. 표준 용어 조회 (필요 시)
-/lookup-term 주문금액
-
-# 3. DB 설계 문서 기반으로 엔티티/DDL 코드 생성
-/generate-entity docs/database/database-design.md의 주문 모듈 테이블
-
-# 4. 생성된 엔티티 코드 네이밍 검사
-/check-naming src/main/java/com/example/entity/Order.java
-
-# 5. DB 스키마 확인 (postgres MCP)
-"현재 DB의 테이블 목록과 docs/database/database-design.md의 정의가 일치하는지 확인해줘"
-
-# 6. 마이그레이션 SQL 기록 (변경 이력 관리)
-/feature-dev "docs/database/database-design.md에서 이번에 추가된 주문 모듈 테이블의
-마이그레이션 SQL을 docs/database/migration/v1.1.0-order.sql로 작성해줘.
-- CREATE TABLE 문 + 인덱스 + FK 제약조건 포함
-- 롤백 SQL도 함께 작성할 것
-아직 실제 DB에는 적용하지 마."
-```
-
-#### D. 국제 코드 활용 (해당 기능 시)
-
-전화번호 입력, 국가/지역 선택기, 주소 양식 등을 구현할 때 국제 코드 표준을 적용합니다.
-
-```
-# 국제 코드 조회 (국가, 지역, 전화번호)
-/lookup-code KR              # → KR, 대한민국, alpha-2
-/lookup-code US-CA           # → US-CA, California, ISO 3166-2
-/lookup-code +82             # → +82, 대한민국, E.164
-
-# 국제 코드 컴포넌트 구현 (code-standard 스킬 자동 감지)
-/feature-dev "ISO 3166-1 기반 국가 선택기 컴포넌트를 만들어줘"
-/feature-dev "E.164 기반 국제 전화번호 입력 컴포넌트를 만들어줘"
-/feature-dev "ISO 3166-2 기반 지역 선택기 컴포넌트를 만들어줘 (국가 연동)"
-
-# DB 엔티티에 국제 코드 컬럼 포함 시 자동 검증
-# → code-standard 스킬이 자동 감지되어 NATN_CD, RGN_CD, INTL_TELNO 규칙 적용
-```
-
-#### E. 실시간 검증 (chrome-devtools MCP)
-
-개발 중 언제든 브라우저에서 직접 확인합니다.
+### 8.3 실시간 검증 (chrome-devtools MCP)
 
 ```
 # 레이아웃 확인
@@ -834,14 +584,110 @@ docs/database/database-design.md의 내용을 엄격히 준수해서
 # 에러 확인
 "콘솔에 에러가 있는지 확인해줘"
 
-# 성능 측정
-"페이지 로딩 성능을 측정하고 개선점을 제안해줘"
-
 # 반응형 확인 (뷰포트 전환)
 "모바일 뷰포트(375x667)로 전환하고 레이아웃을 확인해줘"
 ```
 
-**자동 통합 테스트 (서버 실행 + 브라우저 검증):**
+### 8.4 최신 API 참조 (context7 MCP)
+
+```
+"use context7 - Spring Boot 3에서 WebClient로 비동기 HTTP 요청하는 방법"
+"use context7 - Prisma에서 트랜잭션을 사용하는 방법"
+"use context7 - Next.js 15에서 Server Actions 문법"
+```
+
+### 8.5 커밋
+
+```
+# 기능 완료 시마다 커밋
+/commit
+```
+
+### 8.6 Gate 1: WRITE-TIME (자동 적용)
+
+구현 중 모든 코드 작성(Write/Edit)에 자동 적용되는 품질 게이트입니다.
+
+| 도구 | 검사 내용 | 동작 방식 |
+|------|----------|----------|
+| `security-guidance` | 9개 보안 패턴 (eval, innerHTML 등) | PreToolUse 훅, **차단** (exit 2) |
+| `astra-methodology` | 금칙어 + 네이밍 규칙 | PostToolUse 훅, 경고 (exit 0) |
+| `hookify` | 프로젝트별 커스텀 규칙 | PreToolUse/PostToolUse 훅 |
+| `coding-convention` 스킬 | Java/TS/RN/Python/CSS/SCSS 컨벤션 자동 적용 | Skill (자동 감지) |
+| `data-standard` 스킬 | 공공 데이터 표준 용어 사전 적용 | Skill (DB 코드 시 자동 감지) |
+| `code-standard` 스킬 | ISO 3166-1/2, ITU-T E.164 표준 적용 | Skill (전화번호/국가/주소 시 자동 감지) |
+
+### 8.7 요구사항 변경 대응
+
+스프린트 중간에 요구사항 변경이 발생하면 다음 절차를 따릅니다.
+
+```
+# 1. 영향도 분석 (30분~1시간)
+/feature-dev "결제 수단에 '간편결제(카카오페이)' 추가 요청이 들어왔어.
+기존 코드베이스와 docs/database/database-design.md를 참조해서
+결제 모듈의 영향 범위를 분석해줘.
+아직 코드는 수정하지 마."
+
+# 2. 블루프린트 수정 (1~2시간)
+# → docs/blueprints/payment.md에 간편결제 섹션 추가
+# → docs/database/database-design.md에 테이블 변경사항 반영
+
+# 3. 코드 반영 (4~8시간)
+/feature-dev "docs/blueprints/payment.md와
+docs/database/database-design.md의 업데이트된 내용을 반영해서
+간편결제(카카오페이) 기능을 구현해줘.
+기존 결제 로직에 영향이 없도록 PaymentProvider 패턴을 사용할 것."
+
+# 4. 자동 품질 검증 (30분~1시간)
+/code-review
+```
+
+---
+
+## 9. 테스트 시나리오 작성
+
+스프린트에서 구현된 기능을 기반으로 E2E 테스트 시나리오를 생성합니다. `/test-scenario` 명령이 블루프린트, DB 설계, 라우트, API 엔드포인트를 분석하여 종합적인 테스트 시나리오를 자동 작성합니다.
+
+### 9.1 E2E 테스트 시나리오 생성
+
+```
+# 블루프린트, DB, 라우트 기반 E2E 시나리오 자동 생성
+/test-scenario
+```
+
+> `/test-scenario`가 자동으로 분석하는 항목:
+> - `docs/blueprints/` — 기능 요구사항
+> - `docs/database/database-design.md` — 데이터 모델
+> - 라우트/API 엔드포인트 — 화면 흐름
+> - 기존 테스트 코드 — 누락된 시나리오
+
+### 9.2 예시: 스프린트 1 테스트 시나리오 작성
+
+스프린트 1에서 인증 기능 구현이 완료된 후, `/test-scenario` 명령으로 테스트 시나리오를 작성하는 예시입니다.
+
+```
+# 스프린트 1 테스트 시나리오 자동 생성
+/test-scenario 스프린트 1에 대한 테스트 시나리오 작성해줘.
+
+# → /test-scenario가 자동으로 수행하는 작업:
+# 1. docs/blueprints/ 스캔 — 스프린트 1 기능 요구사항 수집
+# 2. docs/database/database-design.md 분석 — 관련 테이블 구조 파악
+# 3. src/ 라우트/API 엔드포인트 탐색 — 화면 흐름 및 API 경로 매핑
+# 4. 기존 테스트 코드 확인 — 누락된 시나리오 식별
+#
+# → 생성 결과: docs/tests/test-cases/sprint-1/ 에 테스트 시나리오 문서 생성
+#   - E2E 시나리오 (회원가입→로그인→토큰갱신→권한검증 흐름)
+#   - 기능별 테스트 케이스 (Given-When-Then 형식)
+#   - 엣지 케이스 및 에러 시나리오
+```
+
+---
+
+## 10. 테스트 실행
+
+테스트 시나리오를 기반으로 실제 테스트를 수행합니다. `/test-run` 명령으로 서버 실행 + Chrome MCP 통합 테스트를 자동 수행합니다.
+
+### 10.1 통합 테스트 실행
+
 ```
 # 서버 실행 + Chrome MCP 통합 테스트 자동 수행
 /test-run
@@ -853,73 +699,281 @@ docs/database/database-design.md의 내용을 엄격히 준수해서
 # → 콘솔 에러 확인
 ```
 
-#### F. 최신 API 참조 (context7 MCP)
-
-개발 중 라이브러리 API가 불확실할 때 최신 문서를 조회합니다.
+### 10.2 수동 상세 검증
 
 ```
-"use context7 - Spring Boot 3에서 WebClient로 비동기 HTTP 요청하는 방법"
-"use context7 - Prisma에서 트랜잭션을 사용하는 방법"
-"use context7 - Next.js 15에서 Server Actions 문법"
+# API 연동 테스트
+"결제 API와 주문 API 간의 연동을 테스트해줘. 네트워크 요청을 모니터링하고 응답을 검증해."
+
+# DB 데이터 정합성 확인
+"docs/database/database-design.md의 FK 관계 정의와 실제 DB 스키마가 일치하는지 확인해줘"
+
+# 성능 프로파일링
+"전체 페이지의 성능 트레이스를 실행하고 병목 지점을 분석해줘"
+
+# 크로스 브라우저/반응형 테스트
+"모바일 뷰포트(375x667)로 전환하고 레이아웃을 확인해줘"
+"태블릿 뷰포트(768x1024)로 전환하고 확인해줘"
 ```
 
-#### G. 커밋
+### 10.3 테스트 결과 보고서
 
 ```
-# 기능 완료 시마다 커밋
-/commit
+/feature-dev "전체 테스트 실행 결과를 docs/tests/test-reports/sprint-1-report.md로
+작성해줘. 다음을 포함할 것:
+- 모듈별 테스트 통과/실패 현황
+- 테스트 커버리지 요약
+- 발견된 이슈 및 조치 내역
+- docs/tests/test-strategy.md의 목표 대비 달성률"
 ```
 
-### 6.4 Daily Scrum → 비동기 AI 보고
+### 10.4 예시: 스프린트 1 테스트 실행
 
-매일 15분 스탠드업 대신, 커밋 로그 기반으로 진척을 비동기 파악합니다.
+스프린트 1에서 인증 기능의 테스트 시나리오가 작성된 후, 실제 테스트를 수행하는 전체 흐름 예시입니다.
 
-- **비동기 진척 보고**: 커밋 로그와 PR 기반으로 자동 요약
-- **블로커 발생 시에만 동기 소통**: Slack/Teams로 즉시 공유
-- **주 1회 15분 대면 동기화**: 방향성 확인 (선택사항)
+#### Step 1: 통합 테스트 자동 실행
 
-VA가 매일 아침 커밋 이력을 확인하고 필요 시에만 대면 소통합니다.
+```
+# 서버 실행 + Chrome MCP 통합 테스트 자동 수행
+/test-run
 
-### 6.5 Design Review (Thursday 오후) + Code Review (Friday 오전)
+# → 자동 실행 흐름:
+# 1. 서버 자동 실행 + 로그 모니터링
+# 2. 회원가입 페이지 접근 → 폼 입력 → 제출 → 성공 확인
+# 3. 로그인 페이지 접근 → 인증 → 토큰 발급 확인
+# 4. 네트워크 요청 확인 (POST /auth/signup, POST /auth/login 응답 검증)
+# 5. 콘솔 에러 0건 확인
+# 6. 성능 측정 (Core Web Vitals)
+```
 
-#### Design Review (1시간) - DSA 주관
+#### Step 2: 수동 상세 검증
+
+```
+# 인증 API 엔드포인트 동작 검증
+"회원가입 → 로그인 → 토큰 갱신 흐름을 순서대로 테스트해줘.
+각 단계의 네트워크 요청과 응답을 확인하고 결과를 알려줘."
+
+# 엣지 케이스 검증
+"잘못된 비밀번호로 로그인을 시도해줘. 에러 응답이 올바른지 확인해."
+"만료된 Access Token으로 보호된 API를 호출해줘. 401 응답이 오는지 확인해."
+
+# 반응형 확인 (로그인/회원가입 폼)
+"모바일 뷰포트(375x667)로 전환하고 로그인 페이지 레이아웃을 확인해줘"
+
+# DB 데이터 정합성 확인
+"회원가입 후 TB_COMM_USER 테이블에 데이터가 정상 입력되었는지 확인해줘"
+```
+
+#### Step 3: 테스트 결과 보고서 작성
+
+```
+/feature-dev "전체 테스트 실행 결과를 docs/tests/test-reports/sprint-1-report.md로
+작성해줘. 다음을 포함할 것:
+- 인증 모듈 테스트 통과/실패 현황
+- 테스트 커버리지 요약 (목표: 70%+)
+- 발견된 이슈 및 조치 내역
+- docs/tests/test-strategy.md의 목표 대비 달성률"
+
+# → 생성 결과 예시 (docs/tests/test-reports/sprint-1-report.md):
+#
+# ## 테스트 결과 요약
+# | 모듈     | 전체 | 통과 | 실패 | 커버리지 |
+# |----------|------|------|------|----------|
+# | 인증     | 15   | 14   |  1   | 82%      |
+# | 권한(RBAC)| 8   |  8   |  0   | 78%      |
+#
+# ## 발견된 이슈
+# - ISS-001: Refresh Token 만료 시 에러 메시지가 일반적 → 수정 완료
+#
+# ## 목표 대비 달성률
+# - 커버리지 목표 70% → 실제 80% ✅
+# - 고위험 시나리오 100% 커버 ✅
+```
+
+---
+
+## 11. PR / 리뷰
+
+구현과 테스트가 완료되면 PR을 생성하고 코드 리뷰를 수행합니다. `/pr-merge` 명령으로 커밋→PR 생성→리뷰→수정→머지를 일괄 처리할 수 있습니다.
+
+### 11.1 PR 생성 + 코드 리뷰
+
+```
+# 방법 1: 전체 자동화 사이클 (커밋→PR→리뷰→수정→머지)
+/pr-merge
+
+# 방법 2: 단계별 수동 실행
+/commit-push-pr          # 커밋 + 푸시 + PR 생성
+/code-review             # 5개 에이전트 병렬 코드 리뷰 (80점+ 고신뢰 이슈만 보고)
+```
+
+### 11.2 Design Review (DSA 주관)
+
+UI 기능이 포함된 경우, DSA가 디자인 검수를 수행합니다.
 
 ```
 [Design Review]
-  ├─ 30분: DSA가 AI 생성 UI 검수
-  │   ├─ chrome-devtools MCP로 실제 화면 확인
+  ├─ DSA가 chrome-devtools MCP로 실제 화면 확인
   │   ├─ 디자인 토큰 준수 여부 확인
   │   ├─ 반응형 레이아웃 확인 (뷰포트 전환)
   │   └─ 접근성 기본 확인
   │
-  └─ 30분: 디자인 이슈 수정
+  └─ 이슈 수정
       ├─ DSA: "이 버튼 색상이 토큰과 다릅니다", "여백이 8px 그리드에 안 맞습니다"
       ├─ PE: 프롬프트에 디자인 피드백 반영 → AI 재생성 (5~10분)
       └─ DSA: 수정 결과 즉시 확인 → 승인
 ```
 
-#### Code Review
+### 11.3 Gate 2: REVIEW-TIME
+
+| 도구 | 검사 내용 |
+|------|----------|
+| `feature-dev` (내장 code-reviewer) | 코드 품질/버그/컨벤션 (3개 에이전트 병렬) |
+| `/code-review` | CLAUDE.md 준수, 버그, 이력 분석 (5개 에이전트 병렬, 80점+ 필터링) |
+| `blueprint-reviewer` 에이전트 | 설계 문서 품질/일관성 검증 (Sonnet, 읽기 전용) |
+| `test-coverage-analyzer` 에이전트 | 테스트 전략/커버리지 분석 (Haiku, 읽기 전용) |
+| `convention-validator` 에이전트 | 코딩 컨벤션 검증 (Haiku, 읽기 전용) |
+
+### 11.4 Gate 2.5: DESIGN-TIME (DSA 검수)
+
+| 검수 항목 | 확인 방법 |
+|----------|----------|
+| 디자인 토큰 준수 | `chrome-devtools` 스냅샷 + `design-token-validator` 에이전트 (Haiku, 자동 검증) |
+| 컴포넌트 일관성 | 화면별 비교 |
+| 반응형 레이아웃 | `chrome-devtools` 뷰포트 전환 |
+| 접근성 기본 확인 | 컬러 대비, 포커스 확인 |
+
+이슈 발견 시: DSA 피드백 → PE 프롬프트 수정 → AI 재생성 → DSA 재검수 (1시간 내 완료)
+
+### 11.5 추가 품질 검사
 
 ```
-# PR 생성 + 자동 리뷰
-/commit-push-pr
+/check-convention src/      # 코딩 컨벤션 검사
+/check-naming src/entity/   # DB 네이밍 표준 검사
+```
 
-# 5개 에이전트 병렬 코드 리뷰 (80점+ 고신뢰 이슈만 보고)
+### 11.6 예시: 스프린트 1 PR 및 리뷰 실행
+
+스프린트 1에서 인증 기능 구현이 완료된 후 PR 생성부터 머지까지의 전체 흐름 예시입니다.
+
+#### Step 1: 커밋 + PR 생성 + 코드 리뷰 + 머지 (자동화)
+
+```
+# /pr-merge 한 번으로 전체 사이클 자동 실행
+/pr-merge
+
+# → 자동 실행 흐름:
+# 1. 변경사항 커밋 (자동 커밋 메시지 생성)
+# 2. 기능 브랜치 푸시 (feature/sprint-1-auth → origin)
+# 3. PR 생성 (스프린트 1 인증 기능 구현)
+# 4. 코드 리뷰 (5개 에이전트 병렬 — 80점+ 고신뢰 이슈만 보고)
+# 5. 발견된 이슈 자동 수정
+# 6. 재리뷰 → 통과 시 머지
+```
+
+#### Step 2: 단계별 수동 실행 (세밀한 제어가 필요한 경우)
+
+```
+# 1단계: 커밋 + 푸시 + PR 생성
+/commit
+git push -u origin feature/sprint-1-auth
+gh pr create --title "feat: Sprint 1 사용자 인증 구현" --body "## Summary
+- JWT 기반 회원가입/로그인/토큰갱신 구현
+- RBAC 권한 관리
+- docs/blueprints/auth.md 설계 준수
+
+## Test plan
+- [ ] 단위 테스트 통과 확인
+- [ ] API 통합 테스트 확인
+- [ ] 보안 패턴 검사 통과"
+
+# 2단계: 코드 리뷰 (5개 에이전트 병렬)
 /code-review
 
-# 추가 품질 검사
+# 3단계: 리뷰 결과 확인 후 이슈 수정
+# → 고신뢰 이슈(80점+)만 보고되므로 중요 항목에 집중
+
+# 4단계: 품질 검사
 /check-convention src/
 /check-naming src/entity/
+
+# 5단계: 수정사항 커밋 + 재리뷰
+/commit
+/code-review
+
+# 6단계: 머지
+gh pr merge --squash
 ```
 
-### 6.6 Sprint Review (Friday, 1시간)
+#### Step 3: Design Review (UI 포함 시, DSA 주관)
 
-Design Review를 통과한 상태에서 진행합니다.
+```
+# DSA가 chrome-devtools MCP로 실제 화면 확인
+"로그인 페이지의 스냅샷을 찍어서 디자인 토큰 준수 여부를 확인해줘"
+"모바일 뷰포트(375x667)로 전환하고 로그인 폼 레이아웃을 확인해줘"
+
+# DSA 피드백 반영
+# → "비밀번호 입력 필드의 에러 상태 컬러가 토큰과 다릅니다"
+# → PE가 프롬프트 수정 → AI 재생성 (5~10분) → DSA 재검수
+```
+
+#### Step 4: Gate 2 품질 검증 결과 예시
+
+```
+[코드 리뷰 결과 — Sprint 1 인증 기능]
+┌─────────────────────────────────────────────┐
+│ code-reviewer (3개 에이전트)     ✅ 통과       │
+│ convention-validator            ✅ 위반 0건   │
+│ blueprint-reviewer              ✅ 설계 일치   │
+│ test-coverage-analyzer          ✅ 커버리지 82%│
+│ security-guidance               ✅ 보안 이슈 0 │
+└─────────────────────────────────────────────┘
+→ 전체 Gate 2 통과 — 스테이징 머지 가능
+```
+
+---
+
+## 12. 스테이징 브랜치 머지
+
+테스트를 통과한 기능 브랜치를 스테이징(staging/develop) 브랜치에 머지합니다.
+
+### 12.1 머지 전 품질 확인
+
+```
+# 최종 코딩 컨벤션 검사
+/check-convention src/
+
+# DB 네이밍 표준 검사
+/check-naming src/entity/
+
+# 콘솔 에러 0건 확인
+"콘솔에 에러가 있는지 확인해줘"
+```
+
+### 12.2 스테이징 브랜치 머지
+
+```
+# PR 생성 → 리뷰 → 머지 자동화 (staging/develop 브랜치 대상)
+/pr-merge
+```
+
+> **스테이징 브랜치의 역할:**
+> - 사용자 테스트(UAT)를 위한 통합 환경
+> - 모든 기능 브랜치가 스테이징에 머지된 후, 실제 사용자 테스트 진행
+> - 메인 브랜치 머지 전 최종 검증 단계
+
+---
+
+## 13. 사용자 테스트
+
+스테이징 환경에서 **실제 사용자(DE, 이해관계자)**가 직접 시스템을 검증합니다. AI가 대체할 수 없는 **도메인 전문 판단과 사용성 평가** 영역입니다.
+
+### 13.1 Sprint Review (1시간)
 
 ```
 [Sprint Review]
   ├─ 30분: 실시간 데모 (chrome-devtools MCP)
-  │   ├─ 별도 데모 준비 불필요 - 개발 환경에서 즉시 시연
+  │   ├─ 별도 데모 준비 불필요 - 스테이징 환경에서 즉시 시연
   │   ├─ 다양한 뷰포트 실시간 전환 (모바일/태블릿/데스크톱)
   │   ├─ 네트워크 요청 실시간 확인 (API 동작 증명)
   │   └─ 성능 트레이스 결과 공유
@@ -930,7 +984,28 @@ Design Review를 통과한 상태에서 진행합니다.
       └─ 변경 결과 즉시 데모
 ```
 
-### 6.7 Sprint Retrospective (Friday, 30분)
+### 13.2 사용자 인수 테스트 (UAT)
+
+DE와 이해관계자가 스테이징 환경에서 직접 테스트합니다.
+
+**UAT 체크리스트:**
+- [ ] 핵심 비즈니스 시나리오 동작 확인
+- [ ] 데이터 정합성 확인 (실제 데이터 유사 환경)
+- [ ] UI/UX 사용성 평가
+- [ ] 엣지 케이스 및 예외 상황 확인
+- [ ] 성능 체감 확인 (응답 속도, 페이지 로딩)
+
+### 13.3 피드백 반영
+
+사용자 테스트에서 발견된 이슈는 즉시 수정하거나 다음 스프린트 백로그에 등록합니다.
+
+| 이슈 유형 | 대응 | 시간 |
+|----------|------|------|
+| 즉시 수정 가능 | PE가 프롬프트 수정 → AI 재구현 | 30분~2시간 |
+| 설계 변경 필요 | 블루프린트 수정 → 다음 스프린트 반영 | 백로그 등록 |
+| 요구사항 변경 | 영향도 분석 → DE 우선순위 결정 | 1~2일 |
+
+### 13.4 Sprint Retrospective (30분)
 
 ```
 [AI 강화 회고]
@@ -958,88 +1033,15 @@ Design Review를 통과한 상태에서 진행합니다.
 # 대화 분석 기반 자동 감지 (인자 없이 실행)
 /hookify
 # → conversation-analyzer 에이전트가 최근 대화에서 반복 실수 감지
-# → 감지된 문제 행동 목록 제시
-# → 선택 후 규칙 생성
-```
-
-### 6.8 Backlog Refinement (30분)
-
-```
-# 사전 AI 분석 (Refinement 전)
-/feature-dev "다음 백로그 아이템들을 분석해줘:
-1. 주문 취소/환불 프로세스
-2. 관리자 대시보드 통계 페이지
-3. 사용자 알림 설정 관리
-기존 코드베이스와의 관련성, 기술적 위험, 선행 조건을 정리해줘.
-아직 코드는 수정하지 마."
-
-# Refinement 미팅 (30분)
-# ├─ AI 분석 결과 리뷰
-# ├─ DE와 비즈니스 가치/우선순위 확인
-# └─ 필요 시 아이템 분할
-```
-
-### 6.9 요구사항 변경 대응
-
-ASTRA에서는 변경 비용이 극적으로 낮아 스프린트 중간 변경도 유연하게 흡수합니다.
-
-```
-# 1. 영향도 분석 (30분~1시간: AI 분석 15분 + 인간 검토 30분)
-/feature-dev "결제 수단에 '간편결제(카카오페이)' 추가 요청이 들어왔어.
-기존 코드베이스와 docs/database/database-design.md를 참조해서
-결제 모듈의 영향 범위를 분석해줘.
-아직 코드는 수정하지 마."
-
-# 2. 설계 문서 수정 (1~2시간: AI 생성 20분 + 인간 검토·보완 1시간)
-# → docs/blueprints/payment.md에 간편결제 섹션 추가
-# → docs/database/database-design.md에 테이블 변경사항 반영 (필요 시)
-
-# 3. 코드 반영 (4~8시간: AI 코드 생성 1~2시간 + 인간 검증·수정 반복 3~6시간)
-/feature-dev "docs/blueprints/payment.md와
-docs/database/database-design.md의 업데이트된 내용을 반영해서
-간편결제(카카오페이) 기능을 구현해줘.
-기존 결제 로직에 영향이 없도록 PaymentProvider 패턴을 사용할 것."
-
-# 4. 자동 품질 검증 (30분~1시간: AI 리뷰 15분 + 결과 확인 30분)
-/code-review
 ```
 
 ---
 
-## 7. Release Sprint: 배포 준비
+## 14. 메인 브랜치 머지
 
-기존 스크럼의 Hardening Sprint에 해당하며, 1주간 진행합니다.
+사용자 테스트를 통과한 스테이징 브랜치를 메인(main/master) 브랜치에 머지합니다. 최종 품질 게이트(Gate 3)를 실행하고, 릴리스를 준비합니다.
 
-### Step R.1: 시스템 통합 테스트
-
-```
-# 자동 통합 테스트 (서버 실행 + Chrome MCP 전체 검증)
-/test-run
-# → 서버 실행, 전체 페이지 검증, API 동작 확인, 성능 측정, 콘솔 에러 확인을 자동 수행
-
-# API 연동 테스트 (수동 상세 확인)
-"결제 API와 주문 API 간의 연동을 테스트해줘. 네트워크 요청을 모니터링하고 응답을 검증해."
-
-# DB 데이터 정합성 확인 (중앙 DB 설계 문서 기준)
-"docs/database/database-design.md의 FK 관계 정의와 실제 DB 스키마가 일치하는지 확인해줘"
-
-# 성능 프로파일링
-"전체 페이지의 성능 트레이스를 실행하고 병목 지점을 분석해줘"
-
-# 크로스 브라우저/반응형 테스트
-"모바일 뷰포트(375x667)로 전환하고 레이아웃을 확인해줘"
-"태블릿 뷰포트(768x1024)로 전환하고 확인해줘"
-
-# 통합 테스트 결과 보고서 생성
-/feature-dev "전체 테스트 실행 결과를 docs/tests/test-reports/release-report.md로
-작성해줘. 다음을 포함할 것:
-- 모듈별 테스트 통과/실패 현황
-- 테스트 커버리지 요약
-- 발견된 이슈 및 조치 내역
-- docs/tests/test-strategy.md의 목표 대비 달성률"
-```
-
-### Step R.2: 최종 품질 게이트 (Gate 3)
+### 14.1 Gate 3: BRIDGE-TIME (최종 품질 게이트)
 
 ```
 # 전체 코드 품질 검사
@@ -1051,9 +1053,26 @@ docs/database/database-design.md의 업데이트된 내용을 반영해서
 "콘솔에 에러가 있는지 확인해줘"
 
 # DSA 최종 디자인 검수 (전체 화면 일관성)
+# quality-gate-runner 에이전트가 Gate 1~3 통합 실행 (Sonnet, 읽기 전용)
 ```
 
-### Step R.3: 배포 & 이관
+### 14.2 품질 게이트 통과 기준 요약
+
+| 게이트 | 통과 기준 | 차단 시 조치 |
+|--------|----------|-------------|
+| Gate 1 | security-guidance 경고 0건, 금칙어 0건 | 즉시 수정 후 재작성 |
+| Gate 2 | code-review 고신뢰 이슈 0건, 커버리지 70%+ | fix now / fix later 결정 |
+| Gate 2.5 | DSA 디자인 검수 승인 | 프롬프트 수정 → 재생성 → 재검수 |
+| Gate 3 | convention/naming 위반 0건, 콘솔 에러 0건 | 일괄 수정 후 배포 |
+
+### 14.3 메인 브랜치 머지
+
+```
+# 스테이징 → 메인 브랜치 머지
+/pr-merge
+```
+
+### 14.4 릴리스 산출물 생성
 
 ```
 # 운영 매뉴얼 자동 생성
@@ -1064,168 +1083,6 @@ docs/database/database-design.md의 업데이트된 내용을 반영해서
 # 브랜치 정리
 /clean_gone
 ```
-
----
-
-## 8. 프로젝트 템플릿
-
-### 8.1 디렉토리 구조
-
-```
-project-root/
-├── CLAUDE.md                    # 프로젝트 AI 규칙 (핵심!)
-├── .claude/
-│   ├── hookify.*.local.md       # 프로젝트별 hookify 규칙
-│   └── settings.json            # 프로젝트별 Claude 설정
-│
-├── docs/
-│   ├── design-system/           # Sprint 0에서 DSA가 구축
-│   │   ├── design-tokens.css
-│   │   ├── tailwind.config.js
-│   │   ├── components.md
-│   │   ├── layout-grid.md
-│   │   └── references/
-│   │
-│   ├── blueprints/              # 설계 문서 (Living Document)
-│   │   ├── overview.md
-│   │   ├── feature-001.md
-│   │   └── feature-002.md
-│   │
-│   ├── database/                # 데이터베이스 관련 문서
-│   │   ├── database-design.md   # 중앙 DB 설계 문서 (전체 테이블/ERD/FK)
-│   │   ├── naming-rules.md      # DB 네이밍 규칙 및 표준 용어 매핑
-│   │   └── migration/           # 마이그레이션 이력
-│   │       └── v1.0.0.sql
-│   │
-│   ├── tests/                   # 테스트 관련 문서
-│   │   ├── test-strategy.md     # 테스트 전략 (단위/통합/E2E 범위 정의)
-│   │   ├── test-cases/          # 기능별 테스트 케이스 명세 (스프린트별 분류)
-│   │   │   └── sprint-1/
-│   │   │       └── auth-test-cases.md
-│   │   └── test-reports/        # 스프린트별 테스트 결과 보고서
-│   │       └── sprint-1-report.md
-│   │
-│   ├── sprints/                 # 스프린트 문서 (프롬프트 맵, 진행 추적, 회고)
-│   │   ├── sprint-1/
-│   │   │   ├── prompt-map.md
-│   │   │   ├── progress.md
-│   │   │   └── retrospective.md
-│   │   └── sprint-2/
-│   │       └── prompt-map.md
-│   │
-│   └── delivery/                # Release Sprint 산출물
-│       ├── operation-manual.md
-│       └── quality-report.md
-│
-└── src/                         # 소스 코드
-```
-
-### 8.2 스프린트 프롬프트 맵 템플릿
-
-```markdown
-# Sprint [N] 프롬프트 맵
-
-## 스프린트 목표
-[이번 스프린트에서 달성할 비즈니스 가치를 서술]
-
-## 기능 1: 사용자 인증
-### 1.1 설계 프롬프트
-/feature-dev "JWT 기반 사용자 인증 시스템의 설계 문서를
-docs/blueprints/auth.md로 작성해줘. 회원가입, 로그인, 토큰 갱신,
-권한 관리(RBAC) 기능을 포함.
-DB 스키마는 docs/database/database-design.md를 참조할 것.
-아직 코드는 수정하지 마."
-
-### 1.2 DB 설계 반영 프롬프트
-/feature-dev "docs/database/database-design.md에 인증 모듈 테이블을
-추가/갱신해줘:
-- TB_COMM_USER, TB_COMM_TRMS, TH_COMM_USER_AGRE, TB_COMM_RFRSH_TKN
-- ERD와 FK 관계 요약도 갱신할 것. 표준 용어 사전 준수.
-아직 코드는 수정하지 마."
-
-### 1.3 테스트 케이스 프롬프트
-/feature-dev "docs/blueprints/auth.md의 기능 요구사항을 기반으로
-테스트 케이스를 docs/tests/test-cases/sprint-{N}/auth-test-cases.md로 작성해줘.
-Given-When-Then 형식, 단위/통합/엣지 케이스를 포함.
-아직 코드는 수정하지 마."
-
-### 1.4 구현 프롬프트
-/feature-dev "docs/blueprints/auth.md와
-docs/database/database-design.md의 내용을 엄격히 준수해서
-개발을 진행해줘. 테스트는 docs/tests/test-cases/sprint-{N}/auth-test-cases.md를
-참조하여 작성하고, 구현이 끝나면 모든 테스트를 실행하고
-결과를 docs/tests/test-reports/에 보고해."
-
-## 기능 2: 결제 대시보드
-### 2.1 설계 프롬프트
-/feature-dev "결제 현황 대시보드의 설계 문서를
-docs/blueprints/payment-dashboard.md로 작성해줘.
-- 실시간 결제 현황 (오늘 건수/금액)
-- 일별/월별 매출 차트
-- 최근 거래 목록 (필터링, 페이지네이션)
-- 결제 수단별 비율 차트
-- DB 스키마는 docs/database/database-design.md를 참조할 것
-아직 코드는 수정하지 마."
-
-### 2.2 구현 프롬프트
-/feature-dev "docs/blueprints/payment-dashboard.md와
-docs/database/database-design.md의 내용을 엄격히 준수해서
-개발을 진행해줘. 다크 모드 기본, 미니멀리스트 스타일로.
-docs/design-system/design-tokens.css의 토큰 시스템을 반드시 사용할 것."
-```
-
-### 8.3 스프린트 회고 템플릿
-
-```markdown
-# Sprint [N] Retrospective
-
-## AI 분석 데이터
-- code-review 반복 이슈: [자동 수집]
-- security-guidance 차단 건수: [자동 수집]
-- astra-methodology 위반 빈도: [자동 수집]
-
-## 팀 논의 (AI가 잡지 못하는 영역)
-### 잘한 것 (Keep)
--
-
-### 개선할 것 (Problem)
--
-
-### 시도할 것 (Try)
--
-
-## 자동화된 개선 조치
-- /hookify [이번 스프린트에서 발견된 반복 실수 규칙화]
-- CLAUDE.md 업데이트 내용: [추가된 규칙 기술]
-```
-
----
-
-## 9. 기대 효과
-
-### 정량적 효과
-
-| 지표 | ASTRA 목표 | 개선율 |
-|------|-----------|-------|
-| 스프린트 주기 | 1주 (소규모 증분, 빠른 피드백) | 반복 주기 50% 단축 |
-| 스프린트당 세레모니 시간 | 4시간 | 67% 절감 |
-| 투입 인력 | 4~5명 | 50% 절감 |
-| 코딩 표준 준수율 | 95%+ (자동 강제) | +30% 향상 |
-| 코드 리뷰 소요 시간 | 20~40분 (자동) | 85~90% 단축 |
-| 요구사항 변경 대응 | 1~2일 | 기존 2주+ 대비 대폭 단축 |
-| 코딩 작업 시간 | 기존 대비 40~60% 단축 | METR 연구 기반 |
-| 보안 취약점 발견 시점 | 코드 작성 시점 | 사후→사전 전환 |
-| 설계 문서 최신율 | 100% (Living Document) | +70% 향상 |
-| Definition of Done 검증 | 자동 (Gate 1-3) | 수동→자동 전환 |
-
-### 정성적 효과
-
-1. **스크럼의 본질에 집중**: 세레모니 시간이 줄어 "가치 전달"에 집중
-2. **리뷰 문화 개선**: 스타일/표준 논쟁 제거 → 비즈니스 로직 토론의 장으로 전환
-3. **회고의 실효성**: "개선하겠습니다" → "hookify 규칙으로 강제합니다"
-4. **DE 참여도 향상**: 실시간 데모와 즉시 반영으로 프로젝트의 진정한 파트너 참여
-5. **기술 부채 감소**: 작성 시점 품질 내장으로 "나중에 고치자" 원천 제거
-6. **지식 이전 용이**: Living Document로 인수인계 비용 최소화
 
 ---
 
@@ -1243,18 +1100,14 @@ docs/design-system/design-tokens.css의 토큰 시스템을 반드시 사용할 
 | 기능 설계 시작 | `/feature-dev [설명]` | 7단계 자동 워크플로우 |
 | 표준 용어 확인 | `/lookup-term [한글 용어]` | 영문 약어/도메인/타입 |
 | 국제 코드 조회 | `/lookup-code [코드]` | ISO 3166-1/2, E.164 (국가/지역/전화번호) |
-| 국제 코드 컴포넌트 생성 | `/feature-dev` + `code-standard` 스킬 | 국가 선택기, 전화번호 입력, 지역 선택기 (자동 감지) |
 | DB 엔티티 생성 | `/generate-entity [한글 정의]` | DB 설계 문서 기반, Java/TypeScript/SQL |
-| DB 설계 문서 갱신 | `/feature-dev` | `docs/database/database-design.md` 테이블 추가/변경 |
-| DB 마이그레이션 생성 | `/feature-dev` | `docs/database/migration/` DDL 생성 |
-| 테스트 케이스 작성 | `/feature-dev` | `docs/tests/test-cases/sprint-{N}/` 기능별 테스트 명세 |
-| 테스트 결과 보고 | `/feature-dev` | `docs/tests/test-reports/` 스프린트별 보고서 |
 | E2E 테스트 시나리오 생성 | `/test-scenario` | 블루프린트, DB, 라우트 기반 E2E 시나리오 |
 | 통합 테스트 실행 | `/test-run` | 서버 실행 + Chrome MCP 자동 검증 |
 | 코딩 표준 검사 | `/check-convention [대상]` | Java/TS/RN/Python/CSS/SCSS |
 | DB 네이밍 검사 | `/check-naming [대상]` | 표준 용어 사전 기반 |
 | 커밋 | `/commit` | 자동 메시지 생성 |
 | PR 생성 | `/commit-push-pr` | 커밋+푸시+PR 일괄 |
+| PR→리뷰→머지 자동화 | `/pr-merge` | 커밋→PR→리뷰→수정→머지 전체 사이클 |
 | 코드 리뷰 | `/code-review` | 5개 에이전트 병렬 |
 | 훅 규칙 생성 | `/hookify [설명]` | 행동 방지 규칙 |
 | 훅 규칙 확인 | `/hookify:list` | 현재 규칙 목록 |
@@ -1267,8 +1120,8 @@ docs/design-system/design-tokens.css의 토큰 시스템을 반드시 사용할 
 | 에이전트 | 모델 | 게이트 | 역할 |
 |----------|------|--------|------|
 | `astra-verifier` | Haiku | - | ASTRA 방법론 준수 여부 점검 |
-| `naming-validator` | Haiku | Gate 1 | DB 네이밍 표준 검증 |
-| `convention-validator` | Haiku | Gate 1/2 | 코딩 컨벤션 검증 (Java/TS/RN/Python/CSS/SCSS) |
+| `naming-validator` | Haiku | Gate 1/3 | DB 네이밍 표준 검증 (Gate 1: 훅 자동 경고, Gate 3: 에이전트 검증) |
+| `convention-validator` | Haiku | Gate 1/2 | 코딩 컨벤션 검증 (Gate 1: 스킬 자동 적용, Gate 2: 에이전트 검증) |
 | `blueprint-reviewer` | Sonnet | Gate 2 | 설계 문서 품질/일관성 검증 |
 | `test-coverage-analyzer` | Haiku | Gate 2 | 테스트 전략/커버리지 분석 |
 | `design-token-validator` | Haiku | Gate 2.5 | 디자인 토큰 시스템 준수 자동 검증 |
@@ -1350,7 +1203,7 @@ GOOD:
 
 > **핵심 인사이트**: 설계 문서(스펙)의 품질이 AI 작업 시간을 결정적으로 좌우합니다.
 > 좋은 스펙 기반 시 60분이면 가능한 작업이, 스펙 없이는 16시간 이상 소요될 수 있습니다.
-> ASTRA가 Sprint 0에서 설계 문서를 먼저 작성하는 이유입니다.
+> ASTRA가 블루프린트를 먼저 작성하는 이유입니다.
 
 #### 시간 추정의 한계
 
@@ -1358,3 +1211,180 @@ GOOD:
 - METR 연구의 "19% 느려짐"은 **ad-hoc AI 사용** 기준이며, ASTRA처럼 **구조화된 워크플로우**에서는 30~60% 시간 단축 달성 가능
 - AI 자율 작업 시간은 **~7개월마다 2배** 성장 중이므로, 본 문서의 시간 추정치는 **6~12개월마다 재검토** 필요
 - 복잡한 비즈니스 로직, 아키텍처 의사결정, 도메인 특화 검증은 여전히 **인간 판단이 병목**
+
+### 부록 E: Sprint 0 프로젝트 셋업
+
+Sprint 0는 1주간 프로젝트의 기반을 설정합니다. 모든 기능 스프린트에 앞서 **1회만** 수행합니다.
+
+#### Step 0.0: 개발환경 설정 (전역)
+
+> **범위**: 개발자 머신 단위 (1회 설정, 모든 프로젝트에 적용)
+
+```
+# 1단계: 플러그인 마켓플레이스 추가
+claude plugin marketplace add https://github.com/ASTRA-TECHNOLOGY-COMPANY-LIMITED/astra-methodology.git
+
+# 2단계: astra-methodology 플러그인 설치
+claude plugin install astra-methodology@astra
+
+# 3단계: 전역 개발환경 자동 셋업 (전역 설정, MCP 서버, 플러그인 9개 자동 설치)
+/astra-methodology:astra-setup
+```
+
+**자동 설치되는 항목:**
+- 필수 플러그인 9개 (claude-code-setup, code-review, code-simplifier, commit-commands, feature-dev, frontend-design, hookify, security-guidance, context7)
+- MCP 서버 3개 (chrome-devtools, postgres, context7)
+- 전역 설정 (Agent Teams, bypassPermissions, Always Thinking)
+
+#### Step 0.1: Vision & Backlog (Day 1-2)
+
+DE와 킥오프 미팅을 통해 프로젝트 비전을 수립하고, Product Backlog를 초기 작성합니다.
+
+```
+# 기술 스택의 최신 문서 확인
+"use context7 - Spring Boot 3의 WebClient와 RestTemplate 비교. 최신 권장 방식은?"
+
+# 핵심 기능에 대한 사전 분석
+/feature-dev "온라인 결제 시스템의 전체 아키텍처를 분석하고
+docs/blueprints/overview.md로 작성해줘. 아직 실제 코드는 수정하지 마."
+```
+
+#### Step 0.2: Design System 구축 (Day 2-3) - DSA 주관
+
+> 상세 내용은 [4. 디자인 시스템 작성](#4-디자인-시스템-작성)을 참고하세요.
+
+디자인 토큰, 컴포넌트 스타일 가이드, 레이아웃 그리드 시스템을 구축합니다.
+
+#### Step 0.3: Architecture & Standards (Day 3-4)
+
+핵심 기능 설계 문서 생성([5. 블루프린트 작성](#5-블루프린트-작성) 참고), 중앙 DB 설계 문서 작성([6. 데이터베이스 설계](#6-데이터베이스-설계) 참고), 테스트 전략 문서(`docs/tests/test-strategy.md`) 작성을 수행합니다.
+
+#### Step 0.4: Guard Rails 설정 (Day 4-5)
+
+CLAUDE.md 작성 + hookify 규칙 설정으로 스프린트 전체에 적용될 품질 규칙을 사전 설정합니다.
+
+```
+# 프로젝트별 커스텀 규칙 생성
+/hookify 모든 API 엔드포인트에는 인증 미들웨어를 반드시 포함할 것
+/hookify console.log 대신 logger 라이브러리를 사용할 것
+/hookify CSS에서 하드코딩된 컬러값 대신 CSS Variable을 사용할 것
+```
+
+**Sprint 0 완료 체크리스트:**
+- [ ] Product Backlog 초기 작성 완료
+- [ ] 디자인 시스템 구축 완료 (디자인 토큰, 컴포넌트 가이드)
+- [ ] 핵심 기능별 설계 문서(MD) 생성 및 DE 승인
+- [ ] 중앙 DB 설계 문서 작성 완료 (`docs/database/database-design.md`)
+- [ ] 테스트 전략 문서 작성 완료 (`docs/tests/test-strategy.md`)
+- [ ] CLAUDE.md 작성 완료 (디자인 원칙 포함)
+- [ ] hookify 규칙 설정 완료
+
+> Sprint 0 검증: `/project-checklist`
+
+### 부록 F: 프로젝트 템플릿
+
+#### F.1 디렉토리 구조
+
+```
+project-root/
+├── CLAUDE.md                    # 프로젝트 AI 규칙 (핵심!)
+├── .claude/
+│   ├── hookify.*.local.md       # 프로젝트별 hookify 규칙
+│   └── settings.json            # 프로젝트별 Claude 설정
+│
+├── docs/
+│   ├── design-system/           # Sprint 0에서 DSA가 구축
+│   │   ├── design-tokens.css
+│   │   ├── tailwind.config.js
+│   │   ├── components.md
+│   │   ├── layout-grid.md
+│   │   └── references/
+│   │
+│   ├── blueprints/              # 설계 문서 (Living Document)
+│   │   ├── overview.md
+│   │   ├── feature-001.md
+│   │   └── feature-002.md
+│   │
+│   ├── database/                # 데이터베이스 관련 문서
+│   │   ├── database-design.md   # 중앙 DB 설계 문서 (전체 테이블/ERD/FK)
+│   │   ├── naming-rules.md      # DB 네이밍 규칙 및 표준 용어 매핑
+│   │   └── migration/           # 마이그레이션 이력
+│   │       └── v1.0.0.sql
+│   │
+│   ├── tests/                   # 테스트 관련 문서
+│   │   ├── test-strategy.md     # 테스트 전략 (단위/통합/E2E 범위 정의)
+│   │   ├── test-cases/          # 기능별 테스트 케이스 명세
+│   │   │   └── sprint-1/
+│   │   │       └── auth-test-cases.md
+│   │   └── test-reports/        # 스프린트별 테스트 결과 보고서
+│   │       └── sprint-1-report.md
+│   │
+│   ├── sprints/                 # 스프린트 문서
+│   │   ├── sprint-1/
+│   │   │   ├── prompt-map.md
+│   │   │   ├── progress.md
+│   │   │   └── retrospective.md
+│   │   └── sprint-2/
+│   │       └── prompt-map.md
+│   │
+│   └── delivery/                # Release Sprint 산출물
+│       ├── operation-manual.md
+│       └── quality-report.md
+│
+└── src/                         # 소스 코드
+```
+
+#### F.2 스프린트 회고 템플릿
+
+```markdown
+# Sprint [N] Retrospective
+
+## AI 분석 데이터
+- code-review 반복 이슈: [자동 수집]
+- security-guidance 차단 건수: [자동 수집]
+- astra-methodology 위반 빈도: [자동 수집]
+
+## 팀 논의 (AI가 잡지 못하는 영역)
+### 잘한 것 (Keep)
+-
+
+### 개선할 것 (Problem)
+-
+
+### 시도할 것 (Try)
+-
+
+## 자동화된 개선 조치
+- /hookify [이번 스프린트에서 발견된 반복 실수 규칙화]
+- CLAUDE.md 업데이트 내용: [추가된 규칙 기술]
+```
+
+### 부록 G: 기대 효과
+
+#### 정량적 효과
+
+| 지표 | ASTRA 목표 | 개선율 |
+|------|-----------|-------|
+| 스프린트 주기 | 1주 (소규모 증분, 빠른 피드백) | 반복 주기 50% 단축 |
+| 스프린트당 세레모니 시간 | 4시간 | 67% 절감 |
+| 투입 인력 | 4~5명 | 50% 절감 |
+| 코딩 표준 준수율 | 95%+ (자동 강제) | +30% 향상 |
+| 코드 리뷰 소요 시간 | 20~40분 (자동) | 85~90% 단축 |
+| 요구사항 변경 대응 | 1~2일 | 기존 2주+ 대비 대폭 단축 |
+| 코딩 작업 시간 | 기존 대비 40~60% 단축 | METR 연구 기반 |
+| 보안 취약점 발견 시점 | 코드 작성 시점 | 사후→사전 전환 |
+| 설계 문서 최신율 | 100% (Living Document) | +70% 향상 |
+| Definition of Done 검증 | 자동 (Gate 1-3) | 수동→자동 전환 |
+
+#### 정성적 효과
+
+1. **스크럼의 본질에 집중**: 세레모니 시간이 줄어 "가치 전달"에 집중
+2. **리뷰 문화 개선**: 스타일/표준 논쟁 제거 → 비즈니스 로직 토론의 장으로 전환
+3. **회고의 실효성**: "개선하겠습니다" → "hookify 규칙으로 강제합니다"
+4. **DE 참여도 향상**: 실시간 데모와 즉시 반영으로 프로젝트의 진정한 파트너 참여
+5. **기술 부채 감소**: 작성 시점 품질 내장으로 "나중에 고치자" 원천 제거
+6. **지식 이전 용이**: Living Document로 인수인계 비용 최소화
+
+### 부록 H: 비용 효과
+
+상세 내용은 [2.6 비용 효과](#26-비용-효과)를 참고하세요.
