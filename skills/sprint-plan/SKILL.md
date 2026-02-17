@@ -134,7 +134,7 @@ report results to docs/tests/test-reports/."
 
 ### Step 2.5: Create Sprint Progress Tracker
 
-Read the prompt map created in Step 2 (`docs/sprints/sprint-{N}/prompt-map.md`) and extract feature names from `## Feature {N}: {name}` headers.
+Read the prompt map created in Step 2 (`docs/sprints/sprint-{N}/prompt-map.md`) and extract feature names from `## Feature {#}: {name}` headers (where `{#}` is the feature ordinal, e.g., 1, 2, 3).
 
 Create the `docs/sprints/sprint-{N}/progress.md` file:
 

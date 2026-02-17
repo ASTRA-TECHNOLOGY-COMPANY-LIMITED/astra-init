@@ -721,7 +721,7 @@ docs/blueprints/auth.md로 작성해줘.
 - 표준 용어 사전을 준수할 것 (/lookup-term 활용)
 아직 코드는 수정하지 마."
 
-# 3단계: 테스트 케이스 사전 정의
+# 3단계: 테스트 케이스 사전 정의 (Sprint 1 기준 예시 — 이후 스프린트는 sprint-{N} 사용)
 /feature-dev "docs/blueprints/auth.md의 기능 요구사항을 기반으로
 테스트 케이스 문서를 docs/tests/test-cases/sprint-1/auth-test-cases.md로 작성해줘.
 - 단위 테스트: 서비스 레이어 핵심 로직 (해싱, 토큰 생성/검증)
@@ -1099,8 +1099,9 @@ project-root/
 │   │
 │   ├── tests/                   # 테스트 관련 문서
 │   │   ├── test-strategy.md     # 테스트 전략 (단위/통합/E2E 범위 정의)
-│   │   ├── test-cases/          # 기능별 테스트 케이스 명세
-│   │   │   └── auth-test-cases.md
+│   │   ├── test-cases/          # 기능별 테스트 케이스 명세 (스프린트별 분류)
+│   │   │   └── sprint-1/
+│   │   │       └── auth-test-cases.md
 │   │   └── test-reports/        # 스프린트별 테스트 결과 보고서
 │   │       └── sprint-1-report.md
 │   │
