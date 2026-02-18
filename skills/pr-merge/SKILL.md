@@ -142,38 +142,36 @@ Step 4에서 발견된 Critical 및 High 이슈를 수정한다:
 3. `git push`로 원격에 푸시
 4. **Step 4로 복귀**하여 재리뷰 실행
 
-### Step 7: PR 머지 확인 및 버전 업데이트
-
-PR 머지 전 최종 확인과 버전 업데이트를 수행한다.
+### Step 7: PR 머지 확인
 
 1. **AskUserQuestion**으로 사용자에게 최종 머지 확인을 요청한다.
    - PR URL, 리뷰 결과 요약 (통과 여부, 반복 횟수), 변경 파일 수를 표시
 2. 사용자가 머지를 거부하면 워크플로우를 중단한다.
-3. 사용자 확인 후, `.claude-plugin/plugin.json` 파일이 존재하는 플러그인 프로젝트에서 버전을 업데이트한다:
+
+### Step 8: PR 머지
+
+사용자 확인 후 PR을 머지한다:
+
+1. Draft PR인 경우 먼저 `gh pr ready`로 Ready 상태로 변경
+2. `gh pr merge --merge --delete-branch`로 머지 실행
+
+### Step 9: 정리 및 버전 업데이트
+
+머지 후 로컬 환경을 정리하고, 필요 시 버전을 업데이트한다:
+
+1. `git checkout {target-branch}`으로 머지 대상 브랜치로 전환한다. 로컬에 해당 브랜치가 없으면 `git checkout -b {target-branch} origin/{target-branch}`로 트래킹 브랜치를 생성하며 전환한다.
+2. `git pull --ff-only`로 최신 상태 동기화
+3. 머지된 로컬 브랜치 삭제: `git branch -d {branch-name}`
+4. `.claude-plugin/plugin.json` 파일이 존재하는 플러그인 프로젝트에서 버전을 업데이트한다:
    - `.claude-plugin/plugin.json`과 `.claude-plugin/marketplace.json`의 존재 여부를 확인한다.
    - 파일이 존재하면 `--patch` / `--minor` / `--major` 옵션에 따라 SemVer 버전을 범프한다:
      - `--patch` (기본값): `x.y.z` → `x.y.z+1`
      - `--minor`: `x.y.z` → `x.y+1.0`
      - `--major`: `x.y.z` → `x+1.0.0`
    - 두 파일 모두 동일한 버전으로 업데이트한다.
-   - 버전 변경을 커밋하고 푸시한다: "chore: bump version to {new-version}"
+   - `{target-branch}`에 직접 커밋하고 푸시한다: "chore: bump version to {new-version}"
    - 파일이 존재하지 않으면 버전 업데이트를 건너뛴다.
-
-### Step 8: PR 머지
-
-PR을 머지한다:
-
-1. Draft PR인 경우 먼저 `gh pr ready`로 Ready 상태로 변경
-2. `gh pr merge --merge --delete-branch`로 머지 실행
-
-### Step 9: 정리
-
-머지 후 로컬 환경을 정리한다:
-
-1. `git checkout {target-branch}`으로 머지 대상 브랜치로 전환한다. 로컬에 해당 브랜치가 없으면 `git checkout -b {target-branch} origin/{target-branch}`로 트래킹 브랜치를 생성하며 전환한다.
-2. `git pull --ff-only`로 최신 상태 동기화
-3. 머지된 로컬 브랜치 삭제: `git branch -d {branch-name}`
-4. 최종 요약을 출력한다:
+5. 최종 요약을 출력한다:
 
 ```
 ## PR Review & Merge 완료
