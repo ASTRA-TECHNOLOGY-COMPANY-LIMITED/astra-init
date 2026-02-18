@@ -28,13 +28,15 @@ DETAIL=""
 SPRINT_FROM_PATH=""
 
 case "$FILE_PATH" in
-  */docs/blueprints/*.md)
-    # Skip overview.md
-    if [ "$BASENAME" = "overview.md" ]; then
-      exit 0
-    fi
+  */docs/blueprints/overview.md)
+    # Skip overview.md (project-level document, not a feature blueprint)
+    exit 0
+    ;;
+  */docs/blueprints/[0-9][0-9][0-9]-*/*)
+    # Numbered blueprint directory: extract feature name from directory (strip NNN- prefix)
     EVENT="blueprint"
-    DETAIL=$(echo "$BASENAME" | sed 's/\.md$//')
+    BLUEPRINT_DIR=$(echo "$FILE_PATH" | sed -n 's|.*/docs/blueprints/\([^/]*\)/.*|\1|p')
+    DETAIL=$(echo "$BLUEPRINT_DIR" | sed 's/^[0-9]*-//')
     ;;
   */docs/tests/test-reports/*.md)
     EVENT="test_report"

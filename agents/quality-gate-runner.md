@@ -56,7 +56,7 @@ Checks for violations of hookify rules defined in the `.claude/` directory:
 Verifies feature-level quality.
 
 #### 2.1 Design-Implementation Consistency
-- Whether `docs/blueprints/` design documents match the actual implementation
+- Whether `docs/blueprints/{NNN}-{feature-name}/blueprint.md` design documents match the actual implementation
 - API endpoint, data model, and business logic verification
 
 #### 2.2 DB Design Document Consistency
@@ -91,7 +91,7 @@ Verifies the overall project's release readiness.
 - Confirm 0 Critical issues
 
 #### 3.2 Document Completeness
-- Full verification of `docs/blueprints/` design documents
+- Full verification of `docs/blueprints/{NNN}-{feature-name}/` design documents
 - `docs/database/database-design.md` completeness
 - `docs/tests/test-strategy.md` and test report existence
 - CLAUDE.md up-to-date status

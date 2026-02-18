@@ -198,7 +198,10 @@ Structure generated in the target project when `/project-init` is executed:
 ├── docs/
 │   ├── design-system/                     # Design tokens, components, layout
 │   │   └── references/                    # Design reference images
-│   ├── blueprints/                        # Feature design documents
+│   ├── blueprints/                        # Feature design documents (numbered dirs)
+│   │   ├── overview.md                    # Project overview
+│   │   └── {NNN}-{feature-name}/          # e.g., 001-auth/, 002-payment/
+│   │       └── blueprint.md               # Main design document + related files
 │   ├── database/                          # DB design (SSoT), naming rules
 │   │   └── migration/                     # Migration history
 │   ├── tests/                             # Test strategy, cases, reports

@@ -20,9 +20,9 @@ This is a read-only agent and never modifies files.
 
 ## Verification Areas
 
-### 1. Design Document Completeness (docs/blueprints/*.md)
+### 1. Design Document Completeness (docs/blueprints/{NNN}-{feature-name}/blueprint.md)
 
-Checks the existence and quality of the following required sections in each design document:
+Scans numbered directories under `docs/blueprints/` (e.g., `001-auth/`, `002-payment/`) and checks the existence and quality of the following required sections in each `blueprint.md`:
 
 - **Objective**: Whether the business purpose and user value of the feature are clearly described
 - **Scope**: Whether included/excluded items are clearly defined
@@ -54,7 +54,7 @@ Verifies that what is defined in design documents has been implemented in the ac
 
 ### 5. Cross-Document Consistency
 
-- Whether modules mentioned in `docs/blueprints/overview.md` have corresponding individual design documents
+- Whether modules mentioned in `docs/blueprints/overview.md` have corresponding individual blueprint directories (e.g., `docs/blueprints/{NNN}-{module-name}/`)
 - Whether inter-module dependencies are identically defined in both design documents
 - Whether common patterns (error response format, authentication method, etc.) are consistent across documents
 

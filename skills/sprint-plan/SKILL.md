@@ -39,8 +39,8 @@ If the retro file does not exist or is empty (template only), note this as "Retr
 
 #### C. Compare Blueprints vs Implementation Status
 
-1. List all files in `docs/blueprints/` (excluding `overview.md`)
-2. For each blueprint, check if corresponding implementation exists:
+1. List all numbered directories in `docs/blueprints/` (matching pattern `{NNN}-{feature-name}/`)
+2. For each blueprint directory, check if corresponding implementation exists:
    - Source files in `src/` matching the feature name (by directory or filename)
    - Test reports in `docs/tests/test-reports/` matching the feature name
 3. Identify **designed but not implemented** features — potential carryover or deprioritization candidates
@@ -58,7 +58,7 @@ Display the analysis before proceeding to the prompt map:
 | {feature} | {Implementation, Test Report} | {High/Medium/Low} |
 
 ### Blueprints Without Implementation
-- {blueprint-name}.md — designed in Sprint {X}, not yet implemented
+- {NNN}-{blueprint-name}/ — designed in Sprint {X}, not yet implemented
 
 ### Retrospective Actions to Address
 - {action item from retro}
@@ -88,7 +88,7 @@ If there are carryover items from Step 1.5, list them first as `(Carryover)` fea
 ## Feature 1: {carryover-feature} (Carryover from Sprint {N-1})
 
 ### 1.1 Design Prompt
-(Already completed — see docs/blueprints/{feature-name}.md)
+(Already completed — see docs/blueprints/{NNN}-{feature-name}/blueprint.md)
 
 ### 1.2 DB Design Reflection Prompt
 (Already completed — reflected in docs/database/database-design.md)
@@ -103,10 +103,12 @@ If there are carryover items from Step 1.5, list them first as `(Carryover)` fea
 
 ### 2.1 Design Prompt
 /feature-dev "Write the design document for {feature description}
-to docs/blueprints/{feature-name}.md.
+to docs/blueprints/{NNN}-{feature-name}/blueprint.md.
 {detailed requirements}
 Refer to docs/database/database-design.md for DB schema.
 Do not modify any code yet."
+
+> **Numbering Rule**: Scan existing directories in `docs/blueprints/` to determine the next number. Use 3-digit zero-padded format (e.g., `001-`, `002-`). If the feature is a carryover, keep its original number from the previous sprint.
 
 ### 2.2 DB Design Reflection Prompt
 /feature-dev "Add/update the {module-name} tables in
@@ -116,13 +118,13 @@ docs/database/database-design.md:
 Do not modify any code yet."
 
 ### 2.3 Test Case Prompt
-/feature-dev "Based on the feature requirements in docs/blueprints/{feature-name}.md,
+/feature-dev "Based on the feature requirements in docs/blueprints/{NNN}-{feature-name}/blueprint.md,
 write test cases to docs/tests/test-cases/sprint-{N}/{feature-name}-test-cases.md.
 Use Given-When-Then format, include unit/integration/edge cases.
 Do not modify any code yet."
 
 ### 2.4 Implementation Prompt
-/feature-dev "Strictly follow the contents of docs/blueprints/{feature-name}.md and
+/feature-dev "Strictly follow the contents of docs/blueprints/{NNN}-{feature-name}/blueprint.md and
 docs/database/database-design.md to proceed with development.
 Write tests referencing docs/tests/test-cases/sprint-{N}/{feature-name}-test-cases.md,
 and once implementation is complete, run all tests and

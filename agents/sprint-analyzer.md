@@ -29,7 +29,7 @@ Summarizes progress compared to the previous day based on `git log`.
 - Work type classification based on Conventional Commits (feat, fix, refactor, docs, test)
 - Changed module/directory distribution
 - New file / modified file / deleted file statistics
-- Whether design documents (docs/blueprints/) were changed
+- Whether design documents (docs/blueprints/{NNN}-{feature-name}/) were changed
 - Whether DB design documents (docs/database/) were changed
 - Whether test files were changed
 
@@ -71,7 +71,7 @@ Comprehensively analyzes data for the entire sprint period.
 - Implementation progress relative to design documents
 
 #### C. Design Document Currency
-- `docs/blueprints/` document creation/modification history
+- `docs/blueprints/{NNN}-{feature-name}/` document creation/modification history
 - `docs/database/database-design.md` change history
 - `docs/tests/test-cases/sprint-*/` change history
 - Living Document maintenance status evaluation

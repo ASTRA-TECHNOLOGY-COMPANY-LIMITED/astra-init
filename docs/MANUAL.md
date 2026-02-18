@@ -346,7 +346,9 @@ docs/design-system/
 
 ## 5. 블루프린트 작성
 
-기능 구현에 앞서 **설계 문서(Blueprint)**를 먼저 작성합니다. 블루프린트는 AI가 정확한 코드를 생성하기 위한 핵심 입력이며, `docs/blueprints/`에서 관리합니다.
+기능 구현에 앞서 **설계 문서(Blueprint)**를 먼저 작성합니다. 블루프린트는 AI가 정확한 코드를 생성하기 위한 핵심 입력이며, `docs/blueprints/`에서 **넘버링된 디렉토리** 단위로 관리합니다.
+
+> **디렉토리 구조**: 각 기능 블루프린트는 `docs/blueprints/{NNN}-{feature-name}/` 형식의 디렉토리로 구성됩니다 (예: `001-auth/`, `002-payment/`). 메인 설계 문서는 `blueprint.md`, 관련 보조 파일(다이어그램, API 스펙 등)은 같은 디렉토리에 배치합니다.
 
 > **핵심 원칙**: 좋은 블루프린트 = 좋은 코드. 스펙 품질이 AI 결과물 품질을 결정합니다.
 > (스펙 기반 시 1~2시간, 스펙 없이 4~8시간+ 소요 — [부록 D](#부록-d-ai-에이전트-작업-시간-추정-근거) 참고)
@@ -356,20 +358,20 @@ docs/design-system/
 ```
 # 핵심 기능의 설계 문서 자동 생성
 /feature-dev "JWT 기반 사용자 인증 시스템의 설계 문서를
-docs/blueprints/auth.md로 작성해줘.
+docs/blueprints/001-auth/blueprint.md로 작성해줘.
 - 회원가입, 로그인, 토큰 갱신, 권한 관리(RBAC) 기능을 포함
 - 비밀번호는 bcrypt 해싱
 - Access Token 유효기간 30분, Refresh Token 7일
 - DB 스키마는 docs/database/database-design.md를 참조할 것
 아직 코드는 수정하지 마."
 
-# → VA/DE가 생성된 docs/blueprints/auth.md를 직접 열어 검토 및 수정
+# → VA/DE가 생성된 docs/blueprints/001-auth/blueprint.md를 직접 열어 검토 및 수정
 # → DE 승인 후 다음 단계 진행
 ```
 
 ### 5.2 블루프린트 완료 체크리스트
 
-- [ ] 기능 설계 문서 작성 완료 (`docs/blueprints/`)
+- [ ] 기능 설계 문서 작성 완료 (`docs/blueprints/{NNN}-{feature-name}/blueprint.md`)
 - [ ] DE 승인 완료
 
 ---
@@ -386,7 +388,7 @@ docs/blueprints/auth.md로 작성해줘.
 
 ```
 # 블루프린트 기반 DB 테이블 설계
-/feature-dev "docs/blueprints/auth.md 블루프린트를 분석해서
+/feature-dev "docs/blueprints/001-auth/blueprint.md 블루프린트를 분석해서
 필요한 데이터베이스 테이블을 docs/database/database-design.md에 설계해줘.
 - 블루프린트의 기능 요구사항에서 필요한 테이블, 컬럼, 관계를 도출할 것
 - 기존 테이블과의 FK 관계를 ERD와 관계 요약 섹션에도 반영할 것
@@ -492,20 +494,20 @@ docs/blueprints/auth.md로 작성해줘.
 
 ## 기능 1: 사용자 인증
 ### 1.1 블루프린트 참조
-- docs/blueprints/auth.md
+- docs/blueprints/001-auth/blueprint.md
 - docs/database/database-design.md (인증 모듈)
 
 ### 1.2 구현 프롬프트
-/feature-dev "docs/blueprints/auth.md와
+/feature-dev "docs/blueprints/001-auth/blueprint.md와
 docs/database/database-design.md의 내용을 엄격히 준수해서
 개발을 진행해줘."
 
 ## 기능 2: 결제 대시보드
 ### 2.1 블루프린트 참조
-- docs/blueprints/payment-dashboard.md
+- docs/blueprints/002-payment-dashboard/blueprint.md
 
 ### 2.2 구현 프롬프트
-/feature-dev "docs/blueprints/payment-dashboard.md와
+/feature-dev "docs/blueprints/002-payment-dashboard/blueprint.md와
 docs/database/database-design.md의 내용을 엄격히 준수해서
 개발을 진행해줘."
 ```
@@ -536,7 +538,7 @@ docs/database/database-design.md의 내용을 엄격히 준수해서
 ### 8.1 설계 문서 기반 구현
 
 ```
-/feature-dev "docs/blueprints/auth.md와
+/feature-dev "docs/blueprints/001-auth/blueprint.md와
 docs/database/database-design.md의 내용을 엄격히 준수해서
 개발을 진행해줘. 테스트는 docs/tests/test-cases/sprint-1/auth-test-cases.md를
 참조하여 작성하고, 구현이 끝나면 모든 테스트를 실행하고
@@ -628,11 +630,11 @@ docs/database/database-design.md의 내용을 엄격히 준수해서
 아직 코드는 수정하지 마."
 
 # 2. 블루프린트 수정 (1~2시간)
-# → docs/blueprints/payment.md에 간편결제 섹션 추가
+# → docs/blueprints/003-payment/blueprint.md에 간편결제 섹션 추가
 # → docs/database/database-design.md에 테이블 변경사항 반영
 
 # 3. 코드 반영 (4~8시간)
-/feature-dev "docs/blueprints/payment.md와
+/feature-dev "docs/blueprints/003-payment/blueprint.md와
 docs/database/database-design.md의 업데이트된 내용을 반영해서
 간편결제(카카오페이) 기능을 구현해줘.
 기존 결제 로직에 영향이 없도록 PaymentProvider 패턴을 사용할 것."
@@ -655,7 +657,7 @@ docs/database/database-design.md의 업데이트된 내용을 반영해서
 ```
 
 > `/test-scenario`가 자동으로 분석하는 항목:
-> - `docs/blueprints/` — 기능 요구사항
+> - `docs/blueprints/{NNN}-{feature-name}/` — 기능 요구사항
 > - `docs/database/database-design.md` — 데이터 모델
 > - 라우트/API 엔드포인트 — 화면 흐름
 > - 기존 테스트 코드 — 누락된 시나리오
@@ -669,7 +671,7 @@ docs/database/database-design.md의 업데이트된 내용을 반영해서
 /test-scenario 스프린트 1에 대한 테스트 시나리오 작성해줘.
 
 # → /test-scenario가 자동으로 수행하는 작업:
-# 1. docs/blueprints/ 스캔 — 스프린트 1 기능 요구사항 수집
+# 1. docs/blueprints/{NNN}-*/ 스캔 — 스프린트 1 기능 요구사항 수집
 # 2. docs/database/database-design.md 분석 — 관련 테이블 구조 파악
 # 3. src/ 라우트/API 엔드포인트 탐색 — 화면 흐름 및 API 경로 매핑
 # 4. 기존 테스트 코드 확인 — 누락된 시나리오 식별
@@ -880,7 +882,7 @@ git push -u origin feature/sprint-1-auth
 gh pr create --title "feat: Sprint 1 사용자 인증 구현" --body "## Summary
 - JWT 기반 회원가입/로그인/토큰갱신 구현
 - RBAC 권한 관리
-- docs/blueprints/auth.md 설계 준수
+- docs/blueprints/001-auth/blueprint.md 설계 준수
 
 ## Test plan
 - [ ] 단위 테스트 통과 확인
@@ -1149,7 +1151,7 @@ GOOD:
 - 카드 결제와 계좌이체를 지원
 - PG사 API(이니시스)와 연동
 - 결제 실패 시 3회까지 자동 재시도
-- docs/blueprints/payment.md의 설계를 따를 것
+- docs/blueprints/003-payment/blueprint.md의 설계를 따를 것
 - DB 스키마는 docs/database/database-design.md를 참조할 것
 - 단위 테스트와 통합 테스트를 모두 작성할 것"
 ```
@@ -1302,8 +1304,10 @@ project-root/
 │   │
 │   ├── blueprints/              # 설계 문서 (Living Document)
 │   │   ├── overview.md
-│   │   ├── feature-001.md
-│   │   └── feature-002.md
+│   │   ├── 001-auth/
+│   │   │   └── blueprint.md
+│   │   └── 002-payment/
+│   │       └── blueprint.md
 │   │
 │   ├── database/                # 데이터베이스 관련 문서
 │   │   ├── database-design.md   # 중앙 DB 설계 문서 (전체 테이블/ERD/FK)

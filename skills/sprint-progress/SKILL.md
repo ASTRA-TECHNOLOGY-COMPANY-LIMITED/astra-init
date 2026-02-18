@@ -15,7 +15,7 @@ This skill defines the rules for detecting events and updating the progress tabl
 ## Application Targets
 
 This skill applies when writing or editing files matching these patterns:
-- `docs/blueprints/*.md` (not `overview.md`) — blueprint event
+- `docs/blueprints/{NNN}-{feature-name}/*.md` — blueprint event (any .md file inside a numbered blueprint directory)
 - `docs/database/database-design.md` — DB design event
 - `docs/tests/test-cases/sprint-*/*.md` — test case event
 - `docs/tests/test-reports/*.md` — test report event
@@ -31,13 +31,14 @@ This skill applies when writing or editing files matching these patterns:
 
 ### Procedure 1: After Blueprint Creation/Modification
 
-When a file under `docs/blueprints/` (excluding `overview.md`) is written:
+When a file inside a numbered blueprint directory (`docs/blueprints/{NNN}-{feature-name}/`) is written:
 
 1. Open `docs/sprints/sprint-{N}/progress.md`
-2. Find the feature row that matches the blueprint filename
-3. Set the **Blueprint** column to `Done`
-4. If no matching feature row exists (ad-hoc feature), add a new row with the feature name derived from the filename
-5. Recalculate the Summary section
+2. Extract the feature name from the directory name (strip the `{NNN}-` prefix, e.g., `001-auth` → `auth`)
+3. Find the feature row that matches the extracted feature name
+4. Set the **Blueprint** column to `Done`
+5. If no matching feature row exists (ad-hoc feature), add a new row with the extracted feature name
+6. Recalculate the Summary section
 
 ### Procedure 2: After DB Design Modification
 
@@ -134,7 +135,7 @@ If the tracker file `docs/sprints/sprint-{N}/progress.md` does not exist when an
 ## Feature-to-File Matching Rules
 
 When matching files to features:
-1. **Exact name match**: Blueprint filename matches feature name (e.g., `user-auth.md` → `user-auth`)
+1. **Blueprint directory match**: Blueprint directory name matches feature name (e.g., `001-user-auth/` → `user-auth`, strip the `{NNN}-` prefix)
 2. **Prefix match**: Test case/report filename starts with feature name (e.g., `user-auth-test-cases.md` → `user-auth`)
 3. **Directory match**: Source files in a directory named after the feature (e.g., `src/modules/user-auth/` → `user-auth`)
 4. **Content match**: If no name match, check if the file content references the feature by name
