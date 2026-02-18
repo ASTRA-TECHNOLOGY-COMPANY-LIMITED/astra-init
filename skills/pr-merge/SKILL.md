@@ -29,13 +29,17 @@ allowed-tools: Read, Write, Edit, Bash, Glob, Grep, AskUserQuestion, Task
 4. **머지 대상 브랜치 결정**: `{target-branch}`는 항상 `staging`이다.
    - `git ls-remote --heads origin staging`으로 원격에 `staging` 브랜치 존재 여부를 확인한다.
    - **staging 존재**: 그대로 사용
-   - **staging 미존재**: 기본 브랜치(`main` 또는 `master`)로부터 `staging`을 자동 생성한다:
-     ```
-     git fetch origin
-     git checkout -b staging origin/{default-branch}
-     git push -u origin staging
-     git checkout {current-branch}
-     ```
+   - **staging 미존재**: 기본 브랜치로부터 `staging`을 자동 생성한다:
+     1. `gh repo view --json defaultBranchRef --jq .defaultBranchRef.name`으로 `{default-branch}`를 확인한다.
+     2. **AskUserQuestion**으로 사용자에게 `staging` 브랜치를 `{default-branch}`로부터 생성하여 원격에 push할 것인지 확인한다. 거부 시 중단한다.
+     3. 현재 브랜치가 `staging`인 경우 (로컬에만 존재): `git push -u origin staging`으로 현재 브랜치를 그대로 push한다.
+     4. 현재 브랜치가 `staging`이 아닌 경우:
+        ```
+        git fetch origin
+        git checkout -b staging origin/{default-branch}
+        git push -u origin staging
+        git checkout {current-branch}
+        ```
    - 이후 모든 단계에서 `{target-branch}`는 `staging`을 참조한다.
 
 ### Step 1.3: 작업 브랜치 생성 (필요 시)
@@ -44,13 +48,14 @@ Step 1에서 작업 브랜치 자동 생성 플래그가 설정된 경우 (현�
 
 1. `git status`와 `git log`로 현재 변경사항 및 최근 작업 컨텍스트를 분석하여 적절한 브랜치명을 추천한다 (예: `feat/user-auth`, `fix/login-error`).
 2. **AskUserQuestion**으로 브랜치명을 확인한다. 추천 브랜치명을 기본 옵션으로 제시한다.
-3. 사용자가 확인한 브랜치명으로 작업 브랜치를 생성한다:
+3. 사용자가 확인한 브랜치명으로 현재 브랜치(`{current-branch}`)를 베이스로 작업 브랜치를 생성한다:
    ```
    git checkout -b {branch-name}
    ```
+   작업 브랜치는 현재 HEAD를 베이스로 생성되므로, 미커밋 변경사항은 그대로 유지된다.
 4. 이후 단계에서 `{branch-name}`은 이 새로 생성된 브랜치를 참조한다.
 
-이미 작업 브랜치에 있으면 이 단계를 건너뛴다.
+이미 작업 브랜치(feature, fix, docs 등)에 있으면 이 단계를 건너뛴다.
 
 ### Step 1.5: 대상 브랜치 동기화
 
@@ -180,7 +185,7 @@ Step 4에서 발견된 Critical 및 High 이슈를 수정한다:
 머지 후 로컬 환경을 정리하고, 필요 시 버전을 업데이트한다:
 
 1. `git checkout {target-branch}`으로 머지 대상 브랜치로 전환한다. 로컬에 해당 브랜치가 없으면 `git checkout -b {target-branch} origin/{target-branch}`로 트래킹 브랜치를 생성하며 전환한다.
-2. `git pull --ff-only`로 최신 상태 동기화
+2. `git pull --rebase`로 최신 상태 동기화 (fast-forward가 불가능한 경우에도 안전하게 동기화)
 3. 머지된 로컬 브랜치 삭제: `git branch -d {branch-name}`
 4. `.claude-plugin/plugin.json` 파일이 존재하는 플러그인 프로젝트에서 버전을 업데이트한다:
    - `.claude-plugin/plugin.json`과 `.claude-plugin/marketplace.json`의 존재 여부를 확인한다.
