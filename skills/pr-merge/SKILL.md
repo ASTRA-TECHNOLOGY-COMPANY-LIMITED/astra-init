@@ -26,9 +26,10 @@ allowed-tools: Read, Write, Edit, Bash, Glob, Grep, AskUserQuestion, Task
 1. **브랜치 확인**: 현재 브랜치가 `main`, `master`, 또는 `staging`이 아닌지 확인한다. 이 브랜치들에서 실행 시 경고를 출력하고 중단한다.
 2. **gh CLI 인증**: `gh auth status`를 실행하여 GitHub CLI 인증 상태를 확인한다. 인증되지 않은 경우 `gh auth login`을 안내하고 중단한다.
 3. **클린 상태 확인**: `git status`로 현재 상태를 파악한다 (커밋되지 않은 변경사항, 스테이징된 파일 등).
-4. **머지 대상 브랜치 결정**: `git ls-remote --heads origin staging`으로 원격에 `staging` 브랜치가 존재하는지 확인한다.
+4. **머지 대상 브랜치 결정**: 다음 순서로 확인한다:
+   - `git ls-remote --heads origin staging`으로 원격에 `staging` 브랜치 존재 여부 확인
    - **staging 존재**: 머지 대상을 `staging`으로 설정
-   - **staging 미존재**: 머지 대상을 `main`으로 설정
+   - **staging 미존재**: `git remote show origin | grep 'HEAD branch'`로 기본 브랜치를 확인하여 머지 대상으로 설정 (`main` 또는 `master`)
    - 이후 모든 단계에서 `{target-branch}`는 이 값을 참조한다.
 
 ### Step 1.5: 대상 브랜치 동기화
@@ -141,35 +142,36 @@ Step 4에서 발견된 Critical 및 High 이슈를 수정한다:
 3. `git push`로 원격에 푸시
 4. **Step 4로 복귀**하여 재리뷰 실행
 
-### Step 7: 버전 업데이트
+### Step 7: PR 머지 확인 및 버전 업데이트
 
-`.claude-plugin/plugin.json` 파일이 존재하는 플러그인 프로젝트에서만 실행한다.
+PR 머지 전 최종 확인과 버전 업데이트를 수행한다.
 
-1. `.claude-plugin/plugin.json`과 `.claude-plugin/marketplace.json`의 존재 여부를 확인한다.
-2. 파일이 존재하면 `--patch` / `--minor` / `--major` 옵션에 따라 SemVer 버전을 범프한다:
-   - `--patch` (기본값): `x.y.z` → `x.y.z+1`
-   - `--minor`: `x.y.z` → `x.y+1.0`
-   - `--major`: `x.y.z` → `x+1.0.0`
-3. 두 파일 모두 동일한 버전으로 업데이트한다.
-4. 버전 변경을 커밋하고 푸시한다: "chore: bump version to {new-version}"
-5. 파일이 존재하지 않으면 이 단계를 건너뛴다.
+1. **AskUserQuestion**으로 사용자에게 최종 머지 확인을 요청한다.
+   - PR URL, 리뷰 결과 요약 (통과 여부, 반복 횟수), 변경 파일 수를 표시
+2. 사용자가 머지를 거부하면 워크플로우를 중단한다.
+3. 사용자 확인 후, `.claude-plugin/plugin.json` 파일이 존재하는 플러그인 프로젝트에서 버전을 업데이트한다:
+   - `.claude-plugin/plugin.json`과 `.claude-plugin/marketplace.json`의 존재 여부를 확인한다.
+   - 파일이 존재하면 `--patch` / `--minor` / `--major` 옵션에 따라 SemVer 버전을 범프한다:
+     - `--patch` (기본값): `x.y.z` → `x.y.z+1`
+     - `--minor`: `x.y.z` → `x.y+1.0`
+     - `--major`: `x.y.z` → `x+1.0.0`
+   - 두 파일 모두 동일한 버전으로 업데이트한다.
+   - 버전 변경을 커밋하고 푸시한다: "chore: bump version to {new-version}"
+   - 파일이 존재하지 않으면 버전 업데이트를 건너뛴다.
 
 ### Step 8: PR 머지
 
 PR을 머지한다:
 
-1. **AskUserQuestion**으로 사용자에게 최종 머지 확인을 요청한다.
-   - PR URL, 리뷰 결과 요약 (통과 여부, 반복 횟수), 변경 파일 수를 표시
-2. 사용자 확인 후:
-   - Draft PR인 경우 먼저 `gh pr ready`로 Ready 상태로 변경
-   - `gh pr merge --merge --delete-branch`로 머지 실행
+1. Draft PR인 경우 먼저 `gh pr ready`로 Ready 상태로 변경
+2. `gh pr merge --merge --delete-branch`로 머지 실행
 
 ### Step 9: 정리
 
 머지 후 로컬 환경을 정리한다:
 
-1. `git checkout {target-branch}`으로 머지 대상 브랜치로 전환한다.
-2. `git pull`로 최신 상태 동기화
+1. `git checkout {target-branch}`으로 머지 대상 브랜치로 전환한다. 로컬에 해당 브랜치가 없으면 `git checkout -b {target-branch} origin/{target-branch}`로 트래킹 브랜치를 생성하며 전환한다.
+2. `git pull --ff-only`로 최신 상태 동기화
 3. 머지된 로컬 브랜치 삭제: `git branch -d {branch-name}`
 4. 최종 요약을 출력한다:
 
