@@ -23,17 +23,21 @@ allowed-tools: Read, Write, Edit, Bash, Glob, Grep, AskUserQuestion, Task
 
 다음 사전 조건을 검증한다:
 
-1. **브랜치 확인**: 현재 브랜치가 `main` 또는 `master`가 아닌지 확인한다. main/master에서 실행 시 경고를 출력하고 중단한다.
+1. **브랜치 확인**: 현재 브랜치가 `main`, `master`, 또는 `staging`이 아닌지 확인한다. 이 브랜치들에서 실행 시 경고를 출력하고 중단한다.
 2. **gh CLI 인증**: `gh auth status`를 실행하여 GitHub CLI 인증 상태를 확인한다. 인증되지 않은 경우 `gh auth login`을 안내하고 중단한다.
 3. **클린 상태 확인**: `git status`로 현재 상태를 파악한다 (커밋되지 않은 변경사항, 스테이징된 파일 등).
+4. **머지 대상 브랜치 결정**: `git ls-remote --heads origin staging`으로 원격에 `staging` 브랜치가 존재하는지 확인한다.
+   - **staging 존재**: 머지 대상을 `staging`으로 설정
+   - **staging 미존재**: 머지 대상을 `main`으로 설정
+   - 이후 모든 단계에서 `{target-branch}`는 이 값을 참조한다.
 
-### Step 1.5: main 동기화
+### Step 1.5: 대상 브랜치 동기화
 
-원격 main 브랜치의 최신 변경사항을 현재 브랜치에 동기화한다:
+머지 대상 브랜치(`{target-branch}`)의 최신 변경사항을 현재 브랜치에 동기화한다:
 
 ```
-git fetch origin main
-git merge origin/main
+git fetch origin {target-branch}
+git merge origin/{target-branch}
 ```
 
 - **충돌 없음**: 다음 단계로 진행
@@ -63,7 +67,7 @@ git merge origin/main
 3. **기존 PR이 없으면**: ASTRA 템플릿으로 PR 생성
 
 ```bash
-gh pr create --title "{PR 제목}" --body "$(cat <<'EOF'
+gh pr create --base {target-branch} --title "{PR 제목}" --body "$(cat <<'EOF'
 ## Summary
 - {변경사항 요약 1}
 - {변경사항 요약 2}
@@ -77,6 +81,7 @@ EOF
 )"
 ```
 
+- `--base {target-branch}` 플래그로 머지 대상 브랜치를 명시적으로 지정
 - `--draft` 옵션이 지정된 경우 `--draft` 플래그 추가
 - PR 제목은 70자 이내로 작성
 - PR URL을 출력한다
@@ -163,7 +168,7 @@ PR을 머지한다:
 
 머지 후 로컬 환경을 정리한다:
 
-1. `git checkout main`으로 main 브랜치로 전환
+1. `git checkout staging`으로 staging 브랜치로 전환한다. staging 브랜치가 없는 경우 `git checkout main`으로 전환한다.
 2. `git pull`로 최신 상태 동기화
 3. 머지된 로컬 브랜치 삭제: `git branch -d {branch-name}`
 4. 최종 요약을 출력한다:
@@ -207,7 +212,9 @@ PR을 머지한다:
 
 ## Notes
 
-- main/master 브랜치에서는 실행할 수 없다.
+- main/master/staging 브랜치에서는 실행할 수 없다.
+- **머지 대상 브랜치 우선순위**: 원격에 `staging` 브랜치가 존재하면 `staging`으로, 없으면 `main`으로 머지한다.
+- 머지 완료 후 최종 체크아웃 위치는 `staging` 브랜치이다 (staging이 없는 경우에만 `main`).
 - Critical 이슈가 남아있으면 머지가 차단된다.
 - 충돌 발생 시 자동 해결을 시도하지 않고, 사용자에게 안내 후 중단한다.
 - 버전 범프는 `.claude-plugin/plugin.json`이 존재하는 프로젝트에서만 실행된다.
