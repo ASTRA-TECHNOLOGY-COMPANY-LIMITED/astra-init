@@ -40,9 +40,10 @@ Scan the project to identify all testable features:
 #### A. Blueprint Analysis
 
 ```
-1. Glob docs/blueprints/*.md
-2. For each blueprint, extract:
-   - Feature name and description
+1. Glob docs/blueprints/[0-9][0-9][0-9]-*/blueprint.md
+2. For each blueprint directory, extract:
+   - Feature name from directory name (strip NNN- prefix, e.g., 001-auth → auth)
+   - Feature description from blueprint.md
    - User stories / functional requirements
    - API endpoints referenced
    - DB tables referenced
@@ -119,7 +120,7 @@ For each selected feature, design scenarios following the user journey approach.
 #### A. Analyze Feature Requirements
 
 ```
-1. Read the feature's blueprint (docs/blueprints/{feature-name}.md)
+1. Read the feature's blueprint (docs/blueprints/{NNN}-{feature-name}/blueprint.md)
 2. Identify:
    - Primary user journeys (Happy Path)
    - Alternative paths (valid but non-standard flows)
@@ -169,7 +170,7 @@ Write scenario files to `docs/tests/test-cases/sprint-{SPRINT_N}/` using the fol
 - **Related Modules**: {dependent modules}
 - **API Endpoints**: {related endpoints}
 - **DB Tables**: {related tables}
-- **Blueprint**: docs/blueprints/{feature-name}.md
+- **Blueprint**: docs/blueprints/{NNN}-{feature-name}/blueprint.md
 
 ## Scenario Group 1: {User Journey Name}
 

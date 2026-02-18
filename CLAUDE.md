@@ -99,6 +99,15 @@ Data files: `iso_3166_1_countries.json` (249 countries), `iso_3166_2_regions.jso
 3. **track-sprint-progress.sh** — detects sprint-related file events (blueprints, DB design, test cases, implementation, test reports) and appends activity log entries to the sprint progress tracker
 4. All hooks are non-blocking (exit 0) — they emit warnings only
 
+### Blueprint Directory Convention
+
+Individual feature blueprints are organized as numbered directories under `docs/blueprints/`:
+- **Directory format**: `{NNN}-{feature-name}/` (e.g., `001-auth/`, `002-payment/`, `003-payment-dashboard/`)
+- **Main file**: `blueprint.md` inside each directory
+- **Related files**: Supplementary materials (diagrams, API specs, etc.) are placed in the same directory
+- **Numbering**: 3-digit zero-padded sequential numbers. Next number is determined by scanning existing directories.
+- `overview.md` remains at the root level as the project overview document
+
 ### Sprint Progress Tracking
 
 The plugin provides automatic sprint progress tracking through a hook + skill hybrid system:
@@ -117,6 +126,9 @@ When the plugin initializes a target project, it creates:
 ├── docs/
 │   ├── design-system/                 # Design tokens, components, layout grid
 │   ├── blueprints/                    # Feature design documents
+│   │   ├── overview.md                # Project overview
+│   │   ├── {NNN}-{feature-name}/      # Numbered feature directories (e.g., 001-auth/)
+│   │   │   └── blueprint.md           # Main design document + related files
 │   ├── database/                      # DB design (SSoT), naming rules, migrations
 │   ├── tests/                         # Test strategy, test cases (per sprint), test reports
 │   ├── sprints/                       # Sprint documents (prompt maps, progress trackers, retrospectives)

@@ -8,11 +8,13 @@
 ### 1.1 Design Prompt
 ```
 /feature-dev "Write a design document for {feature description}
-at docs/blueprints/{feature-name}.md.
+at docs/blueprints/{NNN}-{feature-name}/blueprint.md.
 {Detailed requirements}
 Refer to docs/database/database-design.md for DB schema.
 Do not modify code yet."
 ```
+
+> **Numbering Rule**: Scan existing directories in `docs/blueprints/` to determine the next number. Use 3-digit zero-padded format (e.g., `001-`, `002-`). Place any supplementary files (diagrams, API specs) in the same directory.
 
 ### 1.2 DB Design Prompt
 ```
@@ -25,7 +27,7 @@ Do not modify code yet."
 
 ### 1.3 Test Case Prompt
 ```
-/feature-dev "Based on the functional requirements in docs/blueprints/{feature-name}.md,
+/feature-dev "Based on the functional requirements in docs/blueprints/{NNN}-{feature-name}/blueprint.md,
 write test cases at docs/tests/test-cases/sprint-1/{feature-name}-test-cases.md.
 Use Given-When-Then format, include unit/integration/edge cases.
 Do not modify code yet."
@@ -33,7 +35,7 @@ Do not modify code yet."
 
 ### 1.4 Implementation Prompt
 ```
-/feature-dev "Strictly follow docs/blueprints/{feature-name}.md and
+/feature-dev "Strictly follow docs/blueprints/{NNN}-{feature-name}/blueprint.md and
 docs/database/database-design.md to proceed with development.
 Write tests referencing docs/tests/test-cases/sprint-1/{feature-name}-test-cases.md,
 and once implementation is complete, run all tests and

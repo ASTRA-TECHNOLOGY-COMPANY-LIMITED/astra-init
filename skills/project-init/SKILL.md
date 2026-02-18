@@ -45,7 +45,9 @@ Create the following structure in the current working directory (CWD):
 │   │       └── .gitkeep
 │   │
 │   ├── blueprints/
-│   │   └── overview.md
+│   │   ├── overview.md
+│   │   └── {NNN}-{feature-name}/    # e.g., 001-auth/
+│   │       └── blueprint.md
 │   │
 │   ├── database/
 │   │   ├── database-design.md
@@ -125,7 +127,7 @@ Customize the template below according to the project information and generate i
 | 단계 | 참조 경로 | 주요 도구 |
 |------|----------|----------|
 | 디자인 시스템 | `docs/design-system/` | `/frontend-design` |
-| 블루프린트 작성 | `docs/blueprints/` | `/feature-dev` (아직 코드는 수정하지 마) |
+| 블루프린트 작성 | `docs/blueprints/{NNN}-{feature-name}/` | `/feature-dev` (아직 코드는 수정하지 마) |
 | DB 설계 | `docs/database/database-design.md` | `/feature-dev`, `/lookup-term` |
 | 스프린트 계획 | `docs/sprints/sprint-N/prompt-map.md` | `/sprint-plan` |
 | 구현 | `src/` | `/feature-dev` (블루프린트+DB 설계 기반) |
@@ -214,7 +216,8 @@ Customize the template below according to the project information and generate i
 - `/pr-merge` — 커밋→PR→리뷰→수정→머지 전체 사이클
 
 ## Design Document Rules
-- 기능별 설계 문서는 docs/blueprints/ 디렉토리에 작성
+- 기능별 설계 문서는 docs/blueprints/{NNN}-{feature-name}/ 디렉토리로 구성 (예: 001-auth/, 002-payment/)
+- 각 블루프린트 디렉토리의 메인 파일은 blueprint.md, 관련 보조 파일(다이어그램, API 스펙 등)도 같은 디렉토리에 배치
 - DB 설계는 docs/database/database-design.md에서 중앙 관리
 - 설계 문서는 기능 구현 전에 반드시 작성 및 승인 완료
 - 블루프린트 기반 워크플로우: 블루프린트 작성 → DE 승인 → DB 설계 반영 → 스프린트 프롬프트 맵 작성 → 구현
@@ -249,7 +252,7 @@ Customize the template below according to the project information and generate i
 1. **What** (무엇을): 만들어야 할 기능의 명확한 설명
 2. **Why** (왜): 비즈니스 목적과 사용자 가치
 3. **Constraint** (제약): 기술적 제약사항과 성능 요구사항
-4. **Reference** (참조): 관련 설계 문서 경로 (docs/blueprints/, docs/database/)
+4. **Reference** (참조): 관련 설계 문서 경로 (docs/blueprints/{NNN}-{feature-name}/, docs/database/)
 5. **Acceptance** (기준): 완료 조건과 검증 방법
 
     BAD: "결제 기능을 만들어줘"
@@ -259,7 +262,7 @@ Customize the template below according to the project information and generate i
     - 카드 결제와 계좌이체를 지원
     - PG사 API(이니시스)와 연동
     - 결제 실패 시 3회까지 자동 재시도
-    - docs/blueprints/payment.md의 설계를 따를 것
+    - docs/blueprints/003-payment/blueprint.md의 설계를 따를 것
     - DB 스키마는 docs/database/database-design.md를 참조할 것
     - 단위 테스트와 통합 테스트를 모두 작성할 것"
 ```
@@ -286,6 +289,8 @@ Create the following files under `docs/design-system/`.
 ### Step 5: Create Blueprint Template
 
 **docs/blueprints/overview.md**: Project overview document (vision, goals, module structure, tech stack decision rationale)
+
+> **Blueprint Directory Convention**: Individual feature blueprints are organized as numbered directories under `docs/blueprints/`. Each directory uses the format `{NNN}-{feature-name}/` (e.g., `001-auth/`, `002-payment/`) and contains `blueprint.md` as the main design document along with any related supplementary files (diagrams, API specs, etc.).
 
 ### Step 6: Create Database Document Templates
 

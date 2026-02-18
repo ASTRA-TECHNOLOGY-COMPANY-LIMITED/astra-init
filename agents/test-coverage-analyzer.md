@@ -24,7 +24,7 @@ This is a read-only agent and never modifies files.
 - `docs/tests/test-strategy.md`: Test strategy (levels, coverage targets, naming rules)
 - `docs/tests/test-cases/sprint-*/*.md`: Feature-specific test case specifications (organized by sprint)
 - `docs/tests/test-reports/*.md`: Sprint-specific test result reports
-- `docs/blueprints/*.md`: Design documents (test target feature definitions)
+- `docs/blueprints/{NNN}-{feature-name}/blueprint.md`: Design documents (test target feature definitions)
 
 ## Analysis Items
 
@@ -61,7 +61,7 @@ Verifies whether test cases defined in `docs/tests/test-cases/sprint-*/*.md` hav
 
 ### 4. Design Document-based Test Completeness
 
-Verifies whether features defined in `docs/blueprints/*.md` design documents are covered by tests:
+Verifies whether features defined in `docs/blueprints/{NNN}-{feature-name}/blueprint.md` design documents are covered by tests:
 
 - Whether edge cases from each design document are included in tests
 - Whether tests exist for each API endpoint
