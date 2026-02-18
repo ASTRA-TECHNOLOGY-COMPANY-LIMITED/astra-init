@@ -23,18 +23,38 @@ allowed-tools: Read, Write, Edit, Bash, Glob, Grep, AskUserQuestion, Task
 
 다음 사전 조건을 검증한다:
 
-1. **브랜치 확인**: 현재 브랜치가 `main`, `master`, 또는 `staging`이 아닌지 확인한다. 이 브랜치들에서 실행 시 경고를 출력하고 중단한다.
+1. **브랜치 확인**: 현재 브랜치가 `main`, `master`, 또는 `staging`인지 확인한다. 이 브랜치들에서 실행 시 **작업 브랜치 자동 생성이 필요**하다고 플래그를 설정한다 (중단하지 않음). 이미 작업 브랜치(feature, fix 등)이면 그대로 사용한다.
 2. **gh CLI 인증**: `gh auth status`를 실행하여 GitHub CLI 인증 상태를 확인한다. 인증되지 않은 경우 `gh auth login`을 안내하고 중단한다.
 3. **클린 상태 확인**: `git status`로 현재 상태를 파악한다 (커밋되지 않은 변경사항, 스테이징된 파일 등).
-4. **머지 대상 브랜치 결정**: 다음 순서로 확인한다:
-   - `git ls-remote --heads origin staging`으로 원격에 `staging` 브랜치 존재 여부 확인
-   - **staging 존재**: 머지 대상을 `staging`으로 설정
-   - **staging 미존재**: `git remote show origin | grep 'HEAD branch'`로 기본 브랜치를 확인하여 머지 대상으로 설정 (`main` 또는 `master`)
-   - 이후 모든 단계에서 `{target-branch}`는 이 값을 참조한다.
+4. **머지 대상 브랜치 결정**: `{target-branch}`는 항상 `staging`이다.
+   - `git ls-remote --heads origin staging`으로 원격에 `staging` 브랜치 존재 여부를 확인한다.
+   - **staging 존재**: 그대로 사용
+   - **staging 미존재**: 기본 브랜치(`main` 또는 `master`)로부터 `staging`을 자동 생성한다:
+     ```
+     git fetch origin
+     git checkout -b staging origin/{default-branch}
+     git push -u origin staging
+     git checkout {current-branch}
+     ```
+   - 이후 모든 단계에서 `{target-branch}`는 `staging`을 참조한다.
+
+### Step 1.3: 작업 브랜치 생성 (필요 시)
+
+Step 1에서 작업 브랜치 자동 생성 플래그가 설정된 경우 (현재 브랜치가 `main`, `master`, 또는 `staging`인 경우):
+
+1. `git status`와 `git log`로 현재 변경사항 및 최근 작업 컨텍스트를 분석하여 적절한 브랜치명을 추천한다 (예: `feat/user-auth`, `fix/login-error`).
+2. **AskUserQuestion**으로 브랜치명을 확인한다. 추천 브랜치명을 기본 옵션으로 제시한다.
+3. 사용자가 확인한 브랜치명으로 작업 브랜치를 생성한다:
+   ```
+   git checkout -b {branch-name}
+   ```
+4. 이후 단계에서 `{branch-name}`은 이 새로 생성된 브랜치를 참조한다.
+
+이미 작업 브랜치에 있으면 이 단계를 건너뛴다.
 
 ### Step 1.5: 대상 브랜치 동기화
 
-머지 대상 브랜치(`{target-branch}`)의 최신 변경사항을 현재 브랜치에 동기화한다:
+머지 대상 브랜치(`staging`)의 최신 변경사항을 현재 브랜치에 동기화한다:
 
 ```
 git fetch origin {target-branch}
@@ -212,9 +232,9 @@ Step 4에서 발견된 Critical 및 High 이슈를 수정한다:
 
 ## Notes
 
-- main/master/staging 브랜치에서는 실행할 수 없다.
-- **머지 대상 브랜치 우선순위**: 원격에 `staging` 브랜치가 존재하면 `staging`으로, 없으면 `main`으로 머지한다.
-- 머지 완료 후 최종 체크아웃 위치는 `{target-branch}` (Step 1에서 결정된 머지 대상 브랜치)이다.
+- main/master/staging 브랜치에서 실행하면 자동으로 작업 브랜치를 생성한다.
+- **머지 대상 브랜치**: 항상 `staging`으로 머지한다. 원격에 `staging`이 없으면 기본 브랜치로부터 자동 생성한다.
+- 머지 완료 후 최종 체크아웃 위치는 `staging`이다.
 - Critical 이슈가 남아있으면 머지가 차단된다.
 - 충돌 발생 시 자동 해결을 시도하지 않고, 사용자에게 안내 후 중단한다.
 - 버전 범프는 `.claude-plugin/plugin.json`이 존재하는 프로젝트에서만 실행된다.
