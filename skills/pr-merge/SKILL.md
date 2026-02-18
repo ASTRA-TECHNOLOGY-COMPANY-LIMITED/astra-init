@@ -62,7 +62,11 @@ Step 1에서 작업 브랜치 자동 생성 플래그가 설정된 경우 (현�
 
 ### Step 1.5: 대상 브랜치 동기화
 
-머지 대상 브랜치(`staging`)의 최신 변경사항을 현재 브랜치에 동기화한다:
+머지 대상 브랜치(`staging`)의 최신 변경사항을 현재 브랜치에 동기화한다.
+
+**건너뛰기 조건**: Step 1.3에서 작업 브랜치를 `staging`으로부터 방금 생성한 경우 (즉, `{current-branch}`가 `staging`이었던 경우), 이미 `origin/staging` HEAD와 동일하므로 이 단계를 건너뛴다.
+
+그 외의 경우:
 
 ```
 git fetch origin {target-branch}
@@ -71,6 +75,8 @@ git merge origin/{target-branch}
 
 - **충돌 없음**: 다음 단계로 진행
 - **충돌 발생**: 충돌 파일 목록을 출력하고, 사용자에게 수동 해결을 안내한 후 중단한다. 자동 충돌 해결은 시도하지 않는다.
+
+> **참고**: `{current-branch}`가 `main`/`master`였던 경우, `origin/staging`에 `main`에 없는 변경사항이 포함될 수 있다. 충돌 가능성이 있으므로 merge 전 사용자에게 안내한다.
 
 ### Step 2: 커밋 & 푸시
 
@@ -187,10 +193,11 @@ Step 4에서 발견된 Critical 및 High 이슈를 수정한다:
 
 머지 후 로컬 환경을 정리하고, 필요 시 버전을 업데이트한다:
 
-1. `git checkout {target-branch}`으로 머지 대상 브랜치로 전환한다. 로컬에 해당 브랜치가 없으면 `git checkout -b {target-branch} origin/{target-branch}`로 트래킹 브랜치를 생성하며 전환한다.
-2. `git pull --rebase`로 최신 상태 동기화 (fast-forward가 불가능한 경우에도 안전하게 동기화)
-3. 머지된 로컬 브랜치 삭제: `git branch -d {branch-name}`
-4. `.claude-plugin/plugin.json` 파일이 존재하는 플러그인 프로젝트에서 버전을 업데이트한다:
+1. `git fetch origin`으로 원격 최신 상태를 가져온다.
+2. `git checkout {target-branch}`으로 머지 대상 브랜치로 전환한다. 로컬에 해당 브랜치가 없으면 `git checkout -b {target-branch} origin/{target-branch}`로 트래킹 브랜치를 생성하며 전환한다.
+3. `git pull --rebase`로 최신 상태 동기화 (fast-forward가 불가능한 경우에도 안전하게 동기화)
+4. 머지된 로컬 브랜치 삭제: `git branch -d {branch-name}`
+5. `.claude-plugin/plugin.json` 파일이 존재하는 플러그인 프로젝트에서 버전을 업데이트한다:
    - `.claude-plugin/plugin.json`과 `.claude-plugin/marketplace.json`의 존재 여부를 확인한다.
    - 파일이 존재하면 `--patch` / `--minor` / `--major` 옵션에 따라 SemVer 버전을 범프한다:
      - `--patch` (기본값): `x.y.z` → `x.y.z+1`
@@ -199,7 +206,7 @@ Step 4에서 발견된 Critical 및 High 이슈를 수정한다:
    - 두 파일 모두 동일한 버전으로 업데이트한다.
    - `{target-branch}`에 직접 커밋하고 푸시한다: "chore: bump version to {new-version}"
    - 파일이 존재하지 않으면 버전 업데이트를 건너뛴다.
-5. 최종 요약을 출력한다:
+6. 최종 요약을 출력한다:
 
 ```
 ## PR Review & Merge 완료
