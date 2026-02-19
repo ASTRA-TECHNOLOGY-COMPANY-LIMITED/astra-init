@@ -96,21 +96,21 @@ Input: /generate-entity 고객 테이블: 고객명, 고객번호, 생년월일,
 Generated Code (Java JPA):
 @Entity
 @Table(name = "TB_CSTMR")
-public class TbCstmr {
+public class Customer {
     @Id @Column(name = "CSTMR_SN")
-    private Long cstmrSn;
+    private Long customerSn;
 
     @Column(name = "CSTMR_NM", length = 100)
-    private String cstmrNm;
+    private String customerName;
 
     @Column(name = "CSTMR_NO", length = 20)
-    private String cstmrNo;
+    private String customerNumber;
 
     @Column(name = "BRDT_YMD", columnDefinition = "CHAR(8)")
-    private String brdtYmd;
+    private String birthDate;
 
-    @Column(name = "USE_YN", columnDefinition = "CHAR(1) DEFAULT 'Y'")
-    private String useYn;
+    @Column(name = "USE_YN")
+    private boolean isUsed;
 }
 ```
 

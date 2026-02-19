@@ -35,7 +35,7 @@ Key examples:
 | 등록일시 (Registration DateTime) | REG_DT | 연월일시분초D |
 | 사업자등록번호 (Business Registration Number) | BRNO | 사업자등록번호C10 |
 | 결제금액 (Payment Amount) | STLM_AMT | 금액N15 |
-| 사용여부 (Use Status) | USE_YN | 여부C1 |
+| 사용여부 (Use Status) | USE_YN | 여부B |
 | 상태코드 (Status Code) | STTS_CD | 코드C3 |
 | 전화번호 (Phone Number) | TELNO | 전화번호V11 |
 | 우편번호 (Postal Code) | ZIP | 우편번호C5 |
@@ -146,8 +146,18 @@ Construct full field names by expanding each standard word's abbreviation to its
 | _CNT | Count | DEAL_CNT | dealCount |
 | _RT | Rate | TAX_RT | taxRate |
 | _YN | boolean (`is`/`has` prefix) | USE_YN | isUsed |
-| _SN | SequenceNumber | CSTMR_SN | customerSequenceNumber |
+| _SN | Sn (keep abbreviation) | CSTMR_SN | customerSn |
+| _ID | Id (keep abbreviation) | USER_ID | userId |
 | _ADDR | Address | DTL_ADDR | detailedAddress |
+
+#### Abbreviation-preserved suffixes
+
+The following suffixes are universally understood and **keep their abbreviated form** in field names:
+
+| Suffix | Field Suffix | Reason |
+|---|---|---|
+| _SN | Sn | Sequence number — universally recognized as surrogate key |
+| _ID | Id | Identifier — universally recognized |
 
 #### Prefix word expansion examples
 
@@ -185,7 +195,7 @@ Construct full field names by expanding each standard word's abbreviation to its
 | DDL (SQL) | BOOLEAN | `USE_YN BOOLEAN DEFAULT true` |
 | Java (JPA) | boolean | `private boolean isUsed;` |
 | TypeScript (TypeORM) | boolean | `isUsed: boolean;` |
-| Python (SQLAlchemy) | Boolean | `is_used: Mapped[bool]` |
+| Python (SQLAlchemy) | Boolean | `is_used: Mapped[bool] = mapped_column("USE_YN")` |
 
 > **Rationale**: `CHAR(1)` with `Y/N` values is a legacy pattern. Modern databases natively support `BOOLEAN`, which provides type safety, reduces bugs from invalid values, and aligns with application-layer boolean semantics.
 
@@ -199,7 +209,7 @@ public class Customer {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "CSTMR_SN")
-  private Long customerSequenceNumber;
+  private Long customerSn;
 
   @Column(name = "CSTMR_NM", length = 100, nullable = false)
   private String customerName;

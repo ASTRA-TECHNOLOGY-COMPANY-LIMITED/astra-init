@@ -276,8 +276,8 @@ e.g., 금액N15 = 금액 (classifier) + NUMERIC (type) + 15 (length)
 | 법인등록번호 | CRNO | 법인등록번호C13 |
 | 전화번호 | TELNO | 전화번호V11 |
 | 우편번호 | ZIP | 우편번호C5 |
-| 삭제여부 | DEL_YN | 여부C1 |
-| 사용여부 | USE_YN | 여부C1 |
+| 삭제여부 | DEL_YN | 여부B |
+| 사용여부 | USE_YN | 여부B |
 
 #### Address Related
 
@@ -353,12 +353,14 @@ Physical DB column names use standard abbreviations, but **entity/DTO/interface 
 
 1. Expand each standard word abbreviation to its full English name (`영문명` in `standard_words.json`)
 2. For `_YN` (boolean) fields, use `is`/`has` prefix with a past participle or adjective
-3. Apply language-specific casing: `lowerCamelCase` (Java/TypeScript), `snake_case` (Python)
+3. **Exception**: `_SN`, `_ID` suffixes keep their abbreviated form (universally understood)
+4. Apply language-specific casing: `lowerCamelCase` (Java/TypeScript), `snake_case` (Python)
 
 #### Field name mapping examples
 
 | DB Column | Java/TS Field | Python Field | Full English Derivation |
 |---|---|---|---|
+| CSTMR_SN | customerSn | customer_sn | Customer + Sn (abbreviation preserved) |
 | CSTMR_NM | customerName | customer_name | Customer + Name |
 | JOIN_YMD | joinDate | join_date | Join + Date |
 | REG_DT | registrationDatetime | registration_datetime | Registration + Datetime |
@@ -391,7 +393,7 @@ public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "CSTMR_SN")  // Customer sequence number
-    private Long customerSequenceNumber;
+    private Long customerSn;
 
     @Column(name = "CSTMR_NM", length = 100, nullable = false)  // Customer name
     private String customerName;

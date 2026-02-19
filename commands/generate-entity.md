@@ -70,8 +70,8 @@ Also generate SQL DDL applying the standard table name rules (TB_ prefix).
 `_YN` (여부) columns must use `BOOLEAN` type with `DEFAULT true` or `DEFAULT false`.
 
 ```sql
-CREATE TABLE TB_테이블약어 (
-    컬럼약어 데이터타입(길이) [NOT NULL] [DEFAULT ...] COMMENT '한글 컬럼명',
+CREATE TABLE TB_{TABLE_ABBR} (
+    {COL_ABBR} {DATA_TYPE}({LENGTH}) [NOT NULL] [DEFAULT ...] COMMENT '{Korean column name}',
     USE_YN BOOLEAN DEFAULT true COMMENT '사용여부',
     ...
 );
