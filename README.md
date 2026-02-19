@@ -98,7 +98,7 @@ Generated Code (Java JPA):
 @Table(name = "TB_CSTMR")
 public class Customer {
     @Id @Column(name = "CSTMR_SN")
-    private Long customerSn;
+    private Long id;
 
     @Column(name = "CSTMR_NM", length = 100)
     private String customerName;

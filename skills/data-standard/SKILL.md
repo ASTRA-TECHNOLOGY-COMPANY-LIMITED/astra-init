@@ -159,6 +159,15 @@ The following suffixes are universally understood and **keep their abbreviated f
 | _SN | Sn | Sequence number — universally recognized as surrogate key |
 | _ID | Id | Identifier — universally recognized |
 
+#### Primary key field naming
+
+The entity's own primary key (`@Id`) is always named **`id`**, regardless of the physical column name. Foreign key references keep the full prefix form.
+
+| Context | DB Column | Field Name |
+|---|---|---|
+| PK (own entity) | CSTMR_SN | id |
+| FK (other entity) | CSTMR_SN | customerSn |
+
 #### Prefix word expansion examples
 
 | DB Prefix | Full English | Source |
@@ -195,7 +204,7 @@ The following suffixes are universally understood and **keep their abbreviated f
 | DDL (SQL) | BOOLEAN | `USE_YN BOOLEAN DEFAULT true` |
 | Java (JPA) | boolean | `private boolean isUsed;` |
 | TypeScript (TypeORM) | boolean | `isUsed: boolean;` |
-| Python (SQLAlchemy) | Boolean | `is_used: Mapped[bool] = mapped_column("USE_YN")` |
+| Python (SQLAlchemy) | bool | `is_used: Mapped[bool] = mapped_column("USE_YN")` |
 
 > **Rationale**: `CHAR(1)` with `Y/N` values is a legacy pattern. Modern databases natively support `BOOLEAN`, which provides type safety, reduces bugs from invalid values, and aligns with application-layer boolean semantics.
 
@@ -209,7 +218,7 @@ public class Customer {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "CSTMR_SN")
-  private Long customerSn;
+  private Long id;
 
   @Column(name = "CSTMR_NM", length = 100, nullable = false)
   private String customerName;

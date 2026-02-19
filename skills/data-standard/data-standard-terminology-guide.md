@@ -354,13 +354,15 @@ Physical DB column names use standard abbreviations, but **entity/DTO/interface 
 1. Expand each standard word abbreviation to its full English name (`영문명` in `standard_words.json`)
 2. For `_YN` (boolean) fields, use `is`/`has` prefix with a past participle or adjective
 3. **Exception**: `_SN`, `_ID` suffixes keep their abbreviated form (universally understood)
-4. Apply language-specific casing: `lowerCamelCase` (Java/TypeScript), `snake_case` (Python)
+4. **PK rule**: The entity's own primary key (`@Id`) is always named `id`. Foreign key references keep the prefix form (e.g., `customerSn`)
+5. Apply language-specific casing: `lowerCamelCase` (Java/TypeScript), `snake_case` (Python)
 
 #### Field name mapping examples
 
 | DB Column | Java/TS Field | Python Field | Full English Derivation |
 |---|---|---|---|
-| CSTMR_SN | customerSn | customer_sn | Customer + Sn (abbreviation preserved) |
+| CSTMR_SN (PK) | id | id | Primary key → always `id` |
+| CSTMR_SN (FK) | customerSn | customer_sn | Customer + Sn (abbreviation preserved) |
 | CSTMR_NM | customerName | customer_name | Customer + Name |
 | JOIN_YMD | joinDate | join_date | Join + Date |
 | REG_DT | registrationDatetime | registration_datetime | Registration + Datetime |
@@ -381,7 +383,7 @@ Physical DB column names use standard abbreviations, but **entity/DTO/interface 
 | DDL (SQL) | BOOLEAN | `USE_YN BOOLEAN DEFAULT true` |
 | Java (JPA) | boolean | `@Column(name = "USE_YN") private boolean isUsed;` |
 | TypeScript (TypeORM) | boolean | `@Column({ name: 'USE_YN' }) isUsed: boolean;` |
-| Python (SQLAlchemy) | Boolean | `is_used: Mapped[bool] = mapped_column("USE_YN")` |
+| Python (SQLAlchemy) | bool | `is_used: Mapped[bool] = mapped_column("USE_YN")` |
 
 ### 7.4 Entity Example
 
@@ -392,8 +394,8 @@ public class Customer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "CSTMR_SN")  // Customer sequence number
-    private Long customerSn;
+    @Column(name = "CSTMR_SN")  // Customer sequence number (PK → id)
+    private Long id;
 
     @Column(name = "CSTMR_NM", length = 100, nullable = false)  // Customer name
     private String customerName;
