@@ -187,7 +187,7 @@ e.g., 금액N15 = 금액 (classifier) + NUMERIC (type) + 15 (length)
 | 코드C5 | CHAR | 5 | 5-digit classification code |
 | 코드C7 | CHAR | 7 | 7-digit classification code |
 | 코드V20 | VARCHAR | 20 | Variable-length code |
-| 여부C1 | CHAR | 1 | Y/N flag |
+| 여부B | BOOLEAN | - | Boolean flag (true/false) |
 
 #### Number Domains
 
@@ -276,8 +276,8 @@ e.g., 금액N15 = 금액 (classifier) + NUMERIC (type) + 15 (length)
 | 법인등록번호 | CRNO | 법인등록번호C13 |
 | 전화번호 | TELNO | 전화번호V11 |
 | 우편번호 | ZIP | 우편번호C5 |
-| 삭제여부 | DEL_YN | 여부C1 |
-| 사용여부 | USE_YN | 여부C1 |
+| 삭제여부 | DEL_YN | 여부B |
+| 사용여부 | USE_YN | 여부B |
 
 #### Address Related
 
@@ -340,55 +340,95 @@ e.g., 금액N15 = 금액 (classifier) + NUMERIC (type) + 15 (length)
 | 내용V1000 | VARCHAR(1000) | String | @Column(length = 1000) |
 | 내용V4000 | VARCHAR(4000) | String | @Column(length = 4000) |
 | 코드C3 | CHAR(3) | String | @Column(length = 3, columnDefinition = "CHAR(3)") |
-| 여부C1 | CHAR(1) | String | @Column(length = 1, columnDefinition = "CHAR(1)") |
+| 여부B | BOOLEAN | boolean | @Column |
 | 주소V200 | VARCHAR(200) | String | @Column(length = 200) |
 | 전화번호V11 | VARCHAR(11) | String | @Column(length = 11) |
 | 사업자등록번호C10 | CHAR(10) | String | @Column(length = 10, columnDefinition = "CHAR(10)") |
 
-### 7.2 Entity Example
+### 7.2 Application-Layer Field Naming Rules
+
+Physical DB column names use standard abbreviations, but **entity/DTO/interface field names must use full English names**.
+
+#### Naming construction
+
+1. Expand each standard word abbreviation to its full English name (`영문명` in `standard_words.json`)
+2. For `_YN` (boolean) fields, use `is`/`has` prefix with a past participle or adjective
+3. **Exception**: `_SN`, `_ID` suffixes keep their abbreviated form (universally understood)
+4. **PK rule**: The entity's own primary key (`@Id`) is always named `id`. Foreign key references keep the prefix form (e.g., `customerSn`)
+5. Apply language-specific casing: `lowerCamelCase` (Java/TypeScript), `snake_case` (Python)
+
+#### Field name mapping examples
+
+| DB Column | Java/TS Field | Python Field | Full English Derivation |
+|---|---|---|---|
+| CSTMR_SN (PK) | id | id | Primary key → always `id` |
+| CSTMR_SN (FK) | customerSn | customer_sn | Customer + Sn (abbreviation preserved) |
+| CSTMR_NM | customerName | customer_name | Customer + Name |
+| JOIN_YMD | joinDate | join_date | Join + Date |
+| REG_DT | registrationDatetime | registration_datetime | Registration + Datetime |
+| STLM_AMT | settlementAmount | settlement_amount | Settlement + Amount |
+| STTS_CD | statusCode | status_code | Status + Code |
+| USE_YN | isUsed | is_used | boolean: is + Used |
+| DEL_YN | isDeleted | is_deleted | boolean: is + Deleted |
+| BRNO | businessRegistrationNumber | business_registration_number | single term expansion |
+| TELNO | telephoneNumber | telephone_number | single term expansion |
+| RDNMADR | roadNameAddress | road_name_address | single term expansion |
+
+### 7.3 Boolean Column Rules
+
+`_YN` (여부) fields must use the native `BOOLEAN` type, not `CHAR(1)`:
+
+| Layer | Type | Default Example |
+|---|---|---|
+| DDL (SQL) | BOOLEAN | `USE_YN BOOLEAN DEFAULT true` |
+| Java (JPA) | boolean | `@Column(name = "USE_YN") private boolean isUsed;` |
+| TypeScript (TypeORM) | boolean | `@Column({ name: 'USE_YN' }) isUsed: boolean;` |
+| Python (SQLAlchemy) | bool | `is_used: Mapped[bool] = mapped_column("USE_YN")` |
+
+### 7.4 Entity Example
 
 ```java
 @Entity
 @Table(name = "TB_CSTMR")  // Customer table
 public class Customer {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "CSTMR_SN")  // Customer sequence number
-    private Long customerSn;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "CSTMR_SN")  // Customer sequence number (PK → id)
+  private Long id;
 
-    @Column(name = "CSTMR_NM", length = 100, nullable = false)  // Customer name
-    private String customerNm;
+  @Column(name = "CSTMR_NM", length = 100, nullable = false)  // Customer name
+  private String customerName;
 
-    @Column(name = "BRNO", length = 10, columnDefinition = "CHAR(10)")  // Business registration number
-    private String brno;
+  @Column(name = "BRNO", length = 10, columnDefinition = "CHAR(10)")  // Business registration number
+  private String businessRegistrationNumber;
 
-    @Column(name = "TELNO", length = 11)  // Phone number
-    private String telno;
+  @Column(name = "TELNO", length = 11)  // Phone number
+  private String telephoneNumber;
 
-    @Column(name = "RDNMADR", length = 200)  // Road name address
-    private String rdnmadr;
+  @Column(name = "RDNMADR", length = 200)  // Road name address
+  private String roadNameAddress;
 
-    @Column(name = "DTL_ADDR", length = 320)  // Detailed address
-    private String dtlAddr;
+  @Column(name = "DTL_ADDR", length = 320)  // Detailed address
+  private String detailedAddress;
 
-    @Column(name = "ZIP", length = 5, columnDefinition = "CHAR(5)")  // Postal code
-    private String zip;
+  @Column(name = "ZIP", length = 5, columnDefinition = "CHAR(5)")  // Postal code
+  private String postalCode;
 
-    @Column(name = "JOIN_YMD", length = 8, columnDefinition = "CHAR(8)")  // Join date
-    private String joinYmd;
+  @Column(name = "JOIN_YMD", length = 8, columnDefinition = "CHAR(8)")  // Join date
+  private String joinDate;
 
-    @Column(name = "REG_DT")  // Registration datetime
-    private LocalDateTime regDt;
+  @Column(name = "REG_DT")  // Registration datetime
+  private LocalDateTime registrationDatetime;
 
-    @Column(name = "CHG_DT")  // Change datetime
-    private LocalDateTime chgDt;
+  @Column(name = "CHG_DT")  // Change datetime
+  private LocalDateTime changeDatetime;
 
-    @Column(name = "USE_YN", length = 1, columnDefinition = "CHAR(1) DEFAULT 'Y'")  // Use flag
-    private String useYn;
+  @Column(name = "USE_YN")  // Use flag
+  private boolean isUsed;
 
-    @Column(name = "DEL_YN", length = 1, columnDefinition = "CHAR(1) DEFAULT 'N'")  // Delete flag
-    private String delYn;
+  @Column(name = "DEL_YN")  // Delete flag
+  private boolean isDeleted;
 }
 ```
 
