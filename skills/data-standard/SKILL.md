@@ -107,7 +107,7 @@ Key examples:
 |---|---|---|---|---|
 | 코드C1~C7 | CHAR(n) | String | string | str |
 | 코드V20 | VARCHAR(20) | String | string | str |
-| 여부C1 | CHAR(1) | String | "Y" \| "N" | str |
+| 여부B | BOOLEAN | boolean | boolean | bool |
 
 ### 5. Forbidden words must not be used
 
@@ -123,7 +123,73 @@ When DB-related naming is needed:
 3. Determine the data type and length from the `공통표준도메인명` (common standard domain name)
 4. If not found in the standard terms, combine individual word abbreviations from `공통표준단어영문약어명` in `data/standard_words.json`
 
-### 7. JPA Entity Example
+### 7. Application-layer field naming (Entity/DTO/Interface)
+
+Physical DB column names use standard abbreviations (e.g., `CSTMR_NM`, `JOIN_YMD`), but **application-layer field names in entities, DTOs, VOs, and interfaces must use full English names**.
+
+Construct full field names by expanding each standard word's abbreviation to its full English name (`영문명` in `data/standard_words.json`).
+
+#### Suffix expansion rules
+
+| DB Suffix | Full Name Suffix | DB Column Example | Field Name Example |
+|---|---|---|---|
+| _NM | Name | CSTMR_NM | customerName |
+| _YMD | Date | JOIN_YMD | joinDate |
+| _DT | Datetime | REG_DT | registrationDatetime |
+| _YM | YearMonth | ACNT_YM | accountYearMonth |
+| _YR | Year | BSNS_YR | businessYear |
+| _AMT | Amount | STLM_AMT | settlementAmount |
+| _PRC | Price | SUPLY_PRC | supplyPrice |
+| _CD | Code | STTS_CD | statusCode |
+| _NO | Number | SEQ_NO | sequenceNumber |
+| _CN | Content | PRCS_CN | processingContent |
+| _CNT | Count | DEAL_CNT | dealCount |
+| _RT | Rate | TAX_RT | taxRate |
+| _YN | boolean (`is`/`has` prefix) | USE_YN | isUsed |
+| _SN | SequenceNumber | CSTMR_SN | customerSequenceNumber |
+| _ADDR | Address | DTL_ADDR | detailedAddress |
+
+#### Prefix word expansion examples
+
+| DB Prefix | Full English | Source |
+|---|---|---|
+| CSTMR | customer | 고객 → Customer |
+| STLM | settlement | 결제 → Settlement |
+| REG | registration | 등록 → Registration |
+| CHG | change | 변경 → Change |
+| PRCS | processing | 처리 → Processing |
+| BRNO | businessRegistrationNumber | 사업자등록번호 (단일 용어) |
+| TELNO | telephoneNumber | 전화번호 (단일 용어) |
+| RDNMADR | roadNameAddress | 도로명주소 (단일 용어) |
+
+#### Boolean field naming rules
+
+`_YN` suffix columns are mapped to boolean types with `is` or `has` prefix:
+
+| DB Column | Field Name | Type |
+|---|---|---|
+| USE_YN | isUsed | boolean |
+| DEL_YN | isDeleted | boolean |
+| DSPLY_YN | isDisplayed | boolean |
+| RCPTN_YN | isReceived | boolean |
+| PRCS_YN | isProcessed | boolean |
+
+> **Rule**: Convert the Korean semantic meaning to a past participle or adjective after `is`/`has`. Do NOT simply translate the abbreviation literally (e.g., `USE_YN` → `isUsed`, not `isUse`).
+
+### 8. Boolean columns must use BOOLEAN type
+
+`_YN` (여부) columns must use the native `BOOLEAN` type in all layers:
+
+| Layer | Type | Default Example |
+|---|---|---|
+| DDL (SQL) | BOOLEAN | `USE_YN BOOLEAN DEFAULT true` |
+| Java (JPA) | boolean | `private boolean isUsed;` |
+| TypeScript (TypeORM) | boolean | `isUsed: boolean;` |
+| Python (SQLAlchemy) | Boolean | `is_used: Mapped[bool]` |
+
+> **Rationale**: `CHAR(1)` with `Y/N` values is a legacy pattern. Modern databases natively support `BOOLEAN`, which provides type safety, reduces bugs from invalid values, and aligns with application-layer boolean semantics.
+
+### 9. JPA Entity Example
 
 ```java
 @Entity
@@ -133,24 +199,24 @@ public class Customer {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "CSTMR_SN")
-  private Long customerSn;
+  private Long customerSequenceNumber;
 
   @Column(name = "CSTMR_NM", length = 100, nullable = false)
-  private String customerNm;
+  private String customerName;
 
   @Column(name = "BRNO", length = 10, columnDefinition = "CHAR(10)")
-  private String brno;
+  private String businessRegistrationNumber;
 
   @Column(name = "TELNO", length = 11)
-  private String telno;
+  private String telephoneNumber;
 
   @Column(name = "JOIN_YMD", length = 8, columnDefinition = "CHAR(8)")
-  private String joinYmd;
+  private String joinDate;
 
   @Column(name = "REG_DT")
-  private LocalDateTime regDt;
+  private LocalDateTime registrationDatetime;
 
-  @Column(name = "USE_YN", length = 1, columnDefinition = "CHAR(1) DEFAULT 'Y'")
-  private String useYn;
+  @Column(name = "USE_YN")
+  private boolean isUsed;
 }
 ```
