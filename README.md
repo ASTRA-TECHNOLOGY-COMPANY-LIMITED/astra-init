@@ -97,7 +97,9 @@ Generated Code (Java JPA):
 @Entity
 @Table(name = "TB_CSTMR")
 public class Customer {
-    @Id @Column(name = "CSTMR_SN")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "CSTMR_SN")
     private Long id;
 
     @Column(name = "CSTMR_NM", length = 100)
@@ -106,7 +108,7 @@ public class Customer {
     @Column(name = "CSTMR_NO", length = 20)
     private String customerNumber;
 
-    @Column(name = "BRDT_YMD", columnDefinition = "CHAR(8)")
+    @Column(name = "BRDT_YMD", length = 8, columnDefinition = "CHAR(8)")
     private String birthDate;
 
     @Column(name = "USE_YN")

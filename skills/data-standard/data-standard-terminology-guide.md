@@ -392,43 +392,43 @@ Physical DB column names use standard abbreviations, but **entity/DTO/interface 
 @Table(name = "TB_CSTMR")  // Customer table
 public class Customer {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "CSTMR_SN")  // Customer sequence number (PK → id)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "CSTMR_SN")  // Customer sequence number (PK → id)
+  private Long id;
 
-    @Column(name = "CSTMR_NM", length = 100, nullable = false)  // Customer name
-    private String customerName;
+  @Column(name = "CSTMR_NM", length = 100, nullable = false)  // Customer name
+  private String customerName;
 
-    @Column(name = "BRNO", length = 10, columnDefinition = "CHAR(10)")  // Business registration number
-    private String businessRegistrationNumber;
+  @Column(name = "BRNO", length = 10, columnDefinition = "CHAR(10)")  // Business registration number
+  private String businessRegistrationNumber;
 
-    @Column(name = "TELNO", length = 11)  // Phone number
-    private String telephoneNumber;
+  @Column(name = "TELNO", length = 11)  // Phone number
+  private String telephoneNumber;
 
-    @Column(name = "RDNMADR", length = 200)  // Road name address
-    private String roadNameAddress;
+  @Column(name = "RDNMADR", length = 200)  // Road name address
+  private String roadNameAddress;
 
-    @Column(name = "DTL_ADDR", length = 320)  // Detailed address
-    private String detailedAddress;
+  @Column(name = "DTL_ADDR", length = 320)  // Detailed address
+  private String detailedAddress;
 
-    @Column(name = "ZIP", length = 5, columnDefinition = "CHAR(5)")  // Postal code
-    private String postalCode;
+  @Column(name = "ZIP", length = 5, columnDefinition = "CHAR(5)")  // Postal code
+  private String postalCode;
 
-    @Column(name = "JOIN_YMD", length = 8, columnDefinition = "CHAR(8)")  // Join date
-    private String joinDate;
+  @Column(name = "JOIN_YMD", length = 8, columnDefinition = "CHAR(8)")  // Join date
+  private String joinDate;
 
-    @Column(name = "REG_DT")  // Registration datetime
-    private LocalDateTime registrationDatetime;
+  @Column(name = "REG_DT")  // Registration datetime
+  private LocalDateTime registrationDatetime;
 
-    @Column(name = "CHG_DT")  // Change datetime
-    private LocalDateTime changeDatetime;
+  @Column(name = "CHG_DT")  // Change datetime
+  private LocalDateTime changeDatetime;
 
-    @Column(name = "USE_YN")  // Use flag
-    private boolean isUsed;
+  @Column(name = "USE_YN")  // Use flag
+  private boolean isUsed;
 
-    @Column(name = "DEL_YN")  // Delete flag
-    private boolean isDeleted;
+  @Column(name = "DEL_YN")  // Delete flag
+  private boolean isDeleted;
 }
 ```
 
